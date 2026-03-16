@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrarme como profesional | alma+</title>
+  <meta name="description" content="Sumáte a alma+ como profesional de salud privado. Configurá tu perfil, horarios y precio en fichas."/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .page-hero { padding:120px 0 50px; text-align:center; background:linear-gradient(180deg,var(--red-50) 0%,var(--bg) 100%); border-bottom:1px solid var(--border); }
+    .apply-layout { display:grid; grid-template-columns:1fr 340px; gap:28px; align-items:start; padding:40px 0 80px; }
+    .form-card { background:white; border:1.5px solid var(--border); border-radius:var(--radius-xl); padding:32px; box-shadow:var(--shadow-card); margin-bottom:20px; }
+    .form-card:last-child { margin-bottom:0; }
+    .form-section-title { display:flex; align-items:center; gap:12px; font-size:1rem; font-weight:700; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+    .form-section-title .ico { width:34px; height:34px; border-radius:var(--radius-sm); background:var(--red-50); border:1px solid var(--red-100); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+    .form-2col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-full { grid-column:1/-1; }
+    .form-sep { height:1px; background:var(--border); margin:20px 0; }
+    .ficha-display {
+      display:flex; align-items:center; gap:10px; background:var(--red-50);
+      border:1.5px solid var(--red-200); border-radius:var(--radius-md); padding:14px 18px; margin-top:12px;
+    }
+    .ficha-display .val { font-size:1.3rem; font-weight:800; color:var(--red); }
+    .ficha-display .lbl { font-size:0.8rem; color:var(--text-2); }
+
+    .check-group { display:flex; flex-wrap:wrap; gap:8px; }
+    .check-pill {
+      display:flex; align-items:center; gap:6px; padding:7px 14px;
+      border-radius:var(--radius-full); border:1.5px solid var(--border);
+      background:white; cursor:pointer; font-size:0.82rem; font-weight:500;
+      transition:var(--transition); user-select:none;
+    }
+    .check-pill input { width:14px; height:14px; accent-color:var(--red); cursor:pointer; }
+    .check-pill:hover { border-color:var(--red-200); color:var(--red); }
+
+    /* ─── Calendar ─── */
+    .cal-section-wrap { margin-top:4px; }
+    .cal-intro { font-size:0.85rem; color:var(--text-2); margin-bottom:14px; line-height:1.7; }
+    .calendar-wrap { background:white; border:1.5px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+    .calendar-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:linear-gradient(135deg,var(--red-50),white); border-bottom:1px solid var(--border); }
+    .calendar-header h4 { font-size:0.95rem; font-weight:700; color:var(--red-dark); }
+    .cal-nav { background:white; border:1.5px solid var(--border); border-radius:8px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); font-size:0.85rem; }
+    .cal-nav:hover { border-color:var(--red); color:var(--red); }
+    .cal-day-names { display:grid; grid-template-columns:repeat(7,1fr); background:var(--bg-2); border-bottom:1px solid var(--border); }
+    .cal-day-name { text-align:center; padding:9px 4px; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); }
+    .cal-days { display:grid; grid-template-columns:repeat(7,1fr); }
+    .cal-day {
+      text-align:center; padding:10px 4px; cursor:pointer; font-size:0.82rem;
+      border:0.5px solid #f5f5f5; min-height:42px; display:flex; align-items:center;
+      justify-content:center; transition:var(--transition); color:var(--text-2); flex-direction:column; gap:2px;
+    }
+    .cal-day:hover:not(.cal-empty):not(.cal-past) { background:var(--red-50); color:var(--red); }
+    .cal-day.available { background:var(--red); color:white; font-weight:700; border-radius:2px; }
+    .cal-day.today { color:var(--red); font-weight:700; }
+    .cal-day.cal-empty, .cal-day.cal-past { color:#e0e0e0; cursor:default; }
+    .cal-day .dot-avail { width:5px; height:5px; border-radius:50%; background:white; opacity:0.8; }
+
+    .time-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+    .time-btn {
+      padding:8px 6px; border-radius:var(--radius-sm); font-size:0.78rem; font-weight:600;
+      border:1.5px solid var(--border); background:white; color:var(--text-2);
+      cursor:pointer; transition:var(--transition); text-align:center;
+    }
+    .time-btn:hover { border-color:var(--red); color:var(--red); }
+    .time-btn.active { background:var(--red); color:white; border-color:var(--red); }
+
+    .selected-summary {
+      background:var(--red-50); border:1px solid var(--red-100); border-radius:var(--radius-md);
+      padding:12px 16px; margin-top:14px; font-size:0.82rem; color:var(--text-2); min-height:40px;
+    }
+    .selected-summary strong { color:var(--red-dark); }
+
+    .file-upload {
+      border:2px dashed var(--border); border-radius:var(--radius-md);
+      padding:24px; text-align:center; cursor:pointer;
+      transition:var(--transition); position:relative;
+    }
+    .file-upload:hover { border-color:var(--red-200); background:var(--red-50); }
+    .file-upload input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+    .file-upload .up-icon { font-size:1.8rem; margin-bottom:6px; }
+    .file-upload p { font-size:0.82rem; color:var(--text-muted); }
+    .file-upload strong { color:var(--red); }
+
+    .submit-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; padding-top:20px; border-top:1px solid var(--border); margin-top:20px; }
+
+    /* Sidebar */
+    .sidebar-card { background:white; border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-card); margin-bottom:16px; }
+    .sidebar-card h4 { font-size:0.9rem; font-weight:700; margin-bottom:14px; }
+    .benefit-item { display:flex; gap:10px; margin-bottom:12px; font-size:0.82rem; }
+    .benefit-item .bi { font-size:1.1rem; flex-shrink:0; }
+    .benefit-item p { color:var(--text-2); line-height:1.5; }
+    .benefit-item p strong { color:var(--text); display:block; }
+
+    .prof-preview {
+      background:linear-gradient(135deg,var(--red-50),white);
+      border:1.5px solid var(--red-200); border-radius:var(--radius-lg);
+      padding:22px; text-align:center; margin-bottom:16px;
+    }
+    .preview-avatar { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,var(--red-light),var(--red-dark)); display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 12px; border:3px solid var(--red-100); }
+    .preview-name { font-size:0.95rem; font-weight:700; }
+    .preview-spec { font-size:0.78rem; color:var(--red); margin-bottom:12px; }
+    .progress-bar { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin-top:8px; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--red),var(--red-light)); border-radius:3px; width:20%; transition:width .5s ease; }
+
+    /* Success */
+    #apply-success { display:none; flex-direction:column; align-items:center; text-align:center; padding:56px 32px; }
+    .success-circle { width:88px; height:88px; border-radius:50%; background:#E8F5E9; border:2px solid #4CAF50; display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin-bottom:24px; }
+    #apply-success h3 { font-size:1.5rem; margin-bottom:10px; }
+    #apply-success p { color:var(--text-2); max-width:340px; line-height:1.7; }
+
+    @media(max-width:960px){
+      .apply-layout{grid-template-columns:1fr;}
+    }
+    @media(max-width:600px){
+      .form-2col{grid-template-columns:1fr;}
+      .form-card{padding:22px;}
+      .time-grid{grid-template-columns:repeat(3,1fr);}
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html">Profesionales</a></li>
+      <li><a href="payment.html">Fichas</a></li>
+      <li><a href="donate.html">Donar</a></li>
+      <li><a href="about.html">Sobre nosotros</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
+      <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a><a href="professionals.html">Profesionales</a>
+  <a href="apply.html">Soy profesional</a><a href="login.html">Ingresar</a>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="badge badge-red" style="margin-bottom:14px">🩺 Para profesionales de la salud</span>
+    <h1>Sumáte a <span class="gradient-text">alma+</span></h1>
+    <p>Configurá tu perfil, disponibilidad y precio. Empezá a recibir pacientes en 24hs.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="apply-layout">
+
+    <div>
+      <form id="apply-form">
+
+        <!-- 1. Datos personales -->
+        <div class="form-card">
+          <div class="form-section-title"><div class="ico">👤</div>Datos personales</div>
+          <div class="form-2col">
+            <div class="form-group"><label class="form-label">Nombre *</label><input id="fn" class="form-input" type="text" placeholder="Ej: Valentina" required onkeyup="previewUpdate()"/></div>
+            <div class="form-group"><label class="form-label">Apellido *</label><input id="ln" class="form-input" type="text" placeholder="Ej: Suárez" required onkeyup="previewUpdate()"/></div>
+            <div class="form-group"><label class="form-label">Email *</label><input class="form-input" type="email" placeholder="hola@tu-email.com" required/></div>
+            <div class="form-group"><label class="form-label">Teléfono *</label><input class="form-input" type="tel" placeholder="+54 11 1234-5678" required/></div>
+            <div class="form-group"><label class="form-label">Ciudad *</label>
+              <select class="form-select" required>
+                <option value="">Seleccioná</option>
+                <option>Buenos Aires (CABA)</option><option>Buenos Aires (GBA)</option>
+                <option>Córdoba</option><option>Rosario</option><option>Mendoza</option><option>Otra</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Modalidad *</label>
+              <select class="form-select" required>
+                <option>Online</option><option>Presencial</option><option>Online y Presencial</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Especialidad -->
+        <div class="form-card">
+          <div class="form-section-title"><div class="ico">🏥</div>Especialidad y formación</div>
+          <div class="form-2col">
+            <div class="form-group form-full">
+              <label class="form-label">Servicio que ofrecés *</label>
+              <select id="svc-select" class="form-select" required onchange="updateServiceInfo()">
+                <option value="">Seleccioná</option>
+                <option value="psicologia" data-fichas="8" data-dur="45 – 60 min">Psicología</option>
+                <option value="psiquiatria" data-fichas="12" data-dur="30 – 45 min">Psiquiatría</option>
+                <option value="nutricion" data-fichas="6" data-dur="50 – 60 min">Nutrición y Dietética</option>
+                <option value="trainer" data-fichas="5" data-dur="60 min">Personal Trainer</option>
+                <option value="coaching" data-fichas="7" data-dur="50 – 60 min">Coaching</option>
+                <option value="otro" data-fichas="6" data-dur="60 min">Otro (detallá abajo)</option>
+              </select>
+            </div>
+            <div class="ficha-display form-full" id="ficha-display" style="display:none">
+              <span style="font-size:1.5rem">💰</span>
+              <div>
+                <div class="val"><span id="ficha-val">–</span><span style="font-size:0.8rem;font-weight:500;color:var(--text-muted)"> fichas por sesión (precio fijo)</span></div>
+                <div class="lbl">Duración: <strong id="dur-val" style="color:var(--text)">–</strong></div>
+              </div>
+            </div>
+            <div class="form-group"><label class="form-label">Matrícula profesional *</label><input class="form-input" type="text" placeholder="MN / MP 12345" required/></div>
+            <div class="form-group"><label class="form-label">Años de experiencia</label>
+              <select class="form-select">
+                <option>Menos de 2 años</option><option>2–5 años</option><option>5–10 años</option><option>+10 años</option>
+              </select>
+            </div>
+            <div class="form-group form-full"><label class="form-label">Mini-bio (visible en tu perfil)</label>
+              <textarea class="form-textarea" placeholder="Contá brevemente tu enfoque, especialización y cómo trabajás con tus pacientes/clientes..." style="min-height:90px"></textarea>
+            </div>
+            <div class="form-group form-full"><label class="form-label">Obras sociales / Coberturas</label>
+              <div class="check-group">
+                <label class="check-pill"><input type="checkbox"> Solo privado (fichas)</label>
+                <label class="check-pill"><input type="checkbox"> OSDE</label>
+                <label class="check-pill"><input type="checkbox"> Swiss Medical</label>
+                <label class="check-pill"><input type="checkbox"> Galeno</label>
+                <label class="check-pill"><input type="checkbox"> Medifé</label>
+                <label class="check-pill"><input type="checkbox"> PAMI</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-sep"></div>
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:12px">📄 CV / Certificaciones</div>
+          <div class="file-upload">
+            <input type="file" accept=".pdf,.doc,.docx,.jpg,.png"/>
+            <div class="up-icon">📎</div>
+            <p><strong>Arrastrá tu CV o diploma</strong><br>PDF, DOC, imagen · Máx. 5 MB</p>
+          </div>
+        </div>
+
+        <!-- 3. Disponibilidad con calendario -->
+        <div class="form-card">
+          <div class="form-section-title"><div class="ico">📅</div>Disponibilidad horaria</div>
+          <p class="cal-intro">Marcá los días y horarios en los que querés recibir turnos. Los pacientes solo podrán reservar en los espacios que hayas habilitado.</p>
+
+          <div class="calendar-wrap">
+            <div class="calendar-header">
+              <button type="button" class="cal-nav" onclick="changeMonth(-1)">◀</button>
+              <h4 id="cal-month-label">Marzo 2026</h4>
+              <button type="button" class="cal-nav" onclick="changeMonth(1)">▶</button>
+            </div>
+            <div class="cal-day-names">
+              <div class="cal-day-name">Dom</div><div class="cal-day-name">Lun</div>
+              <div class="cal-day-name">Mar</div><div class="cal-day-name">Mié</div>
+              <div class="cal-day-name">Jue</div><div class="cal-day-name">Vie</div>
+              <div class="cal-day-name">Sáb</div>
+            </div>
+            <div class="cal-days" id="cal-days"></div>
+          </div>
+
+          <div style="margin-top:18px">
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:8px;color:var(--text)">
+              Horarios disponibles para <span id="selected-date-label" style="color:var(--red)">los días seleccionados</span>:
+            </div>
+            <div class="time-grid" id="time-grid"></div>
+            <div class="selected-summary" id="avail-summary">
+              Seleccioná días en el calendario y luego los horarios disponibles.
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Presentación -->
+        <div class="form-card">
+          <div class="form-section-title"><div class="ico">✉️</div>Carta de presentación</div>
+          <div class="form-group">
+            <label class="form-label">¿Por qué querés ser parte de alma+?</label>
+            <textarea class="form-textarea" placeholder="Contanos tu motivación y el valor que querés aportarle a tus pacientes/clientes..." style="min-height:110px"></textarea>
+          </div>
+          <div style="margin-top:16px">
+            <label class="check-pill" style="width:fit-content">
+              <input type="checkbox" required>
+              Acepto los <a href="#" style="color:var(--red);font-weight:600">Términos y Condiciones</a> de alma+
+            </label>
+          </div>
+          <div class="submit-row">
+            <div style="font-size:0.8rem;color:var(--text-muted)">🔒 Tus datos están protegidos</div>
+            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Enviar perfil →</button>
+          </div>
+        </div>
+
+        <!-- Success -->
+        <div class="form-card" id="apply-success">
+          <div class="success-circle">✓</div>
+          <h3>¡Perfil enviado con éxito!</h3>
+          <p>Revisaremos tu información en las próximas 24–48 hs. Una vez aprobado, tu perfil estará visible para los pacientes.</p>
+          <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;justify-content:center">
+            <a href="dashboard.html" class="btn btn-primary">Ir a mi panel</a>
+            <a href="index.html" class="btn btn-outline">Volver al inicio</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="prof-preview">
+        <div class="preview-avatar" id="pv-avatar">🩺</div>
+        <div class="preview-name" id="pv-name">Tu nombre</div>
+        <div class="preview-spec" id="pv-spec">Especialidad</div>
+        <div class="progress-bar"><div class="progress-fill" id="pv-progress"></div></div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;text-align:left">Completitud: <strong id="pv-pct" style="color:var(--red)">20%</strong></div>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>✨ Beneficios</h4>
+        <div class="benefit-item"><div class="bi">🎯</div><p><strong>Pacientes verificados</strong>Solo personas que buscan activamente tu servicio.</p></div>
+        <div class="benefit-item"><div class="bi">💰</div><p><strong>Cobros seguros</strong>Recibís fichas por cada sesión, sin intermediarios.</p></div>
+        <div class="benefit-item"><div class="bi">📅</div><p><strong>Agenda propia</strong>Controlás tus horarios 100%.</p></div>
+        <div class="benefit-item"><div class="bi">📈</div><p><strong>Crecé tu práctica</strong>El 80% de los profesionales triplica consultas en 3 meses.</p></div>
+      </div>
+
+      <div class="sidebar-card" style="background:var(--red-50);border-color:var(--red-200)">
+        <h4 style="color:var(--red-dark)">📋 Proceso rápido</h4>
+        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.7">Revisamos tu perfil en <strong>24–48hs</strong>. Una vez aprobado, empezás a recibir pacientes de inmediato.</p>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand"><div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div><p>Profesionales privados verificados.</p></div>
+      <div class="footer__col"><h5>Servicios</h5><a href="professionals.html">Ver directorio</a></div>
+      <div class="footer__col"><h5>Profesionales</h5><a href="apply.html">Registrarme</a><a href="login.html">Mi panel</a></div>
+      <div class="footer__col"><h5>alma+</h5><a href="#">Contacto</a><a href="#">Privacidad</a></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 alma+</span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="db.js"></script>
+<script src="script.js"></script>
+<script>
+/* ─── Calendar ─── */
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const TIMES  = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+
+let currentDate = new Date(2026, 2, 1); // March 2026
+let selectedDays = new Set();
+let selectedTimes = new Set();
+const today = new Date(); today.setHours(0,0,0,0);
+
+function renderCalendar() {
+  const y = currentDate.getFullYear(), m = currentDate.getMonth();
+  document.getElementById('cal-month-label').textContent = MONTHS[m] + ' ' + y;
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m+1, 0).getDate();
+  const grid = document.getElementById('cal-days');
+  grid.innerHTML = '';
+  for (let i=0; i<first; i++) { const d=document.createElement('div'); d.className='cal-day cal-empty'; grid.appendChild(d); }
+  for (let d=1; d<=days; d++) {
+    const dd = document.createElement('div');
+    const thisDate = new Date(y, m, d); thisDate.setHours(0,0,0,0);
+    const key = `${y}-${m+1}-${d}`;
+    dd.className = 'cal-day';
+    if (thisDate < today) dd.classList.add('cal-past');
+    if (thisDate.getTime() === today.getTime()) dd.classList.add('today');
+    if (selectedDays.has(key)) { dd.classList.add('available'); dd.innerHTML = `${d}<div class='dot-avail'></div>`; }
+    else dd.textContent = d;
+    if (!dd.classList.contains('cal-past')) {
+      dd.addEventListener('click', () => toggleDay(key, dd, d));
+    }
+    grid.appendChild(dd);
+  }
+  updateSummary();
+}
+
+function toggleDay(key, el, d) {
+  if (selectedDays.has(key)) {
+    selectedDays.delete(key);
+    el.classList.remove('available');
+    el.innerHTML = d;
+  } else {
+    selectedDays.add(key);
+    el.classList.add('available');
+    el.innerHTML = `${d}<div class='dot-avail'></div>`;
+  }
+  updateSummary();
+}
+
+function changeMonth(dir) {
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
+}
+
+function renderTimes() {
+  const grid = document.getElementById('time-grid');
+  grid.innerHTML = '';
+  TIMES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'time-btn';
+    btn.textContent = t;
+    if (selectedTimes.has(t)) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      if (selectedTimes.has(t)) { selectedTimes.delete(t); btn.classList.remove('active'); }
+      else { selectedTimes.add(t); btn.classList.add('active'); }
+      updateSummary();
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function updateSummary() {
+  const sumEl = document.getElementById('avail-summary');
+  const days = selectedDays.size, times = selectedTimes.size;
+  if (!days && !times) {
+    sumEl.innerHTML = 'Seleccioná días en el calendario y luego los horarios disponibles.';
+  } else {
+    const daysStr = days ? `<strong style='color:var(--red-dark)'>${days} día${days>1?'s':''}</strong> seleccionado${days>1?'s':''}` : '0 días';
+    const timesStr = times ? `<strong style='color:var(--red-dark)'>${[...selectedTimes].sort().join(', ')}</strong>` : 'ningún horario';
+    sumEl.innerHTML = `${daysStr} habilitados con los horarios: ${timesStr}`;
+  }
+  updateProgress();
+}
+
+/* ─── Service info ─── */
+function updateServiceInfo() {
+  const sel = document.getElementById('svc-select');
+  const opt = sel.options[sel.selectedIndex];
+  const fichas = opt.dataset.fichas, dur = opt.dataset.dur;
+  const disp = document.getElementById('ficha-display');
+  if (fichas) {
+    document.getElementById('ficha-val').textContent = fichas;
+    document.getElementById('dur-val').textContent = dur;
+    disp.style.display = 'flex';
+  } else {
+    disp.style.display = 'none';
+  }
+  previewUpdate();
+}
+
+/* ─── Profile preview ─── */
+const EMOJIS = ['👩‍⚕️','👨‍⚕️','🩺','💊','🏋️','🧠','🥗','🎯'];
+function previewUpdate() {
+  const fn = document.getElementById('fn').value, ln = document.getElementById('ln').value;
+  const sp = document.getElementById('svc-select').selectedOptions[0]?.textContent || 'Especialidad';
+  document.getElementById('pv-name').textContent = [fn,ln].filter(Boolean).join(' ') || 'Tu nombre';
+  document.getElementById('pv-spec').textContent = sp === 'Seleccioná' ? 'Especialidad' : sp;
+  document.getElementById('pv-avatar').textContent = fn ? EMOJIS[fn.length % EMOJIS.length] : '🩺';
+  updateProgress();
+}
+
+function updateProgress() {
+  const req = document.querySelectorAll('#apply-form input[required], #apply-form select[required]');
+  const filled = [...req].filter(f => f.value.trim()).length;
+  const calBonus = selectedDays.size > 0 ? 1 : 0;
+  const pct = Math.min(100, Math.round(((filled + calBonus) / (req.length + 1)) * 100));
+  document.getElementById('pv-progress').style.width = pct + '%';
+  document.getElementById('pv-pct').textContent = pct + '%';
+}
+
+/* ─── Form submit ─── */
+document.getElementById('apply-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  setTimeout(() => {
+    btn.disabled = false;
+    const success = document.getElementById('apply-success');
+    success.style.display = 'flex';
+    this.querySelectorAll('.form-card:not(#apply-success)').forEach(c => c.style.display='none');
+    showToast('¡Perfil enviado! Te contactamos en 24–48hs.', '✓', 'success');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Auto-login mock info & custom pro save
+    const fn = document.getElementById('fn').value;
+    const ln = document.getElementById('ln').value;
+    const name = `${fn} ${ln}`;
+    const svcId = document.getElementById('svc-select').value;
+    const spec = document.getElementById('svc-select').options[document.getElementById('svc-select').selectedIndex]?.text || '';
+    
+    const colorMap = { 'psicologia': '#E53935', 'psiquiatria': '#7B1FA2', 'nutricion': '#2E7D32', 'trainer': '#E65100', 'coaching': '#00695C', 'otro': '#455A64' };
+    const iconMap = { 'psicologia': '🧠', 'psiquiatria': '💊', 'nutricion': '🥗', 'trainer': '🏋️', 'coaching': '🎯', 'otro': '➕' };
+    const price = document.getElementById('svc-select').options[document.getElementById('svc-select').selectedIndex]?.dataset.fichas || 6;
+    
+    // Format the selected schedule into an array of readable strings
+    const scheduleArray = [];
+    selectedDays.forEach(dateStr => {
+      const [y, m, d] = dateStr.split('-');
+      const dateObj = new Date(y, m - 1, d);
+      const isToday = (dateObj.setHours(0,0,0,0) === new Date().setHours(0,0,0,0));
+      const dayPrefix = isToday ? 'Hoy' : `${dateObj.getDate()}/${dateObj.getMonth()+1}`;
+      
+      selectedTimes.forEach(timeStr => {
+        scheduleArray.push(`${dayPrefix} ${timeStr}`);
+      });
+    });
+
+    const proInfo = {
+      name, svcId, spec, barrio: 'Montevideo', price,
+      lat: -34.90 + (Math.random() * 0.04 - 0.02),
+      lng: -56.16 + (Math.random() * 0.04 - 0.02),
+      color: colorMap[svcId] || colorMap['otro'], 
+      icon: iconMap[svcId] || iconMap['otro'],
+      uyu: "$" + (price * 400).toLocaleString('es-UY') + " UYU",
+      schedule: scheduleArray
+    };
+
+    const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
+    customPros.push(proInfo);
+    localStorage.setItem('alma_custom_pros', JSON.stringify(customPros));
+
+    localStorage.setItem('alma_user', JSON.stringify({ username: fn, email: 'pro@alma.com', role: 'pro', fichas: 0 }));
+  }, 1600);
+});
+
+/* ─── Init ─── */
+renderCalendar();
+renderTimes();
+</script>
+</body>
+</html>

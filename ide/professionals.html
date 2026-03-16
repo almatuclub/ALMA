@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Encontrar Profesional | alma+</title>
+  <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Leaflet.js -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    .page-hero { padding:120px 0 50px; text-align:center; background:linear-gradient(180deg,var(--red-50) 0%,var(--bg) 100%); border-bottom:1px solid var(--border); }
+    .search-wrap { display:flex; gap:10px; max-width:600px; margin:0 auto; }
+    .search-wrap .form-input { border-radius:var(--radius-full); }
+    .search-wrap .btn { border-radius:var(--radius-full); flex-shrink:0; }
+    .service-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+    .chip { padding:6px 16px; border-radius:var(--radius-full); font-size:0.82rem; font-weight:600; border:1.5px solid var(--border); background:white; color:var(--text-2); cursor:pointer; transition:var(--transition); }
+    .chip:hover, .chip.active { background:var(--red-50); border-color:var(--red-200); color:var(--red); }
+
+    .main-layout { display:grid; grid-template-columns:1fr 320px; gap:24px; align-items:start; padding:32px 0 80px; }
+
+    /* Map */
+    .map-section { margin-bottom:24px; }
+    .map-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .map-header h3 { font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .map-toggle { display:flex; gap:4px; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-full); padding:3px; }
+    .map-toggle-btn { padding:5px 14px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:600; border:none; background:none; cursor:pointer; font-family:var(--font); color:var(--text-muted); transition:var(--transition); }
+    .map-toggle-btn.active { background:white; color:var(--red); box-shadow:var(--shadow-sm); }
+
+    #map {
+      height:340px; border-radius:var(--radius-lg); overflow:hidden;
+      border:1.5px solid var(--border); box-shadow:var(--shadow-card);
+    }
+    .map-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--text-2); }
+    .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    /* Filter sidebar */
+    .filter-card { background:white; border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-card); margin-bottom:16px; position:sticky; top:84px; }
+    .filter-card h4 { font-size:0.9rem; font-weight:700; margin-bottom:14px; }
+    .filter-sep { height:1px; background:var(--border); margin:14px 0; }
+
+    /* Prof cards */
+    .prof-list { display:flex; flex-direction:column; gap:14px; }
+    .prof-card {
+      background:white; border:1.5px solid var(--border); border-radius:var(--radius-lg);
+      padding:20px; box-shadow:var(--shadow-card); transition:var(--transition);
+      display:grid; grid-template-columns:60px 1fr auto; gap:14px; align-items:start;
+    }
+    .prof-card:hover { box-shadow:var(--shadow-lg); border-color:var(--red-200); transform:translateY(-2px); cursor:pointer; }
+    .prof-card.highlighted { border-color:var(--red); box-shadow:var(--shadow-lg); }
+    .prof-avatar { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; border:2.5px solid var(--red-100); flex-shrink:0; }
+    .prof-name { font-size:0.95rem; font-weight:700; margin-bottom:2px; }
+    .prof-spec { font-size:0.8rem; color:var(--red); font-weight:600; margin-bottom:8px; }
+    .prof-meta { display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem; color:var(--text-2); margin-bottom:8px; }
+    .prof-meta span { display:flex; align-items:center; gap:3px; }
+    .prof-slots { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
+    .prof-slot { padding:4px 10px; border-radius:var(--radius-full); font-size:0.72rem; font-weight:600; background:var(--red-50); color:var(--red); border:1px solid var(--red-100); cursor:pointer; transition:var(--transition); }
+    .prof-slot:hover { background:var(--red); color:white; }
+    .prof-right { display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width:90px; }
+    .prof-price { font-size:1rem; font-weight:800; color:var(--red); }
+    .prof-price small { font-size:0.68rem; color:var(--text-muted); font-weight:400; display:block; text-align:right; }
+    .prof-price .uyu { font-size:0.72rem; font-weight:500; color:var(--text-muted); }
+    .avail { display:flex; align-items:center; gap:4px; font-size:0.74rem; }
+    .avail .dot { width:7px; height:7px; border-radius:50%; background:#4CAF50; flex-shrink:0; }
+    .avail.busy .dot { background:#FFA726; }
+
+    .fichas-widget { background:var(--red-50); border:1.5px solid var(--red-200); border-radius:var(--radius-lg); padding:18px; margin-bottom:16px; text-align:center; }
+    .fichas-widget .f-num { font-size:2.8rem; font-weight:900; color:var(--red); line-height:1; }
+    .fichas-widget .f-lbl { font-size:0.78rem; color:var(--text-2); margin-bottom:10px; }
+
+    /* Popup */
+    .leaflet-popup-content-wrapper { border-radius:12px !important; border:1.5px solid var(--red-200); box-shadow:var(--shadow-lg) !important; }
+    .leaflet-popup-content { margin:14px 16px !important; }
+    .popup-spec { font-size:0.75rem; color:var(--red); font-weight:600; margin-bottom:6px; }
+    .popup-price { font-size:0.88rem; font-weight:700; color:var(--text); }
+    .popup-info { font-size:0.75rem; color:var(--text-muted); margin:4px 0; }
+    .popup-btn { display:inline-flex; background:var(--red); color:white; padding:6px 14px; border-radius:var(--radius-full); font-size:0.75rem; font-weight:600; margin-top:8px; text-decoration:none; }
+
+    @media(max-width:960px){
+      .main-layout{grid-template-columns:1fr;}
+      .filter-card{position:static;margin-bottom:16px;}
+    }
+    @media(max-width:640px){
+      .prof-card{grid-template-columns:1fr;gap:10px;}
+      .prof-right{flex-direction:row;align-items:center;justify-content:space-between;}
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html" class="active">Profesionales</a></li>
+      <li><a href="payment.html">Fichas</a></li>
+      <li><a href="donate.html">Donar</a></li>
+      <li><a href="about.html">Sobre nosotros</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
+      <a href="payment.html" class="btn btn-primary btn-sm">Comprar fichas</a>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a><a href="professionals.html">Profesionales</a>
+  <a href="payment.html">Comprar fichas</a><a href="donate.html">Donar</a>
+  <a href="apply.html">Soy profesional</a><a href="login.html">Ingresar</a>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="badge badge-red" style="margin-bottom:14px">📍 Montevideo, Uruguay</span>
+    <h1>Encontrá tu <span class="gradient-text">especialista ideal</span></h1>
+    <p>Profesionales privados verificados cerca tuyo. Precio en fichas +, sin obra social, sin esperas.</p>
+    <div class="search-wrap">
+      <input id="search-input" class="form-input" type="text" placeholder="Nombre, especialidad o barrio..." autocomplete="off"/>
+      <button class="btn btn-primary" onclick="doSearch()">Buscar</button>
+    </div>
+    <div class="service-chips" id="chips">
+      <button class="chip active" onclick="filterChip(this,'')">Todos</button>
+      <button class="chip" onclick="filterChip(this,'psicologia')">🧠 Psicología</button>
+      <button class="chip" onclick="filterChip(this,'psiquiatria')">💊 Psiquiatría</button>
+      <button class="chip" onclick="filterChip(this,'nutricion')">🥗 Nutrición</button>
+      <button class="chip" onclick="filterChip(this,'trainer')">🏋️ Personal Trainer</button>
+      <button class="chip" onclick="filterChip(this,'coaching')">🎯 Coaching</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="main-layout">
+
+    <!-- Left: map + results -->
+    <div>
+      <!-- Map -->
+      <div class="map-section">
+        <div class="map-header">
+          <h3>🗺 Profesionales en Montevideo</h3>
+          <div class="map-toggle">
+            <button class="map-toggle-btn active" onclick="setMapView('map')">Mapa</button>
+            <button class="map-toggle-btn" onclick="setMapView('satellite')">Vista aérea</button>
+          </div>
+        </div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#E53935"></div>Psicología</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7B1FA2"></div>Psiquiatría</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2E7D32"></div>Nutrición</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#E65100"></div>Personal Trainer</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#00695C"></div>Coaching</div>
+        </div>
+      </div>
+
+      <div class="results-meta">
+        <div>Mostrando <strong id="result-count">7</strong> profesionales</div>
+        <select class="form-select" style="width:auto;border-radius:var(--radius-full);padding:8px 14px;font-size:0.82rem">
+          <option>Mejor valoración</option>
+          <option>Disponible hoy</option>
+          <option>Menor precio</option>
+        </select>
+      </div>
+
+      <div class="prof-list" id="prof-list">
+
+        <div class="prof-card reveal" data-svc="psicologia" data-id="0" onclick="highlightMap(0)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCDD2,#EF9A9A)">🧠</div>
+          <div>
+            <div class="prof-name">Lic. Valentina Suárez</div>
+            <div class="prof-spec">Psicología · Terapia Cognitivo-Conductual</div>
+            <div class="prof-meta">
+              <span>⭐ 4.9 (142)</span><span>🖥 Online</span><span>⏱ 45–60 min</span><span>📍 Pocitos</span>
+            </div>
+            <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Duelo</span><span class="tag">Relaciones</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Hoy · 17:00', 8)">Hoy 17:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Hoy · 18:00', 8)">Hoy 18:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Mañana · 10:00', 8)">Mañ 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Mañana · 11:00', 8)">Mañ 11:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>8</span><small>/ sesión<div class="uyu">$3.200 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <a href="payment.html" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Reservar</a>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="psiquiatria" data-id="1" onclick="highlightMap(1)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#CE93D8,#7B1FA2)">💊</div>
+          <div>
+            <div class="prof-name">Dr. Rodrigo Mena</div>
+            <div class="prof-spec">Psiquiatría · Adultos y Adolescentes</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (89)</span><span>🏥 Presencial + Online</span><span>⏱ 30–45 min</span><span>📍 Cordón</span>
+            </div>
+            <div class="tags"><span class="tag">Depresión</span><span class="tag">Bipolar</span><span class="tag">TDAH</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Mañana · 09:00', 12)">Mañ 09:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Jue · 10:00', 12)">Jue 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Jue · 15:00', 12)">Jue 15:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>12</span><small>/ consulta<div class="uyu">$4.800 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Dr. Mena', 12); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="nutricion" data-id="2" onclick="highlightMap(2)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#A5D6A7,#2E7D32)">🥗</div>
+          <div>
+            <div class="prof-name">Lic. Camila Ríos</div>
+            <div class="prof-spec">Nutrición · Deportiva y Clínica</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (207)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Punta Carretas</span>
+            </div>
+            <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Pérdida de peso</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Mañana · 11:00', 6)">Mañ 11:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Mañana · 16:00', 6)">Mañ 16:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Jue · 10:00', 6)">Jue 10:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>6</span><small>/ sesión<div class="uyu">$2.400 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Ríos', 6); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="trainer" data-id="3" onclick="highlightMap(3)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCC80,#E65100)">🏋️</div>
+          <div>
+            <div class="prof-name">Agustín Ferreyra</div>
+            <div class="prof-spec">Personal Trainer · Funcional y Fuerza</div>
+            <div class="prof-meta">
+              <span>⭐ 5.0 (98)</span><span>📍 Presencial · Parque Rodó</span><span>⏱ 60 min</span>
+            </div>
+            <div class="tags"><span class="tag">Funcional</span><span class="tag">Pérdida peso</span><span class="tag">Hipertrofia</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Hoy · 08:00', 5)">Hoy 08:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Mañana · 07:30', 5)">Mañ 07:30</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Mañana · 09:00', 5)">Mañ 09:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>5</span><small>/ sesión<div class="uyu">$2.000 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Agustín', 5); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="coaching" data-id="4" onclick="highlightMap(4)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#80DEEA,#00695C)">🎯</div>
+          <div>
+            <div class="prof-name">Lucía Montoya</div>
+            <div class="prof-spec">Coaching Ontológico · Vida y Carrera</div>
+            <div class="prof-meta">
+              <span>⭐ 4.7 (64)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Ciudad Vieja</span>
+            </div>
+            <div class="tags"><span class="tag">Propósito</span><span class="tag">Liderazgo</span><span class="tag">Carrera</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Hoy · 19:00', 7)">Hoy 19:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Mañana · 14:00', 7)">Mañ 14:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Vie · 11:00', 7)">Vie 11:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>7</span><small>/ sesión<div class="uyu">$2.800 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lucía', 7); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="psicologia" data-id="5" onclick="highlightMap(5)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#F48FB1,#880E4F)">🧠</div>
+          <div>
+            <div class="prof-name">Lic. Ignacio Pereyra</div>
+            <div class="prof-spec">Psicología · Gestalt e Infanto-Juvenil</div>
+            <div class="prof-meta">
+              <span>⭐ 4.9 (180)</span><span>🏥 Presencial + Online</span><span>⏱ 45–60 min</span><span>📍 Aguada</span>
+            </div>
+            <div class="tags"><span class="tag">Niños</span><span class="tag">Adolescentes</span><span class="tag">Familia</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Pereyra','Hoy · 16:00', 8)">Hoy 16:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Pereyra','Mañana · 17:00', 8)">Mañ 17:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>8</span><small>/ sesión<div class="uyu">$3.200 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Pereyra', 8); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="nutricion" data-id="6" onclick="highlightMap(6)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#C8E6C9,#1B5E20)">🥗</div>
+          <div>
+            <div class="prof-name">Lic. Sofía Álvarez</div>
+            <div class="prof-spec">Nutrición · Clínica y Embarazo</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (93)</span><span>🖥 Online</span><span>⏱ 50 min</span><span>📍 Malvín</span>
+            </div>
+            <div class="tags"><span class="tag">Embarazo</span><span class="tag">Diabetes</span><span class="tag">Celiaquía</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Jue · 10:00', 6)">Jue 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Jue · 15:30', 6)">Jue 15:30</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Vie · 09:00', 6)">Vie 09:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>6</span><small>/ sesión<div class="uyu">$2.400 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Álvarez', 6); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+      </div><!-- /prof-list -->
+
+      <div class="pagination" style="margin-top:32px">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+      </div>
+    </div>
+
+    <!-- Right: filters + fichas widget -->
+    <aside>
+      <button id="admin-btn" class="btn btn-outline btn-sm" style="display:none;width:100%;justify-content:center;margin-bottom:16px;border-style:dashed" onclick="document.getElementById('admin-modal').style.display='flex'">
+        <span style="font-size:1.1rem;margin-right:4px">📸</span> Agregar Profesional
+      </button>
+
+      <div class="fichas-widget">
+        <div class="f-num">0<span style="font-size:1.4rem">+</span></div>
+        <div class="f-lbl">fichas disponibles</div>
+        <a href="payment.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Comprar fichas</a>
+      </div>
+
+      <div class="filter-card">
+        <h4>🔧 Filtrar</h4>
+        <div class="form-group">
+          <label class="form-label">Servicio</label>
+          <select id="filter-svc" class="form-select" onchange="applyFilter()">
+            <option value="">Todos</option>
+            <option value="psicologia">🧠 Psicología</option>
+            <option value="psiquiatria">💊 Psiquiatría</option>
+            <option value="nutricion">🥗 Nutrición</option>
+            <option value="trainer">🏋️ Personal Trainer</option>
+            <option value="coaching">🎯 Coaching</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Barrio</label>
+          <select class="form-select">
+            <option>Todos los barrios</option>
+            <option>Pocitos</option><option>Cordón</option><option>Punta Carretas</option>
+            <option>Parque Rodó</option><option>Ciudad Vieja</option><option>Malvín</option><option>Aguada</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Modalidad</label>
+          <select class="form-select">
+            <option>Online y presencial</option>
+            <option>Solo online</option><option>Solo presencial</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Disponibilidad</label>
+          <select class="form-select">
+            <option>Cualquier momento</option>
+            <option>Disponible hoy</option><option>Esta semana</option>
+          </select>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px" onclick="clearFilters()">Limpiar filtros</button>
+      </div>
+
+      <div class="filter-card" style="background:var(--red-50);border-color:var(--red-200)">
+        <h4 style="color:var(--red-dark)">❤️ Donar fichas</h4>
+        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.6;margin-bottom:12px">Donás fichas y alguien accede gratis a una sesión de salud.</p>
+        <a href="donate.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Ver programa</a>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div id="admin-modal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div class="modal-content" style="background:white;border-radius:var(--radius-lg);padding:30px;width:100%;max-width:500px;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--text)">Agregar Profesional</h3>
+      <button type="button" onclick="closeAdminModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <form id="admin-form" onsubmit="saveCustomPro(event)" style="display:flex;flex-direction:column;gap:16px">
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Nombre del Profesional</label>
+        <input type="text" id="ap-name" class="form-input" required placeholder="Ej: Dr. Juan Pérez">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Especialidad principal</label>
+        <select id="ap-svc" class="form-select" required>
+          <option value="psicologia">Psicología</option>
+          <option value="psiquiatria">Psiquiatría</option>
+          <option value="nutricion">Nutrición</option>
+          <option value="trainer">Personal Trainer</option>
+          <option value="coaching">Coaching</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Barrio</label>
+        <input type="text" id="ap-barrio" class="form-input" required placeholder="Ej: Pocitos">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Precio (Fichas)</label>
+        <input type="number" id="ap-price" class="form-input" required placeholder="Ej: 8" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Foto de perfil (Opcional)</label>
+        <div style="border:1.5px dashed var(--border);border-radius:var(--radius-md);padding:16px;text-align:center;background:var(--bg-2)">
+          <input type="file" id="ap-photo" accept="image/*" style="max-width:100%">
+          <div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px">Selecciona una imagen desde tu dispositivo para el avatar</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:10px;justify-content:center">Guardar Profesional</button>
+    </form>
+  </div>
+</div>
+
+<!-- Booking Modal (used if clicking reserve from marker popup) -->
+<div id="booking-modal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div class="modal-content" style="background:white;border-radius:var(--radius-lg);padding:30px;width:100%;max-width:400px;box-shadow:var(--shadow-lg);text-align:center">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--text)">Reservar Turno</h3>
+      <button type="button" onclick="document.getElementById('booking-modal').style.display='none'" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <div id="booking-info" style="margin-bottom:20px;font-size:1.1rem;font-weight:600"></div>
+    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:20px">Selecciona un horario disponible:</p>
+    <div class="prof-slots" id="booking-slots" style="justify-content:center;margin-bottom:20px"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div>
+        <p>Bienestar que suma. La primer red interdisciplinaria de bienestar en Uruguay.</p>
+      </div>
+      <div class="footer__col"><h5>Servicios</h5><a href="?s=psicologia">Psicología</a><a href="?s=psiquiatria">Psiquiatría</a><a href="?s=nutricion">Nutrición</a><a href="?s=trainer">Trainer</a><a href="?s=coaching">Coaching</a></div>
+      <div class="footer__col"><h5>Fichas</h5><a href="payment.html">Comprar fichas</a><a href="donate.html">Donar fichas</a></div>
+      <div class="footer__col"><h5>alma+</h5><a href="apply.html">Soy profesional</a><a href="about.html">Sobre nosotros</a><a href="about.html">Políticas y Contacto</a></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 alma+ · Montevideo, Uruguay</span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="db.js"></script>
+<script src="script.js"></script>
+<script>
+/* ─── Professional data for map ─── */
+const PROS = [
+  { id:0, name:'Lic. Valentina Suárez', spec:'Psicología', lat:-34.9128, lng:-56.1506, color:'#E53935', icon:'🧠', price:'8+', uyu:'$3.200', barrio:'Pocitos' },
+  { id:1, name:'Dr. Rodrigo Mena',      spec:'Psiquiatría', lat:-34.9060, lng:-56.1870, color:'#7B1FA2', icon:'💊', price:'12+', uyu:'$4.800', barrio:'Cordón' },
+  { id:2, name:'Lic. Camila Ríos',      spec:'Nutrición', lat:-34.9220, lng:-56.1550, color:'#2E7D32', icon:'🥗', price:'6+',  uyu:'$2.400', barrio:'Punta Carretas' },
+  { id:3, name:'Agustín Ferreyra',      spec:'Personal Trainer', lat:-34.9080, lng:-56.1720, color:'#E65100', icon:'🏋️', price:'5+', uyu:'$2.000', barrio:'Parque Rodó' },
+  { id:4, name:'Lucía Montoya',         spec:'Coaching', lat:-34.9082, lng:-56.2020, color:'#00695C', icon:'🎯', price:'7+',  uyu:'$2.800', barrio:'Ciudad Vieja' },
+  { id:5, name:'Lic. Ignacio Pereyra',  spec:'Psicología', lat:-34.9001, lng:-56.1780, color:'#E53935', icon:'🧠', price:'8+', uyu:'$3.200', barrio:'Aguada' },
+  { id:6, name:'Lic. Sofía Álvarez',    spec:'Nutrición', lat:-34.9000, lng:-56.1300, color:'#2E7D32', icon:'🥗', price:'6+',  uyu:'$2.400', barrio:'Malvín' },
+];
+
+/* ─── Map init ─── */
+const map = L.map('map', { center: [-34.9082, -56.1720], zoom: 13, zoomControl: true });
+let currentLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://openstreetmap.org">OSM</a>',
+  maxZoom: 19
+}).addTo(map);
+
+// Custom marker icon
+function makeIcon(color, emoji) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:36px;height:36px;background:${color};border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 12px rgba(0,0,0,0.25);cursor:pointer;">${emoji}</div>`,
+    iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
+  });
+}
+
+const markers = [];
+PROS.forEach(p => {
+  const m = L.marker([p.lat, p.lng], { icon: makeIcon(p.color, p.icon) })
+    .addTo(map)
+    .bindPopup(`
+      <div style="min-width:180px">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:2px">${p.icon} ${p.name}</div>
+        <div class="popup-spec">${p.spec}</div>
+        <div class="popup-info">📍 ${p.barrio}</div>
+        <div class="popup-price">Precio: <strong style="color:#E53935">${p.price} fichas</strong> · ${p.uyu} UYU</div>
+        <button class="popup-btn" style="border:none;cursor:pointer;margin-top:10px;display:inline-flex;background:#E53935;color:white;padding:6px 14px;border-radius:20px;font-size:0.74rem;font-weight:600" onclick="openBookingPopup('${p.name}', ${p.price.replace('+','')})">Ver horarios →</button>
+      </div>
+    `);
+  markers.push(m);
+});
+
+// User location button
+L.Control.extend({
+  onAdd() {
+    const btn = L.DomUtil.create('button', '');
+    btn.innerHTML = '📍 Mi ubicación';
+    btn.style.cssText = 'background:white;border:1.5px solid #ddd;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:0.78rem;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.1)';
+    btn.onclick = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          map.setView([pos.coords.latitude, pos.coords.longitude], 14);
+          L.marker([pos.coords.latitude, pos.coords.longitude], {
+            icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;background:#2196F3;border:3px solid white;border-radius:50%;box-shadow:0 0 0 4px rgba(33,150,243,0.3)"></div>', iconSize:[14,14], iconAnchor:[7,7] })
+          }).addTo(map).bindPopup('Tu ubicación').openPopup();
+        }, () => showToast('No pudimos acceder a tu ubicación', '⚠️', 'error'));
+      }
+    };
+    return btn;
+  }
+}).prototype.options = { position: 'topright' };
+
+function setMapView(type) {
+  document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  map.removeLayer(currentLayer);
+  if (type === 'satellite') {
+    currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom:19 }).addTo(map);
+  } else {
+    currentLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(map);
+  }
+}
+
+function highlightMap(id) {
+  document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('highlighted'));
+  event?.currentTarget?.classList.add('highlighted');
+  markers[id].openPopup();
+  map.setView([PROS[id].lat, PROS[id].lng], 15, { animate: true });
+}
+
+/* ─── Filter ─── */
+function applyFilter() {
+  const svc = document.getElementById('filter-svc').value;
+  let count = 0;
+  document.querySelectorAll('.prof-card').forEach((c) => {
+    const show = !svc || c.dataset.svc === svc;
+    c.style.display = show ? '' : 'none';
+    if (show) count++;
+    const id = parseInt(c.dataset.id);
+    if (markers[id]) markers[id].setOpacity(show ? 1 : 0.2);
+  });
+  document.getElementById('result-count').textContent = count;
+}
+
+function filterChip(el, svc) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('filter-svc').value = svc;
+  applyFilter();
+}
+
+function clearFilters() {
+  document.getElementById('filter-svc').value = '';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.chip').classList.add('active');
+  applyFilter();
+}
+
+function doSearch() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  let count = 0;
+  document.querySelectorAll('.prof-card').forEach((c) => {
+    const show = !q || c.textContent.toLowerCase().includes(q);
+    c.style.display = show ? '' : 'none';
+    if (show) count++;
+    const id = parseInt(c.dataset.id);
+    if (markers[id]) markers[id].setOpacity(show ? 1 : 0.2);
+  });
+  document.getElementById('result-count').textContent = count;
+}
+
+async function bookSlot(evt, name, slot, price) {
+  evt.stopPropagation();
+  const user = JSON.parse(localStorage.getItem('alma_user'));
+  
+  // Need authentication
+  if (!user || (!user.username && !user.email)) {
+    showToast(`Para reservar necesitas iniciar sesión`, '🔒', 'info');
+    setTimeout(() => location.href = 'login.html', 2000);
+    return;
+  }
+  
+  price = parseInt(price);
+  if (user.fichas >= price || user.role === 'admin') {
+    // Attempt DB decrement if authenticated properly with Supabase
+    if (window.supabase) {
+      evt.target.disabled = true;
+      evt.target.textContent = '...';
+      const { data: { session } } = await window.supabase.auth.getSession();
+      
+      if (session) {
+        const { error } = await window.supabase
+          .from('profiles')
+          .update({ fichas: user.fichas - price })
+          .eq('id', session.user.id);
+
+        if (error) {
+           showToast(`Error al procesar reserva: ${error.message}`, '❌', 'error');
+           evt.target.disabled = false;
+           evt.target.textContent = slot;
+           return;
+        }
+      }
+    }
+
+    // Has enough fichas
+    user.fichas -= price;
+    localStorage.setItem('alma_user', JSON.stringify(user));
+    
+    showToast(`¡Reserva confirmada con ${name} para el ${slot}!`, '🎉', 'success');
+    evt.target.style.background = '#4CAF50';
+    evt.target.style.borderColor = '#4CAF50';
+    evt.target.style.color = 'white';
+    evt.target.textContent = 'Reservado ✓';
+    evt.target.disabled = true;
+    
+    // Update fichas widget UI
+    const fNum = document.querySelector('.fichas-widget .f-num');
+    if (fNum) {
+      fNum.innerHTML = `${user.fichas}<span style="font-size:1.4rem">+</span>`;
+    }
+  } else {
+    // Not enough fichas
+    showToast(`No tienes fichas suficientes. Cuesta ${price}+ y tienes ${user.fichas}+`, '⚠️', 'error');
+    setTimeout(() => location.href = 'payment.html', 2500);
+  }
+}
+
+document.getElementById('search-input').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+document.querySelectorAll('.page-btn').forEach(b => b.addEventListener('click', function() {
+  document.querySelectorAll('.page-btn').forEach(x => x.classList.remove('active'));
+  this.classList.add('active');
+}));
+
+// Prefill from URL
+const sp = new URLSearchParams(location.search).get('s');
+if (sp) {
+  document.getElementById('filter-svc').value = sp;
+  document.querySelectorAll('.chip').forEach(c => { if(c.getAttribute('onclick')?.includes(sp)) c.classList.add('active'); else c.classList.remove('active'); });
+  applyFilter();
+}
+
+/* ─── Admin Custom Pros ─── */
+function closeAdminModal() {
+  document.getElementById('admin-modal').style.display = 'none';
+}
+
+function saveCustomPro(e) {
+  e.preventDefault();
+  
+  const fileInput = document.getElementById('ap-photo');
+  const name = document.getElementById('ap-name').value;
+  const svcId = document.getElementById('ap-svc').value;
+  const specLabel = document.getElementById('ap-svc').options[document.getElementById('ap-svc').selectedIndex].text;
+  const barrio = document.getElementById('ap-barrio').value;
+  const price = document.getElementById('ap-price').value;
+  
+  // Base location somewhere in mvd center + random offset
+  const lat = -34.90 + (Math.random() * 0.04 - 0.02);
+  const lng = -56.16 + (Math.random() * 0.04 - 0.02);
+  
+  const colorMap = {
+    'psicologia': '#E53935', 'psiquiatria': '#7B1FA2', 'nutricion': '#2E7D32',
+    'trainer': '#E65100', 'coaching': '#00695C'
+  };
+  const iconMap = {
+    'psicologia': '🧠', 'psiquiatria': '💊', 'nutricion': '🥗',
+    'trainer': '🏋️', 'coaching': '🎯'
+  };
+
+  const proInfo = {
+    name, svcId, spec: specLabel, barrio, price,
+    lat, lng, color: colorMap[svcId], icon: iconMap[svcId],
+    uyu: "$" + (price * 400).toLocaleString('es-UY') + " UYU"
+  };
+
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      proInfo.photo = evt.target.result; // Base64 image
+      finishSavePro(proInfo);
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    finishSavePro(proInfo);
+  }
+}
+
+function openBookingPopup(name, price) {
+  event.stopPropagation();
+  const modal = document.getElementById('booking-modal');
+  const info = document.getElementById('booking-info');
+  const slots = document.getElementById('booking-slots');
+  
+  info.innerHTML = `Con ${name} <br><span style="color:var(--red);font-size:0.9rem">${price} fichas</span>`;
+  slots.innerHTML = `
+    <button class="prof-slot" style="font-size:0.9rem;padding:8px 16px" onclick="bookSlot(event, '${name}', 'Hoy 15:00', ${price}); setTimeout(()=>document.getElementById('booking-modal').style.display='none', 1500)">Hoy 15:00</button>
+    <button class="prof-slot" style="font-size:0.9rem;padding:8px 16px" onclick="bookSlot(event, '${name}', 'Mañana 10:00', ${price}); setTimeout(()=>document.getElementById('booking-modal').style.display='none', 1500)">Mañ 10:00</button>
+    <button class="prof-slot" style="font-size:0.9rem;padding:8px 16px" onclick="bookSlot(event, '${name}', 'Jueves 16:30', ${price}); setTimeout(()=>document.getElementById('booking-modal').style.display='none', 1500)">Jue 16:30</button>
+  `;
+  modal.style.display = 'flex';
+}
+
+function finishSavePro(p) {
+  const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
+  customPros.push(p);
+  localStorage.setItem('alma_custom_pros', JSON.stringify(customPros));
+  
+  closeAdminModal();
+  document.getElementById('admin-form').reset();
+  showToast('Profesional agregado con éxito', '✅', 'success');
+  
+  // Reload custom pros to UI
+  location.reload(); 
+}
+
+function loadCustomPros() {
+  const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
+  const list = document.getElementById('prof-list');
+  
+  customPros.forEach((p) => {
+    // Generate an ID offset from base PROS
+    const newId = PROS.length;
+    p.id = newId;
+    PROS.push(p);
+
+    // Map Marker
+    let iconContent = p.photo 
+        ? `<img src="${p.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` 
+        : p.icon;
+        
+    const m = L.marker([p.lat, p.lng], { icon: L.divIcon({
+      className: '', 
+      html: `<div style="width:36px;height:36px;background:${p.color};border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 12px rgba(0,0,0,0.25);cursor:pointer;overflow:hidden">${iconContent}</div>`,
+      iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
+    })}).addTo(map).bindPopup(`
+      <div style="min-width:180px">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:2px">${p.icon} ${p.name}</div>
+        <div class="popup-spec">${p.spec}</div>
+        <div class="popup-info">📍 ${p.barrio}</div>
+        <div class="popup-price">Precio: <strong style="color:#E53935">${p.price}+ fichas</strong> · ${p.uyu}</div>
+        <button class="popup-btn" style="border:none;cursor:pointer;margin-top:10px;display:inline-flex;background:#E53935;color:white;padding:6px 14px;border-radius:20px;font-size:0.74rem;font-weight:600" onclick="openBookingPopup('${p.name}', ${p.price})">Ver horarios →</button>
+      </div>
+    `);
+    markers.push(m);
+
+    // HTML Card
+    const card = document.createElement('div');
+    card.className = 'prof-card reveal visible';
+    card.dataset.svc = p.svcId;
+    card.dataset.id = newId;
+    card.onclick = () => highlightMap(newId);
+
+    const avatarHtml = p.photo 
+        ? `<img src="${p.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` 
+        : p.icon;
+        
+    card.innerHTML = `
+      <div class="prof-avatar" style="background:${p.color};overflow:hidden;border-color:${p.color}">${avatarHtml}</div>
+      <div>
+        <div class="prof-name">${p.name} <span class="badge badge-red" style="padding:2px 6px;font-size:0.6rem;margin-left:4px">NUEVO</span></div>
+        <div class="prof-spec">${p.spec}</div>
+        <div class="prof-meta">
+          <span>⭐ 5.0 (Nuevo)</span><span>🖥 Online / Presencial</span><span>📍 ${p.barrio}</span>
+        </div>
+        <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+        <div class="prof-slots">
+          ${p.schedule && p.schedule.length > 0 
+            ? p.schedule.slice(0, 4).map(s => `<button class="prof-slot" onclick="bookSlot(event,'${p.name}','${s}', ${p.price})">${s}</button>`).join('')
+            : `<button class="prof-slot" onclick="bookSlot(event,'${p.name}','Hoy', ${p.price})">Hoy 10:00</button>
+               <button class="prof-slot" onclick="bookSlot(event,'${p.name}','Mañana', ${p.price})">Mañ 15:00</button>`
+          }
+        </div>
+      </div>
+      <div class="prof-right">
+        <div class="prof-price"><span class="ficha"><span class="symbol">+</span>${p.price}</span><small>/ sesión<div class="uyu">${p.uyu}</div></small></div>
+        <div class="avail"><span class="dot"></span>Disponible</div>
+        <button class="btn btn-primary btn-sm" onclick="openBookingPopup('${p.name}', ${p.price}); event.stopPropagation()">Reservar</button>
+      </div>
+    `;
+    list.prepend(card);
+  });
+  
+  // Update result count
+  applyFilter();
+}
+// Ensure custom pros are loaded
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // Apply User auth logic
+  const user = JSON.parse(localStorage.getItem('alma_user') || '{"fichas":0}');
+  if (user.role === 'admin') {
+    const adminBtn = document.getElementById('admin-btn');
+    if (adminBtn) adminBtn.style.display = 'flex';
+  }
+  
+  // Update fichas widget UI
+  const fNum = document.querySelector('.fichas-widget .f-num');
+  if (fNum) {
+    fNum.innerHTML = `${user.fichas || 0}<span style="font-size:1.4rem">+</span>`;
+  }
+});
+
+</script>
+</body>
+</html>

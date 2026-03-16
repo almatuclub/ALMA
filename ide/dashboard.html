@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Panel Profesional | alma+</title>
+  <meta name="description" content="Gestioná tus turnos, revisá tus ganancias y leé las reseñas de tus pacientes en alma+."/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background: var(--bg-2); }
+    .dash-header { background: white; border-bottom: 1px solid var(--border); padding: 30px 0; }
+    .dash-user { display: flex; align-items: center; gap: 20px; }
+    .dash-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--red-light), var(--red)); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; border: 4px solid var(--red-50); }
+    .dash-user-info h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .dash-user-info p { color: var(--text-2); font-size: 0.95rem; }
+    
+    .dash-grid { display: grid; grid-template-columns: 1fr 340px; gap: 28px; padding: 40px 0; align-items: start; }
+    .dash-card { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-xl); padding: 28px; box-shadow: var(--shadow-card); margin-bottom: 24px; }
+    .dash-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .dash-card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    
+    /* Metrics */
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 10px; }
+    .metric-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; text-align: center; }
+    .metric-box .m-val { font-size: 1.8rem; font-weight: 900; color: var(--red); margin-bottom: 4px; }
+    .metric-box .m-val span { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
+    .metric-box .m-lbl { font-size: 0.8rem; color: var(--text-2); font-weight: 500; }
+    
+    /* Calendar List */
+    .apt-list { display: flex; flex-direction: column; gap: 12px; }
+    .apt-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1.5px solid var(--border); border-radius: var(--radius-md); transition: var(--transition); background: white; }
+    .apt-item:hover { border-color: var(--red-200); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+    .apt-time { display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
+    .apt-time strong { color: var(--red); font-size: 1.05rem; }
+    .apt-time span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .apt-info { flex-grow: 1; padding: 0 16px; border-left: 2px solid var(--red-50); }
+    .apt-info h4 { font-size: 0.95rem; margin-bottom: 4px; color: var(--text); }
+    .apt-info p { font-size: 0.82rem; color: var(--text-2); }
+    .apt-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #E8F5E9; color: #2E7D32; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .apt-status.pending { background: #FFF3E0; color: #E65100; }
+    
+    /* Reviews */
+    .review-list { display: flex; flex-direction: column; gap: 16px; }
+    .review-item { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .review-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .review-header { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
+    .review-author { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .review-date { font-size: 0.75rem; color: var(--text-muted); }
+    .review-stars { color: #FFB300; font-size: 0.9rem; letter-spacing: 2px; }
+    .review-text { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; font-style: italic; }
+    
+    /* Empty State */
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem; }
+    
+    @media (max-width: 900px) {
+      .dash-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html">Profesionales</a></li>
+      <li><a href="dashboard.html" class="active">Mi Panel</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <div id="user-menu" style="display:flex;align-items:center;gap:12px">
+        <span id="user-display" style="font-weight:600;font-size:0.9rem"></span>
+        <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
+      </div>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="dash-header">
+  <div class="container">
+    <div class="dash-user">
+      <div class="dash-avatar" id="dash-avatar-icon">👩‍⚕️</div>
+      <div class="dash-user-info">
+        <h1 id="dash-name">Cargando...</h1>
+        <p id="dash-role">Profesional verificado en alma+</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container dash-grid">
+  <!-- Left Column -->
+  <div>
+    <!-- Metrics -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <div class="dash-card-title"><span>💰</span> Balance y Ganancias</div>
+        <button class="btn btn-outline btn-sm">Retirar fondos</button>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="m-val">124<span>+</span></div>
+          <div class="m-lbl">Fichas Ganadas (Mes)</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-val"><span style="font-size: 1.2rem; color: var(--text)">$</span>42.000</div>
+          <div class="m-lbl">UYU Estimados</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-val" style="color:var(--text)">4.8<span>⭐</span></div>
+          <div class="m-lbl">Calificación Promedio</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <div class="dash-card-title"><span>📅</span> Próximos Turnos</div>
+        <a href="apply.html" class="btn btn-outline btn-sm" style="font-size:0.75rem">Configurar disponibilidad</a>
+      </div>
+      <div class="apt-list">
+        <div class="apt-item">
+          <div class="apt-time">
+            <strong>10:00</strong>
+            <span>Hoy</span>
+          </div>
+          <div class="apt-info">
+            <h4>Luciano B.</h4>
+            <p>Primera sesión · Pago confirmado (8+)</p>
+          </div>
+          <div class="apt-status">Confirmado</div>
+        </div>
+        
+        <div class="apt-item">
+          <div class="apt-time">
+            <strong>16:30</strong>
+            <span>Hoy</span>
+          </div>
+          <div class="apt-info">
+            <h4>María Belén G.</h4>
+            <p>Seguimiento · Pago confirmado (8+)</p>
+          </div>
+          <div class="apt-status">Confirmado</div>
+        </div>
+        
+        <div class="apt-item" style="border-color: #FFF3E0; background: #FFFBFA">
+          <div class="apt-time">
+            <strong>09:00</strong>
+            <span>Mañana</span>
+          </div>
+          <div class="apt-info">
+            <h4>Tomás R.</h4>
+            <p>Primera sesión · Pendiente de pago</p>
+          </div>
+          <div class="apt-status pending">Pendiente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column -->
+  <aside>
+    <!-- Reviews -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <div class="dash-card-title"><span>💬</span> Últimas Reseñas</div>
+      </div>
+      <div class="review-list">
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author">Mónica P. <span style="font-size:0.7rem;background:var(--red-50);color:var(--red);padding:2px 6px;border-radius:10px">Verificado</span></div>
+            <div class="review-date">Ayer</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Excelente atención. Me sentí muy escuchada y cómoda desde el primer minuto. Empezando un gran proceso."</div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author">Andrés F.</div>
+            <div class="review-date">Hace 1 semana</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Puntual, claro en sus explicaciones y muy humano. Totalmente recomendable."</div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author">Carla T.</div>
+            <div class="review-date">Hace 2 semanas</div>
+          </div>
+          <div class="review-stars">★★★★☆</div>
+          <div class="review-text">"Muy buena sesión, me ayudó a ordenar varias ideas que tenía sueltas."</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:16px">Ver todas las reseñas</button>
+    </div>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="db.js"></script>
+<script src="script.js"></script>
+<script>
+  function logout() {
+    localStorage.removeItem('alma_user');
+    window.location.href = 'login.html';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('alma_user') || '{}');
+    if (!user.username || user.role !== 'pro') {
+      // Not a logged in professional, redirect to login
+      window.location.href = 'login.html';
+      return;
+    }
+    
+    // Populate dashboard with user data
+    document.getElementById('dash-name').textContent = user.username;
+    
+    // Update navbar
+    document.getElementById('user-display').textContent = 'Hola, ' + user.username;
+  });
+</script>
+</body>
+</html>
