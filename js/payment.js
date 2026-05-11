@@ -35,65 +35,68 @@ function selectCombo(el, fichas, price, per, disc) {
   document.getElementById('coa-count').textContent  = Math.floor(fichas / 7)  + ' sesiones';
 }
 
-async function processPayment() {
-  const btn    = document.getElementById('pay-btn');
-  const inputs = document.querySelectorAll('#payment-form-card input[required]');
-  let allOk    = true;
-
-  inputs.forEach(i => {
-    if (!i.value.trim()) { i.style.borderColor = 'var(--red)'; allOk = false; }
-    else                  { i.style.borderColor = ''; }
-  });
-
-  if (!allOk) { showToast('Completá todos los campos requeridos', '⚠️', 'error'); return; }
-
-  btn.disabled = true;
-  btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite">⟳</span> Procesando pago seguro...';
-
-  // Simulate payment gateway delay
-  await new Promise(r => setTimeout(r, 2200));
-
-  // Credit fichas in DB
-  if (window.supabase) {
-    const { data: { session } } = await window.supabase.auth.getSession();
-    if (session) {
-      const { data: profile } = await window.supabase
-        .from('profiles')
-        .select('fichas')
-        .eq('id', session.user.id)
-        .single();
-
-      const current = profile?.fichas || 0;
-      const { error } = await window.supabase
-        .from('profiles')
-        .update({ fichas: current + selectedFichas })
-        .eq('id', session.user.id);
-
-      if (error) {
-        showToast('Error al acreditar fichas: ' + error.message, '❌', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Confirmar pago';
-        return;
-      }
-    }
+async function initiatePayment() {
+  if (!window.supabase) {
+    showToast('Error de conexión con el servidor', '❌', 'error');
+    return;
   }
 
-  document.getElementById('payment-form-card').style.display = 'none';
-  document.getElementById('success-fichas').textContent = selectedFichas;
-  document.getElementById('payment-success').style.display = 'flex';
-  showToast('¡' + selectedFichas + ' fichas acreditadas en tu cuenta!', '✓', 'success');
+  const { data: { session } } = await window.supabase.auth.getSession();
+  if (!session) {
+    showToast('Iniciá sesión para comprar fichas', '🔒', 'info');
+    setTimeout(() => { location.href = 'login.html'; }, 2000);
+    return;
+  }
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite">⟳</span> Preparando pago...';
+
+  try {
+    const res = await fetch('/api/create-preference', {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ fichas: selectedFichas, price: selectedPrice }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Error al crear preferencia de pago');
+    }
+
+    const { init_point } = await res.json();
+    // Redirect to Mercado Pago hosted checkout
+    location.href = init_point;
+  } catch (err) {
+    showToast(err.message, '❌', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '💳 Pagar $<span id="pay-amount">' + selectedPrice.toLocaleString() + '</span> UYU con Mercado Pago →';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   selectCombo(document.getElementById('combo-50'), 50, 16000, 320, 20);
 
-  document.getElementById('card-num').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').substring(0, 16);
-    this.value = v.replace(/(.{4})/g, '$1 ').trim();
-    const icon = document.getElementById('card-icon');
-    if      (v.startsWith('4')) icon.textContent = '💙';
-    else if (v.startsWith('5')) icon.textContent = '🟠';
-    else if (v.startsWith('3')) icon.textContent = '🟢';
-    else                        icon.textContent = '💳';
-  });
+  // Handle redirect back from Mercado Pago
+  const params  = new URLSearchParams(location.search);
+  const status  = params.get('status');
+  const fichas  = parseInt(params.get('fichas') || '0', 10);
+
+  if (status === 'approved' && fichas > 0) {
+    document.getElementById('payment-form-card').style.display = 'none';
+    document.getElementById('success-fichas').textContent      = fichas;
+    document.getElementById('payment-success').style.display  = 'flex';
+    showToast('¡Pago aprobado! Fichas acreditadas en tu cuenta.', '✓', 'success');
+    // Clean URL so a page refresh doesn't re-show the success screen
+    history.replaceState(null, '', location.pathname);
+  } else if (status === 'failure') {
+    showToast('El pago no pudo procesarse. Intentá de nuevo.', '❌', 'error');
+    history.replaceState(null, '', location.pathname);
+  } else if (status === 'pending') {
+    showToast('Tu pago está pendiente. Te avisamos cuando se acrediten las fichas.', '⏳', 'info');
+    history.replaceState(null, '', location.pathname);
+  }
 });

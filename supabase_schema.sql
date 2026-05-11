@@ -135,3 +135,17 @@ create policy "Donors can view own donations."
 drop policy if exists "Authenticated users can donate." on donations;
 create policy "Authenticated users can donate."
   on donations for insert with check (auth.uid() = donor_id);
+
+
+-- 5. MP_PAYMENTS — idempotency log for Mercado Pago webhooks
+-- Only accessible via service role key (no public RLS policies)
+-- ============================================================
+create table if not exists public.mp_payments (
+  payment_id   text primary key,
+  user_id      uuid references auth.users on delete cascade,
+  fichas       integer not null,
+  status       text not null,
+  processed_at timestamptz not null default now()
+);
+
+alter table public.mp_payments enable row level security;
