@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Encontrar Profesional | alma+</title>
+  <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="pages.css"/>
+  <!-- Leaflet.js -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html" class="active">Profesionales</a></li>
+      <li><a href="payment.html">Fichas</a></li>
+      <li><a href="donate.html">Donar</a></li>
+      <li><a href="about.html">Sobre nosotros</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
+      <a href="payment.html" class="btn btn-primary btn-sm">Comprar fichas</a>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a><a href="professionals.html">Profesionales</a>
+  <a href="payment.html">Comprar fichas</a><a href="donate.html">Donar</a>
+  <a href="apply.html">Soy profesional</a><a href="login.html">Ingresar</a>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="badge badge-red" style="margin-bottom:14px">📍 Montevideo, Uruguay</span>
+    <h1>Encontrá tu <span class="gradient-text">especialista ideal</span></h1>
+    <p>Profesionales privados verificados cerca tuyo. Precio en fichas +, sin obra social, sin esperas.</p>
+    <div class="search-wrap">
+      <input id="search-input" class="form-input" type="text" placeholder="Nombre, especialidad o barrio..." autocomplete="off"/>
+      <button class="btn btn-primary" onclick="doSearch()">Buscar</button>
+    </div>
+    <div class="service-chips" id="chips">
+      <button class="chip active" onclick="filterChip(this,'')">Todos</button>
+      <button class="chip" onclick="filterChip(this,'psicologia')">🧠 Psicología</button>
+      <button class="chip" onclick="filterChip(this,'psiquiatria')">💊 Psiquiatría</button>
+      <button class="chip" onclick="filterChip(this,'nutricion')">🥗 Nutrición</button>
+      <button class="chip" onclick="filterChip(this,'trainer')">🏋️ Personal Trainer</button>
+      <button class="chip" onclick="filterChip(this,'coaching')">🎯 Coaching</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="main-layout">
+
+    <!-- Left: map + results -->
+    <div>
+      <!-- Map -->
+      <div class="map-section">
+        <div class="map-header">
+          <h3>🗺 Profesionales en Montevideo</h3>
+          <div class="map-toggle">
+            <button class="map-toggle-btn active" onclick="setMapView('map')">Mapa</button>
+            <button class="map-toggle-btn" onclick="setMapView('satellite')">Vista aérea</button>
+          </div>
+        </div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#E53935"></div>Psicología</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7B1FA2"></div>Psiquiatría</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2E7D32"></div>Nutrición</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#E65100"></div>Personal Trainer</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#00695C"></div>Coaching</div>
+        </div>
+      </div>
+
+      <div class="results-meta">
+        <div>Mostrando <strong id="result-count">7</strong> profesionales</div>
+        <select class="form-select" style="width:auto;border-radius:var(--radius-full);padding:8px 14px;font-size:0.82rem">
+          <option>Mejor valoración</option>
+          <option>Disponible hoy</option>
+          <option>Menor precio</option>
+        </select>
+      </div>
+
+      <div class="prof-list" id="prof-list">
+
+        <div class="prof-card reveal" data-svc="psicologia" data-id="0" onclick="highlightMap(0)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCDD2,#EF9A9A)">🧠</div>
+          <div>
+            <div class="prof-name">Lic. Valentina Suárez</div>
+            <div class="prof-spec">Psicología · Terapia Cognitivo-Conductual</div>
+            <div class="prof-meta">
+              <span>⭐ 4.9 (142)</span><span>🖥 Online</span><span>⏱ 45–60 min</span><span>📍 Pocitos</span>
+            </div>
+            <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Duelo</span><span class="tag">Relaciones</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Hoy · 17:00', 8)">Hoy 17:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Hoy · 18:00', 8)">Hoy 18:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Mañana · 10:00', 8)">Mañ 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Valentina Suárez','Mañana · 11:00', 8)">Mañ 11:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>8</span><small>/ sesión<div class="uyu">$3.200 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <a href="payment.html" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Reservar</a>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="psiquiatria" data-id="1" onclick="highlightMap(1)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#CE93D8,#7B1FA2)">💊</div>
+          <div>
+            <div class="prof-name">Dr. Rodrigo Mena</div>
+            <div class="prof-spec">Psiquiatría · Adultos y Adolescentes</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (89)</span><span>🏥 Presencial + Online</span><span>⏱ 30–45 min</span><span>📍 Cordón</span>
+            </div>
+            <div class="tags"><span class="tag">Depresión</span><span class="tag">Bipolar</span><span class="tag">TDAH</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Mañana · 09:00', 12)">Mañ 09:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Jue · 10:00', 12)">Jue 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Dr. Mena','Jue · 15:00', 12)">Jue 15:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>12</span><small>/ consulta<div class="uyu">$4.800 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Dr. Mena', 12); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="nutricion" data-id="2" onclick="highlightMap(2)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#A5D6A7,#2E7D32)">🥗</div>
+          <div>
+            <div class="prof-name">Lic. Camila Ríos</div>
+            <div class="prof-spec">Nutrición · Deportiva y Clínica</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (207)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Punta Carretas</span>
+            </div>
+            <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Pérdida de peso</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Mañana · 11:00', 6)">Mañ 11:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Mañana · 16:00', 6)">Mañ 16:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Ríos','Jue · 10:00', 6)">Jue 10:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>6</span><small>/ sesión<div class="uyu">$2.400 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Ríos', 6); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="trainer" data-id="3" onclick="highlightMap(3)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCC80,#E65100)">🏋️</div>
+          <div>
+            <div class="prof-name">Agustín Ferreyra</div>
+            <div class="prof-spec">Personal Trainer · Funcional y Fuerza</div>
+            <div class="prof-meta">
+              <span>⭐ 5.0 (98)</span><span>📍 Presencial · Parque Rodó</span><span>⏱ 60 min</span>
+            </div>
+            <div class="tags"><span class="tag">Funcional</span><span class="tag">Pérdida peso</span><span class="tag">Hipertrofia</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Hoy · 08:00', 5)">Hoy 08:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Mañana · 07:30', 5)">Mañ 07:30</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Agustín','Mañana · 09:00', 5)">Mañ 09:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>5</span><small>/ sesión<div class="uyu">$2.000 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Agustín', 5); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="coaching" data-id="4" onclick="highlightMap(4)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#80DEEA,#00695C)">🎯</div>
+          <div>
+            <div class="prof-name">Lucía Montoya</div>
+            <div class="prof-spec">Coaching Ontológico · Vida y Carrera</div>
+            <div class="prof-meta">
+              <span>⭐ 4.7 (64)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Ciudad Vieja</span>
+            </div>
+            <div class="tags"><span class="tag">Propósito</span><span class="tag">Liderazgo</span><span class="tag">Carrera</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Hoy · 19:00', 7)">Hoy 19:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Mañana · 14:00', 7)">Mañ 14:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lucía','Vie · 11:00', 7)">Vie 11:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>7</span><small>/ sesión<div class="uyu">$2.800 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lucía', 7); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="psicologia" data-id="5" onclick="highlightMap(5)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#F48FB1,#880E4F)">🧠</div>
+          <div>
+            <div class="prof-name">Lic. Ignacio Pereyra</div>
+            <div class="prof-spec">Psicología · Gestalt e Infanto-Juvenil</div>
+            <div class="prof-meta">
+              <span>⭐ 4.9 (180)</span><span>🏥 Presencial + Online</span><span>⏱ 45–60 min</span><span>📍 Aguada</span>
+            </div>
+            <div class="tags"><span class="tag">Niños</span><span class="tag">Adolescentes</span><span class="tag">Familia</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Pereyra','Hoy · 16:00', 8)">Hoy 16:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Pereyra','Mañana · 17:00', 8)">Mañ 17:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>8</span><small>/ sesión<div class="uyu">$3.200 UYU</div></small></div>
+            <div class="avail"><span class="dot"></span>Disponible hoy</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Pereyra', 8); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+        <div class="prof-card reveal" data-svc="nutricion" data-id="6" onclick="highlightMap(6)">
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#C8E6C9,#1B5E20)">🥗</div>
+          <div>
+            <div class="prof-name">Lic. Sofía Álvarez</div>
+            <div class="prof-spec">Nutrición · Clínica y Embarazo</div>
+            <div class="prof-meta">
+              <span>⭐ 4.8 (93)</span><span>🖥 Online</span><span>⏱ 50 min</span><span>📍 Malvín</span>
+            </div>
+            <div class="tags"><span class="tag">Embarazo</span><span class="tag">Diabetes</span><span class="tag">Celiaquía</span></div>
+            <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
+            <div class="prof-slots">
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Jue · 10:00', 6)">Jue 10:00</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Jue · 15:30', 6)">Jue 15:30</button>
+              <button class="prof-slot" onclick="bookSlot(event,'Lic. Álvarez','Vie · 09:00', 6)">Vie 09:00</button>
+            </div>
+          </div>
+          <div class="prof-right">
+            <div class="prof-price"><span class="ficha"><span class="symbol">+</span>6</span><small>/ sesión<div class="uyu">$2.400 UYU</div></small></div>
+            <div class="avail busy"><span class="dot"></span>Esta semana</div>
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Álvarez', 6); event.stopPropagation()">Reservar</button>
+          </div>
+        </div>
+
+      </div><!-- /prof-list -->
+
+      <div class="pagination" style="margin-top:32px">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+      </div>
+    </div>
+
+    <!-- Right: filters + fichas widget -->
+    <aside>
+      <button id="admin-btn" class="btn btn-outline btn-sm" style="display:none;width:100%;justify-content:center;margin-bottom:16px;border-style:dashed" onclick="document.getElementById('admin-modal').style.display='flex'">
+        <span style="font-size:1.1rem;margin-right:4px">📸</span> Agregar Profesional
+      </button>
+
+      <div class="fichas-widget">
+        <div class="f-num">0<span style="font-size:1.4rem">+</span></div>
+        <div class="f-lbl">fichas disponibles</div>
+        <a href="payment.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Comprar fichas</a>
+      </div>
+
+      <div class="filter-card">
+        <h4>🔧 Filtrar</h4>
+        <div class="form-group">
+          <label class="form-label">Servicio</label>
+          <select id="filter-svc" class="form-select" onchange="applyFilter()">
+            <option value="">Todos</option>
+            <option value="psicologia">🧠 Psicología</option>
+            <option value="psiquiatria">💊 Psiquiatría</option>
+            <option value="nutricion">🥗 Nutrición</option>
+            <option value="trainer">🏋️ Personal Trainer</option>
+            <option value="coaching">🎯 Coaching</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Barrio</label>
+          <select class="form-select">
+            <option>Todos los barrios</option>
+            <option>Pocitos</option><option>Cordón</option><option>Punta Carretas</option>
+            <option>Parque Rodó</option><option>Ciudad Vieja</option><option>Malvín</option><option>Aguada</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Modalidad</label>
+          <select class="form-select">
+            <option>Online y presencial</option>
+            <option>Solo online</option><option>Solo presencial</option>
+          </select>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="form-group">
+          <label class="form-label">Disponibilidad</label>
+          <select class="form-select">
+            <option>Cualquier momento</option>
+            <option>Disponible hoy</option><option>Esta semana</option>
+          </select>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px" onclick="clearFilters()">Limpiar filtros</button>
+      </div>
+
+      <div class="filter-card" style="background:var(--red-50);border-color:var(--red-200)">
+        <h4 style="color:var(--red-dark)">❤️ Donar fichas</h4>
+        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.6;margin-bottom:12px">Donás fichas y alguien accede gratis a una sesión de salud.</p>
+        <a href="donate.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Ver programa</a>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div id="admin-modal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div class="modal-content" style="background:white;border-radius:var(--radius-lg);padding:30px;width:100%;max-width:500px;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--text)">Agregar Profesional</h3>
+      <button type="button" onclick="closeAdminModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <form id="admin-form" onsubmit="saveCustomPro(event)" style="display:flex;flex-direction:column;gap:16px">
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Nombre del Profesional</label>
+        <input type="text" id="ap-name" class="form-input" required placeholder="Ej: Dr. Juan Pérez">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Especialidad principal</label>
+        <select id="ap-svc" class="form-select" required>
+          <option value="psicologia">Psicología</option>
+          <option value="psiquiatria">Psiquiatría</option>
+          <option value="nutricion">Nutrición</option>
+          <option value="trainer">Personal Trainer</option>
+          <option value="coaching">Coaching</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Barrio</label>
+        <input type="text" id="ap-barrio" class="form-input" required placeholder="Ej: Pocitos">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Precio (Fichas)</label>
+        <input type="number" id="ap-price" class="form-input" required placeholder="Ej: 8" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-weight:600;font-size:0.85rem">Foto de perfil (Opcional)</label>
+        <div style="border:1.5px dashed var(--border);border-radius:var(--radius-md);padding:16px;text-align:center;background:var(--bg-2)">
+          <input type="file" id="ap-photo" accept="image/*" style="max-width:100%">
+          <div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px">Selecciona una imagen desde tu dispositivo para el avatar</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:10px;justify-content:center">Guardar Profesional</button>
+    </form>
+  </div>
+</div>
+
+<!-- Booking Modal (used if clicking reserve from marker popup) -->
+<div id="booking-modal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div class="modal-content" style="background:white;border-radius:var(--radius-lg);padding:30px;width:100%;max-width:400px;box-shadow:var(--shadow-lg);text-align:center">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--text)">Reservar Turno</h3>
+      <button type="button" onclick="document.getElementById('booking-modal').style.display='none'" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <div id="booking-info" style="margin-bottom:20px;font-size:1.1rem;font-weight:600"></div>
+    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:20px">Selecciona un horario disponible:</p>
+    <div class="prof-slots" id="booking-slots" style="justify-content:center;margin-bottom:20px"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div>
+        <p>Bienestar que suma. La primer red interdisciplinaria de bienestar en Uruguay.</p>
+      </div>
+      <div class="footer__col"><h5>Servicios</h5><a href="?s=psicologia">Psicología</a><a href="?s=psiquiatria">Psiquiatría</a><a href="?s=nutricion">Nutrición</a><a href="?s=trainer">Trainer</a><a href="?s=coaching">Coaching</a></div>
+      <div class="footer__col"><h5>Fichas</h5><a href="payment.html">Comprar fichas</a><a href="donate.html">Donar fichas</a></div>
+      <div class="footer__col"><h5>alma+</h5><a href="apply.html">Soy profesional</a><a href="about.html">Sobre nosotros</a><a href="about.html">Políticas y Contacto</a></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 alma+ · Montevideo, Uruguay</span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script src="script.js" defer></script>
+<script src="js/professionals.js" defer></script>
+
+</body>
+</html>
+

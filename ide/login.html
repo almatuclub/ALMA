@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ingresar | alma+</title>
+  <meta name="description" content="Iniciá sesión en alma+ como paciente o profesional de la salud."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="pages.css"/>
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- Visual side -->
+  <div class="auth-visual">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">❤</div>
+      <span>alma<span class="plus">+</span></span>
+    </a>
+    <h2>Tu salud, en buenas manos</h2>
+    <p>Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras que atienden de forma privada.</p>
+    <div class="benefit-list">
+      <div class="benefit-row">
+        <div class="ico">🔒</div>
+        <span>Perfiles verificados y matriculados</span>
+      </div>
+      <div class="benefit-row">
+        <div class="ico">📅</div>
+        <span>Agendás en tiempo real, sin intermediarios</span>
+      </div>
+      <div class="benefit-row">
+        <div class="ico">💰</div>
+        <span>Precios transparentes en fichas +</span>
+      </div>
+      <div class="benefit-row">
+        <div class="ico">🌟</div>
+        <span>Más de 480 profesionales activos</span>
+      </div>
+    </div>
+    <img src="img-therapy.png" alt="Sesión de terapia" class="img-preview" />
+  </div>
+
+  <!-- Form side -->
+  <div class="auth-form-col">
+    <div class="auth-box">
+      <a href="index.html" class="back">← Volver al inicio</a>
+
+      <!-- Type selector -->
+      <div class="type-tabs">
+        <button class="type-tab active" id="tab-patient" onclick="setTab('patient')">
+          <span class="t-icon">👤</span>
+          <span class="t-label">Soy paciente</span>
+          <span class="t-sub">Quiero reservar</span>
+        </button>
+        <button class="type-tab" id="tab-pro" onclick="setTab('pro')">
+          <span class="t-icon">🩺</span>
+          <span class="t-label">Soy profesional</span>
+          <span class="t-sub">Ofrezco servicios</span>
+        </button>
+      </div>
+
+      <!-- PATIENT: Login -->
+      <div id="patient-login" class="form-mode active">
+        <div class="mode-label">👤 Paciente — Ingresar</div>
+        <h3 class="form-title">¡Hola de nuevo!</h3>
+        <p class="form-subtitle">Ingresá con tu cuenta para ver tu agenda y reservar sesiones.</p>
+        <form onsubmit="handleLogin(event,'patient')">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Correo electrónico o Usuario</label>
+              <div class="input-icon-wrap">
+                <span class="icon">👤</span>
+                <input class="form-input" type="text" placeholder="tu@email.com o Alma+" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contraseña <a href="#" class="forgot">¿La olvidaste?</a></label>
+              <div class="input-icon-wrap">
+                <span class="icon">🔑</span>
+                <input class="form-input" type="password" placeholder="••••••••" required/>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px">Ingresar como paciente</button>
+        </form>
+        <div class="switch-mode">¿No tenés cuenta? <a onclick="showRegister('patient')">Registrate gratis</a></div>
+      </div>
+
+      <!-- PATIENT: Register -->
+      <div id="patient-register" class="form-mode">
+        <div class="mode-label">👤 Paciente — Registro</div>
+        <h3 class="form-title">Crear cuenta</h3>
+        <p class="form-subtitle">Registrate para reservar sesiones con tu ficha +.</p>
+        <form onsubmit="handleRegister(event,'patient')">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nombre</label>
+                <input class="form-input" type="text" placeholder="María" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Apellido</label>
+                <input class="form-input" type="text" placeholder="González" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Correo electrónico</label>
+              <div class="input-icon-wrap">
+                <span class="icon">📧</span>
+                <input class="form-input" type="email" placeholder="tu@email.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contraseña</label>
+              <div class="input-icon-wrap">
+                <span class="icon">🔑</span>
+                <input class="form-input" type="password" placeholder="Mín. 8 caracteres" required minlength="8"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">¿Cómo nos encontraste?</label>
+              <select class="form-select">
+                <option value="">Opcional</option>
+                <option>Instagram / Redes sociales</option>
+                <option>Un amigo me recomendó</option>
+                <option>Google</option>
+                <option>Otro</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px">Crear cuenta gratis</button>
+        </form>
+        <div class="switch-mode">¿Ya tenés cuenta? <a onclick="showLogin('patient')">Ingresá acá</a></div>
+      </div>
+
+      <!-- PRO: Login -->
+      <div id="pro-login" class="form-mode">
+        <div class="mode-label">🩺 Profesional — Ingresar</div>
+        <h3 class="form-title">¡Bienvenido/a de nuevo!</h3>
+        <p class="form-subtitle">Accedé a tu panel de profesional para gestionar tu agenda.</p>
+        <form onsubmit="handleLogin(event,'pro')">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Correo electrónico profesional</label>
+              <div class="input-icon-wrap">
+                <span class="icon">📧</span>
+                <input class="form-input" type="email" placeholder="tu@email.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contraseña <a href="#" class="forgot">¿La olvidaste?</a></label>
+              <div class="input-icon-wrap">
+                <span class="icon">🔑</span>
+                <input class="form-input" type="password" placeholder="••••••••" required/>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px">Ingresar al panel</button>
+        </form>
+        <div class="switch-mode">¿No estás registrado/a? <a href="apply.html">Completar mi perfil profesional</a></div>
+      </div>
+
+      <!-- PRO: Register (redirect to apply) -->
+      <div id="pro-register" class="form-mode">
+        <div class="mode-label">🩺 Profesional — Registro</div>
+        <h3 class="form-title">Registrarte como profesional</h3>
+        <p class="form-subtitle">El proceso requiere verificar tu matrícula y especialidad. Te llevará unos minutos.</p>
+        <div style="background:var(--red-50);border:1.5px solid var(--red-200);border-radius:var(--radius-md);padding:20px;margin-bottom:20px">
+          <p style="font-size:0.88rem;color:var(--text-2);line-height:1.7">
+            📋 <strong style="color:var(--text)">¿Qué necesitás?</strong><br>
+            Matrícula profesional vigente, datos de contacto, y disponibilidad horaria. También vas a configurar tu calendario de turnos.
+          </p>
+        </div>
+        <a href="apply.html" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;display:flex">Completar mi perfil profesional →</a>
+        <div class="switch-mode">¿Ya tenés cuenta? <a onclick="showLogin('pro')">Ingresá acá</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script src="script.js" defer></script>
+<script src="js/login.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>alma+ | Tu plataforma de salud y bienestar</title>
+
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="pages.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo">
+      <div class="logo-icon">❤</div>
+      <span>alma<span class="plus">+</span></span>
+    </a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html">Profesionales</a></li>
+      <li><a href="payment.html">Fichas</a></li>
+      <li><a href="donate.html">Donar</a></li>
+      <li><a href="about.html">Sobre nosotros</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
+      <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a>
+  <a href="professionals.html">Profesionales</a>
+  <a href="apply.html">Soy profesional</a>
+  <a href="login.html">Ingresar / Registrarme</a>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero__content">
+    <div class="hero__badge">
+      <span class="dot"></span>
+      Más de 480 profesionales verificados
+    </div>
+    <h1>Tu bienestar a un <span class="gradient-text">clic de distancia</span></h1>
+    <p class="hero__sub">Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras que atienden de forma privada. Elegís a quién y cuándo.</p>
+    <div class="hero__actions">
+      <a href="professionals.html" class="btn btn-primary btn-lg">Encontrar profesional</a>
+      <a href="login.html" class="btn btn-outline btn-lg">Ingresar</a>
+    </div>
+    <div class="ficha-strip">
+      <span class="ficha"><span class="symbol">+</span> fichas</span>
+      <span>— la moneda de alma+. Comprás fichas y las usás para reservar sesiones.</span>
+    </div>
+  </div>
+  <div class="hero__visual">
+    <img src="img-therapy.png" alt="Sesión de terapia profesional" class="hero__img-main" />
+    <div class="hero__img-badge">
+      <div class="icon">📅</div>
+      <div>
+        <strong>Próxima sesión disponible</strong>
+        <span>Hoy · 17:00 hs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── How it works ─── -->
+<section class="section">
+  <div class="container">
+    <div class="how-wrap reveal">
+      <div class="section-header" style="margin-bottom:48px">
+        <div class="overline">Cómo funciona</div>
+        <h2>Simple y sin vueltas</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-bubble">1</div>
+          <h4>Elegís un profesional</h4>
+          <p>Filtrá por especialidad, horario y precio en fichas.</p>
+        </div>
+        <div class="step">
+          <div class="step-bubble">2</div>
+          <h4>Reservás tu sesión</h4>
+          <p>Elegís el día y horario disponible en el calendario.</p>
+        </div>
+        <div class="step">
+          <div class="step-bubble">3</div>
+          <h4>Pagás con fichas</h4>
+          <p>Cada sesión tiene un precio fijo en fichas +.</p>
+        </div>
+        <div class="step">
+          <div class="step-bubble">4</div>
+          <h4>¡Listo, nos vemos!</h4>
+          <p>Recibís confirmación y recordatorio de tu turno.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Services ─── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline">Nuestros servicios</div>
+      <h2>Profesionales de salud <span class="gradient-text">privados</span></h2>
+      <div class="divider"></div>
+      <p>Todos atienden de forma independiente con precios transparentes en fichas.</p>
+    </div>
+    <div class="services-grid stagger-children">
+
+      <a href="professionals.html?s=psicologia" class="service-card">
+        <div class="service-icon" style="background:#FFF5F5">🧠</div>
+        <h3>Psicología</h3>
+        <p class="desc">Terapia individual con psicólogos y psicólogas especializados en diferentes enfoques.</p>
+        <div class="session-info">⏱ Sesiones de 45 a 60 minutos</div>
+        <div class="service-footer">
+          <div class="ficha"><span class="symbol">+</span> 8 fichas / sesión</div>
+          <span class="badge badge-green">Disponible hoy</span>
+        </div>
+      </a>
+
+      <a href="professionals.html?s=psiquiatria" class="service-card">
+        <div class="service-icon" style="background:#FFF5F5">💊</div>
+        <h3>Psiquiatría</h3>
+        <p class="desc">Consultas psiquiátricas para diagnóstico, seguimiento y ajuste de tratamiento.</p>
+        <div class="session-info">⏱ Consultas de 30 a 45 minutos</div>
+        <div class="service-footer">
+          <div class="ficha"><span class="symbol">+</span> 12 fichas / consulta</div>
+          <span class="badge badge-yellow">Alta demanda</span>
+        </div>
+      </a>
+
+      <a href="professionals.html?s=nutricion" class="service-card">
+        <div class="service-icon" style="background:#FFF5F5">🥗</div>
+        <h3>Nutrición</h3>
+        <p class="desc">Planes de alimentación personalizados con nutricionistas diplomados.</p>
+        <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
+        <div class="service-footer">
+          <div class="ficha"><span class="symbol">+</span> 6 fichas / sesión</div>
+          <span class="badge badge-green">Disponible hoy</span>
+        </div>
+      </a>
+
+      <a href="professionals.html?s=trainer" class="service-card">
+        <div class="service-icon" style="background:#FFF5F5">🏋️</div>
+        <h3>Personal Trainer</h3>
+        <p class="desc">Entrenamiento físico personalizado online o presencial, adaptado a tus objetivos.</p>
+        <div class="session-info">⏱ Sesiones de 60 minutos</div>
+        <div class="service-footer">
+          <div class="ficha"><span class="symbol">+</span> 5 fichas / sesión</div>
+          <span class="badge badge-green">Disponible hoy</span>
+        </div>
+      </a>
+
+      <a href="professionals.html?s=coaching" class="service-card">
+        <div class="service-icon" style="background:#FFF5F5">🎯</div>
+        <h3>Coaching</h3>
+        <p class="desc">Acompañamiento profesional para metas de vida, carrera y transformación personal.</p>
+        <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
+        <div class="service-footer">
+          <div class="ficha"><span class="symbol">+</span> 7 fichas / sesión</div>
+          <span class="badge badge-green">Disponible hoy</span>
+        </div>
+      </a>
+
+      <a href="professionals.html" class="service-card" style="border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:200px">
+        <div class="service-icon" style="background:#FFF5F5;margin:0 auto 14px">➕</div>
+        <h3>Otro profesional</h3>
+        <p class="desc">¿Buscás otro tipo de profesional de salud privado? Explorá el directorio completo.</p>
+        <div style="margin-top:16px">
+          <span class="btn btn-outline btn-sm">Ver directorio</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── Fichas explainer ─── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="fichas-section reveal">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div>
+          <span class="badge badge-red" style="margin-bottom:20px;background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.2)">Sistema de fichas</span>
+          <h2>¿Qué son las fichas <span style="color:#FF8A80">+</span>?</h2>
+          <p>Las fichas son la moneda de alma+. Comprás un paquete de fichas y las usás para reservar sesiones con cualquier profesional del directorio. Sin sorpresas, sin comisiones ocultas.</p>
+          <a href="login.html#register" class="btn btn-white btn-lg" style="margin-top:28px">Comprar fichas →</a>
+        </div>
+        <div class="fichas-grid">
+          <div class="ficha-item">
+            <div class="svc">🧠 Psicología</div>
+            <div class="price">8<span>+ fichas</span></div>
+            <div class="duration">45 – 60 min por sesión</div>
+          </div>
+          <div class="ficha-item">
+            <div class="svc">💊 Psiquiatría</div>
+            <div class="price">12<span>+ fichas</span></div>
+            <div class="duration">30 – 45 min por consulta</div>
+          </div>
+          <div class="ficha-item">
+            <div class="svc">🥗 Nutrición</div>
+            <div class="price">6<span>+ fichas</span></div>
+            <div class="duration">50 – 60 min por sesión</div>
+          </div>
+          <div class="ficha-item">
+            <div class="svc">🏋️ Personal Trainer</div>
+            <div class="price">5<span>+ fichas</span></div>
+            <div class="duration">60 min por sesión</div>
+          </div>
+          <div class="ficha-item">
+            <div class="svc">🎯 Coaching</div>
+            <div class="price">7<span>+ fichas</span></div>
+            <div class="duration">50 – 60 min por sesión</div>
+          </div>
+          <div class="ficha-item" style="display:flex;align-items:center;justify-content:center;text-align:center">
+            <a href="login.html#register" style="color:rgba(255,255,255,0.7);font-size:0.85rem;text-decoration:underline">Ver todos los precios →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Professionals preview ─── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline">Profesionales destacados</div>
+      <h2>Conocé a nuestros especialistas</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="profs-preview stagger-children">
+      <div class="prof-mini">
+        <div class="prof-mini-head">
+          <div class="prof-mini-avatar">🧠</div>
+          <div>
+            <div class="prof-mini-name">Lic. Valentina Suárez</div>
+            <div class="prof-mini-spec">Psicología · TCC</div>
+            <div class="prof-mini-rating">⭐ 4.9 · 142 sesiones</div>
+          </div>
+        </div>
+        <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Vínculos</span><span class="tag">Online</span></div>
+        <div class="next-slots">
+          <span class="slot-pill">Hoy 17:00</span>
+          <span class="slot-pill">Hoy 18:00</span>
+          <span class="slot-pill">Mañ 10:00</span>
+        </div>
+        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:14px;justify-content:center">Ver perfil</a>
+      </div>
+      <div class="prof-mini">
+        <div class="prof-mini-head">
+          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#FF7043,#E53935)">🏋️</div>
+          <div>
+            <div class="prof-mini-name">Agustín Ferreyra</div>
+            <div class="prof-mini-spec">Personal Trainer</div>
+            <div class="prof-mini-rating">⭐ 5.0 · 98 sesiones</div>
+          </div>
+        </div>
+        <div class="tags"><span class="tag">Funcional</span><span class="tag">Presencial</span><span class="tag">CABA</span></div>
+        <div class="next-slots">
+          <span class="slot-pill">Hoy 08:00</span>
+          <span class="slot-pill">Mañ 07:30</span>
+          <span class="slot-pill">Mañ 09:00</span>
+        </div>
+        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:14px;justify-content:center">Ver perfil</a>
+      </div>
+      <div class="prof-mini">
+        <div class="prof-mini-head">
+          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">🥗</div>
+          <div>
+            <div class="prof-mini-name">Lic. Camila Ríos</div>
+            <div class="prof-mini-spec">Nutrición</div>
+            <div class="prof-mini-rating">⭐ 4.8 · 207 sesiones</div>
+          </div>
+        </div>
+        <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Online</span></div>
+        <div class="next-slots">
+          <span class="slot-pill">Mañ 11:00</span>
+          <span class="slot-pill">Mañ 16:00</span>
+          <span class="slot-pill">Jue 10:00</span>
+        </div>
+        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:14px;justify-content:center">Ver perfil</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px">
+      <a href="professionals.html" class="btn btn-primary">Ver todos los profesionales →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>¿Sos profesional de la salud?</h2>
+      <p>Sumáte a alma+ y gestioná tu agenda, pacientes y pagos en un solo lugar.</p>
+      <div class="btn-group">
+        <a href="apply.html" class="btn btn-white btn-lg">Registrarme como profesional</a>
+        <a href="professionals.html" class="btn btn-lg" style="background:rgba(255,255,255,0.12);color:white;border:2px solid rgba(255,255,255,0.3)">Conocer el directorio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo">
+          <div class="logo-icon">❤</div>
+          <span>alma<span class="plus">+</span></span>
+        </div>
+        <p>Plataforma de salud y bienestar con profesionales privados verificados. Atención personalizada con precios transparentes.</p>
+      </div>
+      <div class="footer__col">
+        <h5>Servicios</h5>
+        <a href="professionals.html?s=psicologia">Psicología</a>
+        <a href="professionals.html?s=psiquiatria">Psiquiatría</a>
+        <a href="professionals.html?s=nutricion">Nutrición</a>
+        <a href="professionals.html?s=trainer">Personal Trainer</a>
+        <a href="professionals.html?s=coaching">Coaching</a>
+      </div>
+      <div class="footer__col">
+        <h5>Para profesionales</h5>
+        <a href="apply.html">Registrarme</a>
+        <a href="login.html">Mi panel</a>
+        <a href="#">¿Cómo funciona?</a>
+      </div>
+      <div class="footer__col">
+        <h5>alma+</h5>
+        <a href="about.html">Sobre nosotros</a>
+        <a href="about.html">Políticas y Contacto</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 alma+. Todos los derechos reservados.</span>
+      <div class="tags" style="gap:8px">
+        <span class="tag" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#aaa">🇦🇷 Argentina</span>
+        <span class="tag" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#aaa">❤️ Hecho con amor</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>

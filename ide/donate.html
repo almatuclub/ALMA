@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donar Fichas | alma+</title>
+  <meta name="description" content="Doná fichas alma+ para que otros accedan a sesiones de salud gratuitas. Bienestar que suma."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="pages.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <ul class="navbar__nav">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="professionals.html">Profesionales</a></li>
+      <li><a href="payment.html">Fichas</a></li>
+      <li><a href="donate.html" class="active">Donar</a></li>
+      <li><a href="about.html">Sobre nosotros</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
+      <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
+    </div>
+    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a><a href="professionals.html">Profesionales</a>
+  <a href="payment.html">Comprar fichas</a><a href="donate.html">Donar fichas</a>
+  <a href="apply.html">Soy profesional</a><a href="login.html">Ingresar</a>
+</nav>
+
+<div class="donate-hero">
+  <div class="container">
+    <span class="badge badge-red" style="margin-bottom:14px">❤️ Programa de donaciones</span>
+    <h1>Bienestar que <span class="gradient-text">suma</span></h1>
+    <p>Donás fichas, alguien acede a su primera sesión gratuita. La primer red interdisciplinaria de bienestar en Uruguay construida entre tod@s.</p>
+    <a href="#donate-form" class="btn btn-primary btn-lg">Quiero donar</a>
+    <div class="counter-strip reveal">
+      <div class="counter-item"><div class="val" data-count="2847">2847</div><div class="lbl">Fichas donadas</div></div>
+      <div class="counter-item"><div class="val" data-count="312">312</div><div class="lbl">Sesiones gratuitas</div></div>
+      <div class="counter-item"><div class="val" data-count="89">89</div><div class="lbl">Profesionales que aportan</div></div>
+      <div class="counter-item"><div class="val" data-count="5">5</div><div class="lbl">Disciplinas activas</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- How it works -->
+<section class="section">
+  <div class="container">
+    <div class="how-donate reveal">
+      <div class="section-header" style="margin-bottom:36px">
+        <div class="overline">¿Cómo funciona?</div>
+        <h2>El círculo del bienestar</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="donate-steps">
+        <div class="donate-step">
+          <div class="donate-step-icon">💰</div>
+          <h4>Vos donás fichas</h4>
+          <p>Desde tu balance de fichas, elegís cuántas querés donar al pool comunitario de alma+.</p>
+        </div>
+        <div class="donate-step">
+          <div class="donate-step-icon">🏦</div>
+          <h4>Van al pool</h4>
+          <p>Las fichas se acumulan junto con los aportes de los profesionales (5% de cada sesión).</p>
+        </div>
+        <div class="donate-step">
+          <div class="donate-step-icon">🎁</div>
+          <h4>Alguien recibe</h4>
+          <p>Personas que lo necesitan pueden acceder a sesiones gratuitas usando fichas del pool.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services that contribute -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:28px">
+      <div class="overline">Aporte de disciplinas</div>
+      <h2>Cada sesión contribuye al pool</h2>
+      <div class="divider"></div>
+      <p>El 5% de cada sesión aportada por los profesionales va al fondo comunitario.</p>
+    </div>
+    <div class="contribution-grid stagger-children">
+      <div class="contrib-item"><div class="icon">🧠</div><div class="svc">Psicología</div><div class="pct">5%</div><div class="lbl">0.4 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon">💊</div><div class="svc">Psiquiatría</div><div class="pct">5%</div><div class="lbl">0.6 fichas por consulta</div></div>
+      <div class="contrib-item"><div class="icon">🥗</div><div class="svc">Nutrición</div><div class="pct">5%</div><div class="lbl">0.3 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon">🏋️</div><div class="svc">Trainer</div><div class="pct">5%</div><div class="lbl">0.25 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon">🎯</div><div class="svc">Coaching</div><div class="pct">5%</div><div class="lbl">0.35 fichas por sesión</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Donation form -->
+<section class="section" style="padding-top:0" id="donate-form">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:36px">
+      <div class="overline">Hacer una donación</div>
+      <h2>Elegí cuánto donar</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="donate-layout">
+      <div>
+        <div class="d-card" id="donate-form-card">
+          <h3>🎁 Cantidad de fichas a donar</h3>
+          <div class="ficha-picker">
+            <button class="fp-btn" onclick="selectDonate(this,1)">
+              <div class="fp-num">1+</div><div class="fp-lbl">ficha</div><div class="fp-val">$400</div>
+            </button>
+            <button class="fp-btn selected" onclick="selectDonate(this,2)">
+              <div class="fp-num">2+</div><div class="fp-lbl">fichas</div><div class="fp-val">$800</div>
+            </button>
+            <button class="fp-btn" onclick="selectDonate(this,5)">
+              <div class="fp-num">5+</div><div class="fp-lbl">fichas</div><div class="fp-val">$2.000</div>
+            </button>
+            <button class="fp-btn" onclick="selectDonate(this,10)">
+              <div class="fp-num">10+</div><div class="fp-lbl">fichas</div><div class="fp-val">$4.000</div>
+            </button>
+          </div>
+          <div class="custom-input-wrap" style="margin-bottom:20px">
+            <label>Cantidad personalizada:</label>
+            <input type="number" min="1" max="50" value="2" id="custom-fichas" oninput="customDonate(this.value)"/>
+            <span style="font-size:0.85rem;color:var(--red);font-weight:700">fichas +</span>
+          </div>
+
+
+
+          <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+            <div class="form-group">
+              <label class="form-label">Tu correo (opcional, para confirmación)</label>
+              <input class="form-input" type="email" placeholder="tu@email.com"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mensaje para el pool (opcional)</label>
+              <textarea class="form-textarea" placeholder="Un mensaje de ánimo para quien reciba las fichas..." style="min-height:80px"></textarea>
+            </div>
+          </div>
+
+          <div style="background:#E8F5E9;border:1px solid #A5D6A7;border-radius:var(--radius-sm);padding:10px 14px;font-size:0.78rem;color:#2E7D32;margin-bottom:16px">
+            🔒 Tus fichas se descuentan directamente de tu balance de forma cifrada y segura.
+          </div>
+
+          <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="processDonate()">
+            ❤️ Donar <span id="d-btn-val">10</span> fichas al pool
+          </button>
+        </div>
+
+        <!-- Success -->
+        <div class="d-card" id="donate-success" style="display:none;flex-direction:column;align-items:center;text-align:center;padding:48px 32px">
+          <div style="width:80px;height:80px;border-radius:50%;background:#E8F5E9;border:2px solid #4CAF50;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:20px;animation:pop .4s ease">❤️</div>
+          <h2 style="margin-bottom:8px">¡Gracias!</h2>
+          <p style="color:var(--text-2);margin-bottom:4px">Tus <strong id="success-donated" style="color:var(--red)">10</strong> fichas ya están en el pool comunitario.</p>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:28px">Bienestar que suma ❤️</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <a href="professionals.html" class="btn btn-primary">Ver profesionales</a>
+            <a href="payment.html" class="btn btn-outline">Comprar más fichas</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="d-sidebar-card">
+          <h4>🏦 Estado del pool comunitario</h4>
+          <div style="font-size:2rem;font-weight:900;color:var(--red)">2.847 <span style="font-size:1rem;font-weight:600">fichas</span></div>
+          <div class="pool-bar"><div class="pool-fill"></div></div>
+          <div class="pool-labels"><span>0</span><span>Meta: 4.000 fichas</span></div>
+          <p style="font-size:0.78rem;color:var(--text-2);margin-top:10px;line-height:1.6">Faltan <strong style="color:var(--red)">1.153 fichas</strong> para cubrir todas las solicitudes pendientes.</p>
+        </div>
+
+        <div class="d-sidebar-card" style="background:var(--red-50);border-color:var(--red-200)">
+          <h4 style="color:var(--red-dark)">💡 Tu impacto</h4>
+          <div class="ficha-impact">
+            <div class="fi-row"><span class="fi-num">1+</span><span style="color:var(--text-2)">= 1 persona accede a asesoramiento</span></div>
+            <div class="fi-row"><span class="fi-num">5+</span><span style="color:var(--text-2)">= 1 sesión completa de nutrición</span></div>
+            <div class="fi-row"><span class="fi-num">8+</span><span style="color:var(--text-2)">= 1 sesión completa de psicología</span></div>
+            <div class="fi-row"><span class="fi-num">50+</span><span style="color:var(--text-2)">= 6 personas con acceso a salud</span></div>
+          </div>
+        </div>
+
+        <div class="d-sidebar-card">
+          <h4>📋 Solicitar fichas del pool</h4>
+          <p style="font-size:0.82rem;color:var(--text-2);line-height:1.6;margin-bottom:14px">¿Estás en una situación vulnerable y necesitás acceder a un servicio? Podés solicitar fichas del pool.</p>
+          <a href="login.html" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;display:flex">Solicitar acceso gratuito</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Impact stories -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:0">
+      <div class="overline">Historias reales</div>
+      <h2>Lo que dicen quienes recibieron</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="stories-grid stagger-children">
+      <div class="story-card">
+        <div style="font-size:1.3rem;margin-bottom:8px;color:var(--red)">❤️</div>
+        <p class="story-quote">"Gracias al pool pude tener mi primera sesión de psicología. No podría haberlo pagado de otro modo. Cambió algo en mí."</p>
+        <div class="story-attr">
+          <div class="story-avatar" style="background:var(--red-50)">👩</div>
+          <div><div class="story-name">M. G.</div><div class="story-sub">Recibió 8 fichas del pool</div></div>
+        </div>
+      </div>
+      <div class="story-card">
+        <p class="story-quote">"Como nutricionista, saber que el 5% de mis sesiones va a alguien que lo necesita me hace sentir que mi trabajo tiene más significado."</p>
+        <div class="story-attr">
+          <div class="story-avatar" style="background:#E8F5E9">🥗</div>
+          <div><div class="story-name">Lic. Camila R.</div><div class="story-sub">Profesional colaboradora</div></div>
+        </div>
+      </div>
+      <div class="story-card">
+        <p class="story-quote">"Doné 25 fichas el mes pasado. Me llegó un mensaje que alguien pudo hacer una sesión de coaching. Vale cada peso."</p>
+        <div class="story-attr">
+          <div class="story-avatar" style="background:var(--red-50)">👨</div>
+          <div><div class="story-name">Fernando T.</div><div class="story-sub">Donante recurrente</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div>
+        <p>Bienestar que suma. La primer red interdisciplinaria de bienestar en Uruguay.</p>
+      </div>
+      <div class="footer__col"><h5>Servicios</h5><a href="professionals.html">Ver profesionales</a><a href="payment.html">Comprar fichas</a><a href="donate.html">Donar fichas</a></div>
+      <div class="footer__col"><h5>Profesionales</h5><a href="apply.html">Registrarme</a><a href="login.html">Mi panel</a></div>
+      <div class="footer__col"><h5>alma+</h5><a href="about.html">Sobre nosotros</a><a href="about.html">Políticas y Contacto</a></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 alma+ · Montevideo, Uruguay</span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script src="script.js" defer></script>
+<script src="js/donate.js" defer></script>
+</body>
+</html>
