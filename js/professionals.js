@@ -1,12 +1,12 @@
-/* ─── Professional seed data ─── */
+/* ─── Hardcoded seed professionals (always shown on map) ─── */
 const PROS = [
-  { id:0, name:'Lic. Valentina Suárez', spec:'Psicología',       lat:-34.9128, lng:-56.1506, color:'#E53935', icon:'🧠', price:'8+',  uyu:'$3.200', barrio:'Pocitos' },
-  { id:1, name:'Dr. Rodrigo Mena',      spec:'Psiquiatría',      lat:-34.9060, lng:-56.1870, color:'#7B1FA2', icon:'💊', price:'12+', uyu:'$4.800', barrio:'Cordón' },
-  { id:2, name:'Lic. Camila Ríos',      spec:'Nutrición',        lat:-34.9220, lng:-56.1550, color:'#2E7D32', icon:'🥗', price:'6+',  uyu:'$2.400', barrio:'Punta Carretas' },
-  { id:3, name:'Agustín Ferreyra',      spec:'Personal Trainer', lat:-34.9080, lng:-56.1720, color:'#E65100', icon:'🏋️', price:'5+', uyu:'$2.000', barrio:'Parque Rodó' },
-  { id:4, name:'Lucía Montoya',         spec:'Coaching',         lat:-34.9082, lng:-56.2020, color:'#00695C', icon:'🎯', price:'7+',  uyu:'$2.800', barrio:'Ciudad Vieja' },
-  { id:5, name:'Lic. Ignacio Pereyra',  spec:'Psicología',       lat:-34.9001, lng:-56.1780, color:'#E53935', icon:'🧠', price:'8+',  uyu:'$3.200', barrio:'Aguada' },
-  { id:6, name:'Lic. Sofía Álvarez',    spec:'Nutrición',        lat:-34.9000, lng:-56.1300, color:'#2E7D32', icon:'🥗', price:'6+',  uyu:'$2.400', barrio:'Malvín' },
+  { id:0, name:'Lic. Valentina Suárez', spec:'Psicología',       lat:-34.9128, lng:-56.1506, color:'#E53935', icon:'🧠', price:8,  uyu:'$3.200', barrio:'Pocitos',        svcId:'psicologia' },
+  { id:1, name:'Dr. Rodrigo Mena',      spec:'Psiquiatría',      lat:-34.9060, lng:-56.1870, color:'#7B1FA2', icon:'💊', price:12, uyu:'$4.800', barrio:'Cordón',          svcId:'psiquiatria' },
+  { id:2, name:'Lic. Camila Ríos',      spec:'Nutrición',        lat:-34.9220, lng:-56.1550, color:'#2E7D32', icon:'🥗', price:6,  uyu:'$2.400', barrio:'Punta Carretas',  svcId:'nutricion' },
+  { id:3, name:'Agustín Ferreyra',      spec:'Personal Trainer', lat:-34.9080, lng:-56.1720, color:'#E65100', icon:'🏋️', price:5, uyu:'$2.000', barrio:'Parque Rodó',     svcId:'trainer' },
+  { id:4, name:'Lucía Montoya',         spec:'Coaching',         lat:-34.9082, lng:-56.2020, color:'#00695C', icon:'🎯', price:7,  uyu:'$2.800', barrio:'Ciudad Vieja',    svcId:'coaching' },
+  { id:5, name:'Lic. Ignacio Pereyra',  spec:'Psicología',       lat:-34.9001, lng:-56.1780, color:'#E53935', icon:'🧠', price:8,  uyu:'$3.200', barrio:'Aguada',          svcId:'psicologia' },
+  { id:6, name:'Lic. Sofía Álvarez',    spec:'Nutrición',        lat:-34.9000, lng:-56.1300, color:'#2E7D32', icon:'🥗', price:6,  uyu:'$2.400', barrio:'Malvín',          svcId:'nutricion' },
 ];
 
 /* ─── Map ─── */
@@ -32,8 +32,8 @@ PROS.forEach(p => {
         <div style="font-weight:700;font-size:0.9rem;margin-bottom:2px">${p.icon} ${p.name}</div>
         <div class="popup-spec">${p.spec}</div>
         <div class="popup-info">📍 ${p.barrio}</div>
-        <div class="popup-price">Precio: <strong style="color:#E53935">${p.price} fichas</strong> · ${p.uyu} UYU</div>
-        <button class="popup-btn" onclick="openBookingPopup('${p.name}', ${parseInt(p.price)})">Ver horarios →</button>
+        <div class="popup-price">Precio: <strong style="color:#E53935">${p.price}+ fichas</strong> · ${p.uyu} UYU</div>
+        <button class="popup-btn" onclick="openBookingPopup('${p.name}', ${p.price})">Ver horarios →</button>
       </div>
     `);
   markers.push(m);
@@ -103,49 +103,72 @@ function doSearch() {
 /* ─── Booking ─── */
 async function bookSlot(evt, name, slot, price) {
   evt.stopPropagation();
-  const user = JSON.parse(localStorage.getItem('alma_user') || 'null');
+  price = parseInt(price);
 
-  if (!user || (!user.username && !user.email)) {
+  if (!window.supabase) {
+    showToast('Error de conexión con el servidor', '❌', 'error');
+    return;
+  }
+
+  const { data: { session } } = await window.supabase.auth.getSession();
+  if (!session) {
     showToast('Para reservar necesitás iniciar sesión', '🔒', 'info');
     setTimeout(() => { location.href = 'login.html'; }, 2000);
     return;
   }
 
-  price = parseInt(price);
-  if (user.fichas >= price || user.role === 'admin') {
-    evt.target.disabled = true;
-    evt.target.textContent = '...';
+  const { data: profile, error: profileErr } = await window.supabase
+    .from('profiles')
+    .select('fichas, role')
+    .eq('id', session.user.id)
+    .single();
 
-    if (window.supabase) {
-      const { data: { session } } = await window.supabase.auth.getSession();
-      if (session) {
-        const { error } = await window.supabase
-          .from('profiles')
-          .update({ fichas: user.fichas - price })
-          .eq('id', session.user.id);
-        if (error) {
-          showToast('Error al procesar reserva: ' + error.message, '❌', 'error');
-          evt.target.disabled = false;
-          evt.target.textContent = slot;
-          return;
-        }
-      }
-    }
-
-    user.fichas -= price;
-    localStorage.setItem('alma_user', JSON.stringify(user));
-    showToast(`¡Reserva confirmada con ${name} para el ${slot}!`, '🎉', 'success');
-    evt.target.style.background   = '#4CAF50';
-    evt.target.style.borderColor  = '#4CAF50';
-    evt.target.style.color        = 'white';
-    evt.target.textContent        = 'Reservado ✓';
-
-    const fNum = document.querySelector('.fichas-widget .f-num');
-    if (fNum) fNum.innerHTML = `${user.fichas}<span style="font-size:1.4rem">+</span>`;
-  } else {
-    showToast(`No tenés fichas suficientes. Cuesta ${price}+ y tenés ${user.fichas}+`, '⚠️', 'error');
-    setTimeout(() => { location.href = 'payment.html'; }, 2500);
+  if (profileErr || !profile) {
+    showToast('Error al verificar tu cuenta', '❌', 'error');
+    return;
   }
+
+  const isAdmin   = profile.role === 'admin';
+  const hasFichas = profile.fichas >= price;
+
+  if (!hasFichas && !isAdmin) {
+    showToast(`No tenés fichas suficientes. Cuesta ${price}+ y tenés ${profile.fichas}+`, '⚠️', 'error');
+    setTimeout(() => { location.href = 'payment.html'; }, 2500);
+    return;
+  }
+
+  evt.target.disabled    = true;
+  evt.target.textContent = '...';
+
+  const newFichas = isAdmin ? profile.fichas : profile.fichas - price;
+
+  const { error: updateErr } = await window.supabase
+    .from('profiles')
+    .update({ fichas: newFichas })
+    .eq('id', session.user.id);
+
+  if (updateErr) {
+    showToast('Error al procesar reserva: ' + updateErr.message, '❌', 'error');
+    evt.target.disabled    = false;
+    evt.target.textContent = slot;
+    return;
+  }
+
+  await window.supabase.from('bookings').insert({
+    patient_id:   session.user.id,
+    pro_name:     name,
+    slot,
+    fichas_spent: isAdmin ? 0 : price,
+  });
+
+  showToast(`¡Reserva confirmada con ${name} para el ${slot}!`, '🎉', 'success');
+  evt.target.style.background  = '#4CAF50';
+  evt.target.style.borderColor = '#4CAF50';
+  evt.target.style.color       = 'white';
+  evt.target.textContent       = 'Reservado ✓';
+
+  const fNum = document.querySelector('.fichas-widget .f-num');
+  if (fNum) fNum.innerHTML = `${newFichas}<span style="font-size:1.4rem">+</span>`;
 }
 
 function openBookingPopup(name, price) {
@@ -171,19 +194,19 @@ function closeAdminModal() {
 
 function saveCustomPro(e) {
   e.preventDefault();
-  const fileInput  = document.getElementById('ap-photo');
-  const name       = document.getElementById('ap-name').value;
-  const svcEl      = document.getElementById('ap-svc');
-  const svcId      = svcEl.value;
-  const specLabel  = svcEl.options[svcEl.selectedIndex].text;
-  const barrio     = document.getElementById('ap-barrio').value;
-  const price      = document.getElementById('ap-price').value;
+  const fileInput = document.getElementById('ap-photo');
+  const name      = document.getElementById('ap-name').value;
+  const svcEl     = document.getElementById('ap-svc');
+  const svcId     = svcEl.value;
+  const specLabel = svcEl.options[svcEl.selectedIndex].text;
+  const barrio    = document.getElementById('ap-barrio').value;
+  const price     = document.getElementById('ap-price').value;
 
   const colorMap = { psicologia: '#E53935', psiquiatria: '#7B1FA2', nutricion: '#2E7D32', trainer: '#E65100', coaching: '#00695C' };
   const iconMap  = { psicologia: '🧠', psiquiatria: '💊', nutricion: '🥗', trainer: '🏋️', coaching: '🎯' };
 
   const proInfo = {
-    name, svcId, spec: specLabel, barrio, price,
+    name, svcId, spec: specLabel, barrio, price: parseInt(price),
     lat:   -34.90 + (Math.random() * 0.04 - 0.02),
     lng:   -56.16 + (Math.random() * 0.04 - 0.02),
     color: colorMap[svcId] || '#455A64',
@@ -191,82 +214,122 @@ function saveCustomPro(e) {
     uyu:   '$' + (price * 400).toLocaleString('es-UY') + ' UYU',
   };
 
-  if (fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    reader.onload = evt => { proInfo.photo = evt.target.result; finishSavePro(proInfo); };
-    reader.readAsDataURL(fileInput.files[0]);
-  } else {
-    finishSavePro(proInfo);
-  }
+  // Photos are not stored in DB; skip file reading
+  finishSavePro(proInfo);
 }
 
-function finishSavePro(p) {
-  const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
-  customPros.push(p);
-  localStorage.setItem('alma_custom_pros', JSON.stringify(customPros));
+async function finishSavePro(p) {
+  if (!window.supabase) {
+    showToast('Error de conexión', '❌', 'error');
+    return;
+  }
+
+  const { data: { session } } = await window.supabase.auth.getSession();
+
+  const { error } = await window.supabase
+    .from('professional_listings')
+    .insert({
+      user_id: session?.user?.id || null,
+      name:    p.name,
+      spec:    p.spec,
+      svc_id:  p.svcId,
+      barrio:  p.barrio,
+      price:   p.price,
+      lat:     p.lat,
+      lng:     p.lng,
+      color:   p.color,
+      icon:    p.icon,
+      uyu:     p.uyu,
+      schedule: p.schedule || [],
+      status:  'approved',
+    });
+
+  if (error) {
+    showToast('Error al guardar profesional: ' + error.message, '❌', 'error');
+    return;
+  }
+
   closeAdminModal();
   document.getElementById('admin-form').reset();
   showToast('Profesional agregado con éxito', '✅', 'success');
   location.reload();
 }
 
-/* ─── Load professionals from localStorage ─── */
-function loadCustomPros() {
-  const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
+/* ─── Load additional professionals from Supabase ─── */
+async function loadCustomPros() {
+  if (!window.supabase) return;
+
+  const { data: listings, error } = await window.supabase
+    .from('professional_listings')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (error || !listings || !listings.length) return;
+
   const list = document.getElementById('prof-list');
 
-  customPros.forEach(p => {
+  listings.forEach(p => {
     const newId = PROS.length;
-    p.id = newId;
-    PROS.push(p);
+    const proData = {
+      id:    newId,
+      name:  p.name,
+      spec:  p.spec,
+      svcId: p.svc_id,
+      barrio: p.barrio || 'Montevideo',
+      price: p.price,
+      lat:   p.lat   || (-34.90 + Math.random() * 0.04 - 0.02),
+      lng:   p.lng   || (-56.16 + Math.random() * 0.04 - 0.02),
+      color: p.color || '#455A64',
+      icon:  p.icon  || '➕',
+      uyu:   p.uyu   || ('$' + (p.price * 400).toLocaleString('es-UY') + ' UYU'),
+      schedule: p.schedule || [],
+    };
+    PROS.push(proData);
 
-    const iconContent = p.photo
-      ? `<img src="${p.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`
-      : p.icon;
-
-    const m = L.marker([p.lat, p.lng], {
+    const m = L.marker([proData.lat, proData.lng], {
       icon: L.divIcon({
         className: '',
-        html: `<div style="width:36px;height:36px;background:${p.color};border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 12px rgba(0,0,0,0.25);overflow:hidden">${iconContent}</div>`,
+        html: `<div style="width:36px;height:36px;background:${proData.color};border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 12px rgba(0,0,0,0.25)">${proData.icon}</div>`,
         iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20],
       }),
     }).addTo(map).bindPopup(`
       <div style="min-width:180px">
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:2px">${p.icon} ${p.name}</div>
-        <div class="popup-spec">${p.spec}</div>
-        <div class="popup-info">📍 ${p.barrio}</div>
-        <div class="popup-price">Precio: <strong style="color:#E53935">${p.price}+ fichas</strong> · ${p.uyu}</div>
-        <button class="popup-btn" onclick="openBookingPopup('${p.name}',${p.price})">Ver horarios →</button>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:2px">${proData.icon} ${proData.name}</div>
+        <div class="popup-spec">${proData.spec}</div>
+        <div class="popup-info">📍 ${proData.barrio}</div>
+        <div class="popup-price">Precio: <strong style="color:#E53935">${proData.price}+ fichas</strong> · ${proData.uyu}</div>
+        <button class="popup-btn" onclick="openBookingPopup('${proData.name}',${proData.price})">Ver horarios →</button>
       </div>
     `);
     markers.push(m);
 
     const card = document.createElement('div');
-    card.className = 'prof-card reveal visible';
-    card.dataset.svc = p.svcId;
-    card.dataset.id  = newId;
-    card.onclick = () => highlightMap(newId);
+    card.className      = 'prof-card reveal visible';
+    card.dataset.svc    = proData.svcId;
+    card.dataset.id     = newId;
+    card.onclick        = () => highlightMap(newId);
     card.innerHTML = `
-      <div class="prof-avatar" style="background:${p.color};overflow:hidden;border-color:${p.color}">${iconContent}</div>
+      <div class="prof-avatar" style="background:${proData.color};border-color:${proData.color}">${proData.icon}</div>
       <div>
-        <div class="prof-name">${p.name} <span class="badge badge-red" style="padding:2px 6px;font-size:0.6rem;margin-left:4px">NUEVO</span></div>
-        <div class="prof-spec">${p.spec}</div>
+        <div class="prof-name">${proData.name} <span class="badge badge-red" style="padding:2px 6px;font-size:0.6rem;margin-left:4px">NUEVO</span></div>
+        <div class="prof-spec">${proData.spec}</div>
         <div class="prof-meta">
-          <span>⭐ 5.0 (Nuevo)</span><span>🖥 Online / Presencial</span><span>📍 ${p.barrio}</span>
+          <span>⭐ 5.0 (Nuevo)</span><span>🖥 Online / Presencial</span><span>📍 ${proData.barrio}</span>
         </div>
         <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
         <div class="prof-slots">
-          ${p.schedule && p.schedule.length > 0
-            ? p.schedule.slice(0, 4).map(s => `<button class="prof-slot" onclick="bookSlot(event,'${p.name}','${s}',${p.price})">${s}</button>`).join('')
-            : `<button class="prof-slot" onclick="bookSlot(event,'${p.name}','Hoy 10:00',${p.price})">Hoy 10:00</button>
-               <button class="prof-slot" onclick="bookSlot(event,'${p.name}','Mañ 15:00',${p.price})">Mañ 15:00</button>`
+          ${proData.schedule && proData.schedule.length > 0
+            ? proData.schedule.slice(0, 4).map(s => `<button class="prof-slot" onclick="bookSlot(event,'${proData.name}','${s}',${proData.price})">${s}</button>`).join('')
+            : `<button class="prof-slot" onclick="bookSlot(event,'${proData.name}','Hoy 10:00',${proData.price})">Hoy 10:00</button>
+               <button class="prof-slot" onclick="bookSlot(event,'${proData.name}','Mañ 15:00',${proData.price})">Mañ 15:00</button>`
           }
         </div>
       </div>
       <div class="prof-right">
-        <div class="prof-price"><span class="ficha"><span class="symbol">+</span>${p.price}</span><small>/ sesión<div class="uyu">${p.uyu}</div></small></div>
+        <div class="prof-price"><span class="ficha"><span class="symbol">+</span>${proData.price}</span><small>/ sesión<div class="uyu">${proData.uyu}</div></small></div>
         <div class="avail"><span class="dot"></span>Disponible</div>
-        <button class="btn btn-primary btn-sm" onclick="openBookingPopup('${p.name}',${p.price});event.stopPropagation()">Reservar</button>
+        <button class="btn btn-primary btn-sm" onclick="openBookingPopup('${proData.name}',${proData.price});event.stopPropagation()">Reservar</button>
       </div>
     `;
     list.prepend(card);
@@ -276,28 +339,35 @@ function loadCustomPros() {
 }
 
 /* ─── Init ─── */
-document.addEventListener('DOMContentLoaded', () => {
-  const user = JSON.parse(localStorage.getItem('alma_user') || '{"fichas":0}');
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load logged-in user's fichas and role from Supabase
+  if (window.supabase) {
+    const { data: { session } } = await window.supabase.auth.getSession();
+    if (session) {
+      const { data: profile } = await window.supabase
+        .from('profiles')
+        .select('fichas, role')
+        .eq('id', session.user.id)
+        .single();
 
-  // Admin button visibility
-  if (user.role === 'admin') {
-    const adminBtn = document.getElementById('admin-btn');
-    if (adminBtn) adminBtn.style.display = 'flex';
+      if (profile) {
+        const fNum = document.querySelector('.fichas-widget .f-num');
+        if (fNum) fNum.innerHTML = `${profile.fichas}<span style="font-size:1.4rem">+</span>`;
+
+        if (profile.role === 'admin') {
+          const adminBtn = document.getElementById('admin-btn');
+          if (adminBtn) adminBtn.style.display = 'flex';
+        }
+      }
+    }
   }
 
-  // Fichas widget
-  const fNum = document.querySelector('.fichas-widget .f-num');
-  if (fNum) fNum.innerHTML = `${user.fichas || 0}<span style="font-size:1.4rem">+</span>`;
+  await loadCustomPros();
 
-  // Load custom pros from localStorage
-  loadCustomPros();
-
-  // Search input — Enter key
   document.getElementById('search-input')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') doSearch();
   });
 
-  // Pagination buttons
   document.querySelectorAll('.page-btn').forEach(b => {
     b.addEventListener('click', function () {
       document.querySelectorAll('.page-btn').forEach(x => x.classList.remove('active'));
@@ -305,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Pre-fill filter from URL param ?s=specialty
   const sp = new URLSearchParams(location.search).get('s');
   if (sp) {
     const svcEl = document.getElementById('filter-svc');

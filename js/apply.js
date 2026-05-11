@@ -2,9 +2,8 @@
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const TIMES  = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 
-// Use current month instead of a hardcoded date
 const today = new Date(); today.setHours(0, 0, 0, 0);
-let currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+let currentDate   = new Date(today.getFullYear(), today.getMonth(), 1);
 let selectedDays  = new Set();
 let selectedTimes = new Set();
 
@@ -13,10 +12,10 @@ function renderCalendar() {
   const m = currentDate.getMonth();
   document.getElementById('cal-month-label').textContent = MONTHS[m] + ' ' + y;
 
-  const firstDay = new Date(y, m, 1).getDay();
+  const firstDay    = new Date(y, m, 1).getDay();
   const daysInMonth = new Date(y, m + 1, 0).getDate();
-  const grid = document.getElementById('cal-days');
-  grid.innerHTML = '';
+  const grid        = document.getElementById('cal-days');
+  grid.innerHTML    = '';
 
   for (let i = 0; i < firstDay; i++) {
     const el = document.createElement('div');
@@ -25,14 +24,14 @@ function renderCalendar() {
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
-    const el = document.createElement('div');
+    const el       = document.createElement('div');
     const thisDate = new Date(y, m, d);
     thisDate.setHours(0, 0, 0, 0);
     const key = `${y}-${m + 1}-${d}`;
 
     el.className = 'cal-day';
-    if (thisDate < today)                            el.classList.add('cal-past');
-    if (thisDate.getTime() === today.getTime())      el.classList.add('today');
+    if (thisDate < today)                       el.classList.add('cal-past');
+    if (thisDate.getTime() === today.getTime()) el.classList.add('today');
     if (selectedDays.has(key)) {
       el.classList.add('available');
       el.innerHTML = `${d}<div class='dot-avail'></div>`;
@@ -100,8 +99,8 @@ function updateSummary() {
 
 /* ─── Service info ─── */
 function updateServiceInfo() {
-  const sel = document.getElementById('svc-select');
-  const opt = sel.options[sel.selectedIndex];
+  const sel    = document.getElementById('svc-select');
+  const opt    = sel.options[sel.selectedIndex];
   const fichas = opt.dataset.fichas;
   const dur    = opt.dataset.dur;
   const disp   = document.getElementById('ficha-display');
@@ -122,71 +121,95 @@ function previewUpdate() {
   const fn = document.getElementById('fn').value;
   const ln = document.getElementById('ln').value;
   const sp = document.getElementById('svc-select').selectedOptions[0]?.textContent || 'Especialidad';
-  document.getElementById('pv-name').textContent = [fn, ln].filter(Boolean).join(' ') || 'Tu nombre';
-  document.getElementById('pv-spec').textContent = sp === 'Seleccioná' ? 'Especialidad' : sp;
+  document.getElementById('pv-name').textContent   = [fn, ln].filter(Boolean).join(' ') || 'Tu nombre';
+  document.getElementById('pv-spec').textContent   = sp === 'Seleccioná' ? 'Especialidad' : sp;
   document.getElementById('pv-avatar').textContent = fn ? EMOJIS[fn.length % EMOJIS.length] : '🩺';
   updateProgress();
 }
 
 function updateProgress() {
-  const req    = document.querySelectorAll('#apply-form input[required], #apply-form select[required]');
-  const filled = [...req].filter(f => f.value.trim()).length;
+  const req      = document.querySelectorAll('#apply-form input[required], #apply-form select[required]');
+  const filled   = [...req].filter(f => f.value.trim()).length;
   const calBonus = selectedDays.size > 0 ? 1 : 0;
-  const pct = Math.min(100, Math.round(((filled + calBonus) / (req.length + 1)) * 100));
+  const pct      = Math.min(100, Math.round(((filled + calBonus) / (req.length + 1)) * 100));
   document.getElementById('pv-progress').style.width = pct + '%';
-  document.getElementById('pv-pct').textContent = pct + '%';
+  document.getElementById('pv-pct').textContent       = pct + '%';
 }
 
 /* ─── Form submit ─── */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('apply-form').addEventListener('submit', function (e) {
+  document.getElementById('apply-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
+    btn.disabled    = true;
     btn.textContent = 'Enviando...';
 
-    setTimeout(() => {
-      const success = document.getElementById('apply-success');
-      success.style.display = 'flex';
-      this.querySelectorAll('.form-card:not(#apply-success)').forEach(c => c.style.display = 'none');
-      showToast('¡Perfil enviado! Te contactamos en 24–48hs.', '✓', 'success');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const fn    = document.getElementById('fn').value;
+    const ln    = document.getElementById('ln').value;
+    const svcEl = document.getElementById('svc-select');
+    const svcId = svcEl.value;
+    const spec  = svcEl.options[svcEl.selectedIndex]?.text || '';
+    const price = parseInt(svcEl.options[svcEl.selectedIndex]?.dataset.fichas || 6);
 
-      const fn    = document.getElementById('fn').value;
-      const ln    = document.getElementById('ln').value;
-      const svcEl = document.getElementById('svc-select');
-      const svcId = svcEl.value;
-      const spec  = svcEl.options[svcEl.selectedIndex]?.text || '';
-      const price = svcEl.options[svcEl.selectedIndex]?.dataset.fichas || 6;
+    const colorMap = { psicologia: '#E53935', psiquiatria: '#7B1FA2', nutricion: '#2E7D32', trainer: '#E65100', coaching: '#00695C', otro: '#455A64' };
+    const iconMap  = { psicologia: '🧠', psiquiatria: '💊', nutricion: '🥗', trainer: '🏋️', coaching: '🎯', otro: '➕' };
 
-      const colorMap = { psicologia: '#E53935', psiquiatria: '#7B1FA2', nutricion: '#2E7D32', trainer: '#E65100', coaching: '#00695C', otro: '#455A64' };
-      const iconMap  = { psicologia: '🧠', psiquiatria: '💊', nutricion: '🥗', trainer: '🏋️', coaching: '🎯', otro: '➕' };
+    const scheduleArray = [];
+    selectedDays.forEach(dateStr => {
+      const [y, mo, d] = dateStr.split('-');
+      const dateObj = new Date(+y, +mo - 1, +d);
+      dateObj.setHours(0, 0, 0, 0);
+      const isToday  = dateObj.getTime() === today.getTime();
+      const dayPrefix = isToday ? 'Hoy' : `${dateObj.getDate()}/${dateObj.getMonth() + 1}`;
+      selectedTimes.forEach(t => scheduleArray.push(`${dayPrefix} ${t}`));
+    });
 
-      const scheduleArray = [];
-      selectedDays.forEach(dateStr => {
-        const [y, mo, d] = dateStr.split('-');
-        const dateObj = new Date(+y, +mo - 1, +d);
-        dateObj.setHours(0, 0, 0, 0);
-        const isToday = dateObj.getTime() === today.getTime();
-        const dayPrefix = isToday ? 'Hoy' : `${dateObj.getDate()}/${dateObj.getMonth() + 1}`;
-        selectedTimes.forEach(t => scheduleArray.push(`${dayPrefix} ${t}`));
-      });
+    // Save to Supabase
+    if (window.supabase) {
+      const { data: { session } } = await window.supabase.auth.getSession();
 
-      const proInfo = {
-        name: `${fn} ${ln}`, svcId, spec, barrio: 'Montevideo', price,
-        lat:   -34.90 + (Math.random() * 0.04 - 0.02),
-        lng:   -56.16 + (Math.random() * 0.04 - 0.02),
-        color: colorMap[svcId] || colorMap.otro,
-        icon:  iconMap[svcId]  || iconMap.otro,
-        uyu:   '$' + (price * 400).toLocaleString('es-UY') + ' UYU',
-        schedule: scheduleArray,
-      };
+      const { error: insertErr } = await window.supabase
+        .from('professional_listings')
+        .insert({
+          user_id:  session?.user?.id || null,
+          name:     `${fn} ${ln}`,
+          spec,
+          svc_id:   svcId,
+          barrio:   'Montevideo',
+          price,
+          lat:      -34.90 + (Math.random() * 0.04 - 0.02),
+          lng:      -56.16 + (Math.random() * 0.04 - 0.02),
+          color:    colorMap[svcId] || colorMap.otro,
+          icon:     iconMap[svcId]  || iconMap.otro,
+          uyu:      '$' + (price * 400).toLocaleString('es-UY') + ' UYU',
+          schedule: scheduleArray,
+          status:   'pending',
+        });
 
-      const customPros = JSON.parse(localStorage.getItem('alma_custom_pros') || '[]');
-      customPros.push(proInfo);
-      localStorage.setItem('alma_custom_pros', JSON.stringify(customPros));
-      localStorage.setItem('alma_user', JSON.stringify({ username: fn, email: 'pro@alma.com', role: 'pro', fichas: 0 }));
-    }, 1600);
+      if (insertErr) {
+        showToast('Error al enviar: ' + insertErr.message, '❌', 'error');
+        btn.disabled    = false;
+        btn.textContent = 'Enviar solicitud';
+        return;
+      }
+
+      // Mark the logged-in user as a pro
+      if (session) {
+        await window.supabase
+          .from('profiles')
+          .update({ role: 'pro' })
+          .eq('id', session.user.id);
+      }
+    }
+
+    // UX delay then show success
+    await new Promise(r => setTimeout(r, 1600));
+
+    const success = document.getElementById('apply-success');
+    success.style.display = 'flex';
+    this.querySelectorAll('.form-card:not(#apply-success)').forEach(c => c.style.display = 'none');
+    showToast('¡Perfil enviado! Te contactamos en 24–48hs.', '✓', 'success');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   renderCalendar();

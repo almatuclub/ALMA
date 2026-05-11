@@ -9,15 +9,15 @@ function selectCombo(el, fichas, price, per, disc) {
   selectedFichas = fichas; selectedPrice = price; selectedPer = per; selectedDiscount = disc;
 
   const saving = fichas * 400 - price;
-  document.getElementById('sum-combo').textContent         = fichas + ' fichas';
-  document.getElementById('sum-per').textContent           = '$' + per.toLocaleString();
+  document.getElementById('sum-combo').textContent          = fichas + ' fichas';
+  document.getElementById('sum-per').textContent            = '$' + per.toLocaleString();
   document.getElementById('sum-discount-label').textContent = disc > 0 ? 'Descuento (' + disc + '%)' : 'Sin descuento';
-  document.getElementById('sum-discount').textContent      = disc > 0 ? '-$' + saving.toLocaleString() : '$0';
-  document.getElementById('sum-total').textContent         = '$' + price.toLocaleString() + ' UYU';
-  document.getElementById('pay-amount').textContent        = price.toLocaleString();
+  document.getElementById('sum-discount').textContent       = disc > 0 ? '-$' + saving.toLocaleString() : '$0';
+  document.getElementById('sum-total').textContent          = '$' + price.toLocaleString() + ' UYU';
+  document.getElementById('pay-amount').textContent         = price.toLocaleString();
 
-  document.getElementById('sb-fichas').textContent = fichas;
-  document.getElementById('sb-price').textContent  = '$' + price.toLocaleString() + ' UYU';
+  document.getElementById('sb-fichas').textContent  = fichas;
+  document.getElementById('sb-price').textContent   = '$' + price.toLocaleString() + ' UYU';
   document.getElementById('combo-desc').textContent = fichas + ' fichas';
 
   const sbWrap = document.getElementById('sb-saving-wrap');
@@ -35,7 +35,7 @@ function selectCombo(el, fichas, price, per, disc) {
   document.getElementById('coa-count').textContent  = Math.floor(fichas / 7)  + ' sesiones';
 }
 
-function processPayment() {
+async function processPayment() {
   const btn    = document.getElementById('pay-btn');
   const inputs = document.querySelectorAll('#payment-form-card input[required]');
   let allOk    = true;
@@ -50,25 +50,43 @@ function processPayment() {
   btn.disabled = true;
   btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite">⟳</span> Procesando pago seguro...';
 
-  setTimeout(() => {
-    document.getElementById('payment-form-card').style.display = 'none';
-    document.getElementById('success-fichas').textContent = selectedFichas;
+  // Simulate payment gateway delay
+  await new Promise(r => setTimeout(r, 2200));
 
-    const user = JSON.parse(localStorage.getItem('alma_user') || '{"fichas":0}');
-    user.fichas = (user.fichas || 0) + selectedFichas;
-    localStorage.setItem('alma_user', JSON.stringify(user));
+  // Credit fichas in DB
+  if (window.supabase) {
+    const { data: { session } } = await window.supabase.auth.getSession();
+    if (session) {
+      const { data: profile } = await window.supabase
+        .from('profiles')
+        .select('fichas')
+        .eq('id', session.user.id)
+        .single();
 
-    const succ = document.getElementById('payment-success');
-    succ.style.display = 'flex';
-    showToast('¡' + selectedFichas + ' fichas acreditadas en tu cuenta!', '✓', 'success');
-  }, 2200);
+      const current = profile?.fichas || 0;
+      const { error } = await window.supabase
+        .from('profiles')
+        .update({ fichas: current + selectedFichas })
+        .eq('id', session.user.id);
+
+      if (error) {
+        showToast('Error al acreditar fichas: ' + error.message, '❌', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Confirmar pago';
+        return;
+      }
+    }
+  }
+
+  document.getElementById('payment-form-card').style.display = 'none';
+  document.getElementById('success-fichas').textContent = selectedFichas;
+  document.getElementById('payment-success').style.display = 'flex';
+  showToast('¡' + selectedFichas + ' fichas acreditadas en tu cuenta!', '✓', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Pre-select popular combo
   selectCombo(document.getElementById('combo-50'), 50, 16000, 320, 20);
 
-  // Card number auto-formatting
   document.getElementById('card-num').addEventListener('input', function () {
     let v = this.value.replace(/\D/g, '').substring(0, 16);
     this.value = v.replace(/(.{4})/g, '$1 ').trim();
