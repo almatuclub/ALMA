@@ -7,8 +7,16 @@
 //   SUPABASE_URL               — e.g. https://xxx.supabase.co
 //   SUPABASE_SERVICE_ROLE_KEY  — service role key (bypasses RLS)
 
+const REQUIRED_ENV = ['MP_ACCESS_TOKEN', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'];
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
+
+  const missing = REQUIRED_ENV.filter(k => !process.env[k]);
+  if (missing.length) {
+    console.error('[webhook] Missing env vars:', missing.join(', '));
+    return res.status(500).end();
+  }
 
   const { type, data } = req.body || {};
 

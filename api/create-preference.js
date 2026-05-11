@@ -1,17 +1,27 @@
 // POST /api/create-preference
-// Validates the caller's Supabase JWT server-side, then creates a Mercado Pago
-// Checkout Pro preference and returns the init_point URL.
+// Validates the caller's Supabase JWT, then creates a Mercado Pago Checkout Pro
+// preference and returns the init_point URL to redirect to.
 //
 // Required env vars — set all of these in the Vercel dashboard:
-//   MP_ACCESS_TOKEN   — Mercado Pago production access token
-//   SUPABASE_URL      — e.g. https://iuhnhexotyrnflsmpzxi.supabase.co
-//   SUPABASE_ANON_KEY — anon/publishable key (used only to validate JWT)
-//   SITE_URL          — full origin with no trailing slash, e.g. https://alma.vercel.app
+//   MP_ACCESS_TOKEN           — Mercado Pago production access token
+//   SUPABASE_URL              — e.g. https://iuhnhexotyrnflsmpzxi.supabase.co
+//   SUPABASE_SERVICE_ROLE_KEY — service role key (standard JWT; validates user tokens via GoTrue)
+//   SITE_URL                  — full origin, no trailing slash, e.g. https://alma.vercel.app
+//
+// NOTE: SUPABASE_ANON_KEY is NOT used here.
+// The publishable/anon key (sb_publishable_…) only works through the JS SDK, not as a raw
+// REST apikey header. The service role key is always a standard JWT and GoTrue accepts it.
 
-const REQUIRED_ENV = ['MP_ACCESS_TOKEN', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SITE_URL'];
+const REQUIRED_ENV = ['MP_ACCESS_TOKEN', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'SITE_URL'];
+
+const VALID_COMBOS = [
+  { fichas: 10,  price:  4000 },
+  { fichas: 25,  price:  9000 },
+  { fichas: 50,  price: 16000 },
+  { fichas: 100, price: 28000 },
+];
 
 module.exports = async function handler(req, res) {
-  // CORS — allow the browser to POST from the same Vercel domain
   const origin = process.env.SITE_URL || '*';
   res.setHeader('Access-Control-Allow-Origin',  origin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,70 +31,81 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')    return res.status(405).json({ error: 'Method not allowed' });
 
-  /* ── 0. Guard: fail fast with a clear message if env vars are missing ── */
+  /* ── 0. Env var guard — fail fast with the variable name, never the value ── */
   const missing = REQUIRED_ENV.filter(k => !process.env[k]);
   if (missing.length) {
-    // Only the variable *names* are logged/returned — never the values
     console.error('[create-preference] Missing env vars:', missing.join(', '));
     return res.status(500).json({
       error: `Server misconfiguration — missing env var(s): ${missing.join(', ')}`,
     });
   }
 
-  /* ── 1. Authenticate caller: validate Supabase JWT and resolve user ID ── */
+  /* ── 1. Extract the user's Supabase JWT from the Authorization header ── */
   const authHeader = (req.headers['authorization'] || '').trim();
   if (!authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Falta token de autenticación' });
+    return res.status(401).json({ error: 'Falta token de autenticación (Authorization: Bearer …)' });
   }
 
+  // The token is the part after "Bearer "
+  const userJwt = authHeader.slice(7);
+  if (!userJwt) {
+    return res.status(401).json({ error: 'Token vacío' });
+  }
+
+  /* ── 2. Validate the JWT against Supabase GoTrue ──
+     We use SUPABASE_SERVICE_ROLE_KEY as the `apikey` because:
+     - It is a standard JWT that GoTrue always accepts as a valid project key.
+     - The publishable/anon key (sb_publishable_…) only works through the JS SDK,
+       not as a raw REST header.
+     The user's own JWT stays in Authorization — GoTrue uses that to return the user's record. */
   let user;
   try {
-    const userRes = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
+    const gotrueRes = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
       headers: {
-        'apikey':        process.env.SUPABASE_ANON_KEY,
-        'Authorization': authHeader,
+        'apikey':        process.env.SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${userJwt}`,
       },
     });
 
-    if (!userRes.ok) {
-      console.error('[create-preference] Supabase /user returned', userRes.status);
-      return res.status(401).json({ error: 'Token inválido o expirado' });
+    const body = await gotrueRes.json().catch(() => ({}));
+
+    if (!gotrueRes.ok) {
+      // Log status + GoTrue error code — no secrets exposed
+      console.error(
+        '[create-preference] GoTrue /user returned', gotrueRes.status,
+        '| error_code:', body.error_code || body.error || '(none)',
+        '| msg:', body.msg || body.message || '(none)'
+      );
+      return res.status(401).json({
+        error: `Sesión inválida (GoTrue ${gotrueRes.status}). Cerrá sesión, volvé a ingresar e intentá de nuevo.`,
+      });
     }
 
-    user = await userRes.json();
+    user = body;
   } catch (err) {
-    console.error('[create-preference] Failed to reach Supabase:', err.message);
-    return res.status(502).json({ error: 'No se pudo verificar la sesión' });
+    console.error('[create-preference] Failed to reach Supabase GoTrue:', err.message);
+    return res.status(502).json({ error: 'No se pudo verificar la sesión con Supabase' });
   }
 
   if (!user?.id) {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    console.error('[create-preference] GoTrue returned OK but no user.id:', JSON.stringify(user));
+    return res.status(401).json({ error: 'Respuesta de sesión inesperada' });
   }
 
-  /* ── 2. Validate request body ── */
+  /* ── 3. Validate request body against known combos ── */
   const { fichas, price } = req.body || {};
 
-  if (
-    typeof fichas !== 'number' || fichas < 1 ||
-    typeof price  !== 'number' || price  < 1
-  ) {
-    return res.status(400).json({ error: 'Combo inválido — fichas y price deben ser números positivos' });
+  if (typeof fichas !== 'number' || typeof price !== 'number') {
+    return res.status(400).json({ error: 'fichas y price deben ser números' });
   }
 
-  // Sanity-check against known combos (prevents arbitrary amounts)
-  const VALID_COMBOS = [
-    { fichas: 10,  price:  4000 },
-    { fichas: 25,  price:  9000 },
-    { fichas: 50,  price: 16000 },
-    { fichas: 100, price: 28000 },
-  ];
   if (!VALID_COMBOS.some(c => c.fichas === fichas && c.price === price)) {
     return res.status(400).json({ error: 'Combo no reconocido' });
   }
 
+  /* ── 4. Create Mercado Pago preference ── */
   const siteUrl = process.env.SITE_URL;
 
-  /* ── 3. Create Mercado Pago preference ── */
   let mpData;
   try {
     const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
@@ -97,10 +118,10 @@ module.exports = async function handler(req, res) {
         items: [{
           title:       `${fichas} fichas alma+`,
           quantity:    1,
-          unit_price:  price,   // UYU, full integer amount (e.g. 16000)
+          unit_price:  price,      // full UYU integer, e.g. 16000
           currency_id: 'UYU',
         }],
-        // external_reference carries userId + fichas to the webhook securely
+        // external_reference passes userId + fichas count to the webhook
         external_reference: `${user.id}:${fichas}`,
         back_urls: {
           success: `${siteUrl}/payment?status=approved&fichas=${fichas}`,
@@ -130,7 +151,7 @@ module.exports = async function handler(req, res) {
   }
 
   return res.status(200).json({
-    init_point:         mpData.init_point,          // production checkout URL
-    sandbox_init_point: mpData.sandbox_init_point,  // sandbox URL for testing
+    init_point:         mpData.init_point,
+    sandbox_init_point: mpData.sandbox_init_point,
   });
 };
