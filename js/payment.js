@@ -3,36 +3,43 @@ let selectedPrice    = 16000;
 let selectedPer      = 320;
 let selectedDiscount = 20;
 
-function selectCombo(el, fichas, price, per, disc) {
+// Safe getElementById — never throws on missing elements
+function el(id) { return document.getElementById(id); }
+function setText(id, val) { const n = el(id); if (n) n.textContent = val; }
+
+function selectCombo(card, fichas, price, per, disc) {
   document.querySelectorAll('.combo-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
+  if (card) card.classList.add('selected');
+
   selectedFichas = fichas; selectedPrice = price; selectedPer = per; selectedDiscount = disc;
 
   const saving = fichas * 400 - price;
-  document.getElementById('sum-combo').textContent          = fichas + ' fichas';
-  document.getElementById('sum-per').textContent            = '$' + per.toLocaleString();
-  document.getElementById('sum-discount-label').textContent = disc > 0 ? 'Descuento (' + disc + '%)' : 'Sin descuento';
-  document.getElementById('sum-discount').textContent       = disc > 0 ? '-$' + saving.toLocaleString() : '$0';
-  document.getElementById('sum-total').textContent          = '$' + price.toLocaleString() + ' UYU';
-  document.getElementById('pay-amount').textContent         = price.toLocaleString();
 
-  document.getElementById('sb-fichas').textContent  = fichas;
-  document.getElementById('sb-price').textContent   = '$' + price.toLocaleString() + ' UYU';
-  document.getElementById('combo-desc').textContent = fichas + ' fichas';
+  setText('sum-combo',         fichas + ' fichas');
+  setText('sum-per',           '$' + per.toLocaleString());
+  setText('sum-discount-label', disc > 0 ? 'Descuento (' + disc + '%)' : 'Sin descuento');
+  setText('sum-discount',      disc > 0 ? '-$' + saving.toLocaleString() : '$0');
+  setText('sum-total',         '$' + price.toLocaleString() + ' UYU');
+  setText('pay-amount',        price.toLocaleString());
+  setText('sb-fichas',         fichas);
+  setText('sb-price',          '$' + price.toLocaleString() + ' UYU');
+  setText('combo-desc',        fichas + ' fichas');
 
-  const sbWrap = document.getElementById('sb-saving-wrap');
-  if (disc > 0) {
-    document.getElementById('sb-saving').textContent = 'Ahorrás ' + disc + '% ($' + saving.toLocaleString() + ')';
-    sbWrap.style.display = 'block';
-  } else {
-    sbWrap.style.display = 'none';
+  const sbWrap = el('sb-saving-wrap');
+  if (sbWrap) {
+    if (disc > 0) {
+      setText('sb-saving', 'Ahorrás ' + disc + '% ($' + saving.toLocaleString() + ')');
+      sbWrap.style.display = 'block';
+    } else {
+      sbWrap.style.display = 'none';
+    }
   }
 
-  document.getElementById('psi-count').textContent  = Math.floor(fichas / 8)  + ' sesiones';
-  document.getElementById('psi2-count').textContent = Math.floor(fichas / 12) + ' consultas';
-  document.getElementById('nut-count').textContent  = Math.floor(fichas / 6)  + ' sesiones';
-  document.getElementById('tra-count').textContent  = Math.floor(fichas / 5)  + ' sesiones';
-  document.getElementById('coa-count').textContent  = Math.floor(fichas / 7)  + ' sesiones';
+  setText('psi-count',  Math.floor(fichas / 8)  + ' sesiones');
+  setText('psi2-count', Math.floor(fichas / 12) + ' consultas');
+  setText('nut-count',  Math.floor(fichas / 6)  + ' sesiones');
+  setText('tra-count',  Math.floor(fichas / 5)  + ' sesiones');
+  setText('coa-count',  Math.floor(fichas / 7)  + ' sesiones');
 }
 
 async function initiatePayment() {
@@ -48,7 +55,8 @@ async function initiatePayment() {
     return;
   }
 
-  const btn = document.getElementById('pay-btn');
+  const btn = el('pay-btn');
+  if (!btn) return;
   btn.disabled = true;
   btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite">⟳</span> Preparando pago...';
 
@@ -62,14 +70,21 @@ async function initiatePayment() {
       body: JSON.stringify({ fichas: selectedFichas, price: selectedPrice }),
     });
 
+    let payload = {};
+    try { payload = await res.json(); } catch (_) { /* empty body */ }
+
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Error al crear preferencia de pago');
+      throw new Error(payload.error || `Error ${res.status} al crear preferencia de pago`);
     }
 
-    const { init_point } = await res.json();
-    // Redirect to Mercado Pago hosted checkout
-    location.href = init_point;
+    if (!payload.init_point) {
+      throw new Error('Respuesta inesperada del servidor de pagos');
+    }
+
+    // Redirect user to Mercado Pago hosted checkout — fichas are credited only
+    // after the webhook confirms the payment, never from the frontend directly.
+    location.href = payload.init_point;
+
   } catch (err) {
     showToast(err.message, '❌', 'error');
     btn.disabled = false;
@@ -77,24 +92,39 @@ async function initiatePayment() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  selectCombo(document.getElementById('combo-50'), 50, 16000, 320, 20);
+// Expose on window so combo card onclick attributes can still call selectCombo
+// (those inline handlers are safe — selectCombo is synchronous and defined at parse time)
+window.selectCombo = selectCombo;
 
-  // Handle redirect back from Mercado Pago
-  const params  = new URLSearchParams(location.search);
-  const status  = params.get('status');
-  const fichas  = parseInt(params.get('fichas') || '0', 10);
+document.addEventListener('DOMContentLoaded', () => {
+  // Pre-select popular combo
+  selectCombo(el('combo-50'), 50, 16000, 320, 20);
+
+  // Wire the pay button in JS, not via inline onclick, to avoid timing issues
+  // with defer-loaded scripts
+  const payBtn = el('pay-btn');
+  if (payBtn) payBtn.addEventListener('click', initiatePayment);
+
+  // ── Handle redirect back from Mercado Pago ──
+  const params = new URLSearchParams(location.search);
+  const status = params.get('status');
+  const fichas = parseInt(params.get('fichas') || '0', 10);
 
   if (status === 'approved' && fichas > 0) {
-    document.getElementById('payment-form-card').style.display = 'none';
-    document.getElementById('success-fichas').textContent      = fichas;
-    document.getElementById('payment-success').style.display  = 'flex';
+    const formCard = el('payment-form-card');
+    const successEl = el('payment-success');
+    if (formCard)  formCard.style.display  = 'none';
+    if (successEl) {
+      setText('success-fichas', fichas);
+      successEl.style.display = 'flex';
+    }
     showToast('¡Pago aprobado! Fichas acreditadas en tu cuenta.', '✓', 'success');
-    // Clean URL so a page refresh doesn't re-show the success screen
     history.replaceState(null, '', location.pathname);
+
   } else if (status === 'failure') {
     showToast('El pago no pudo procesarse. Intentá de nuevo.', '❌', 'error');
     history.replaceState(null, '', location.pathname);
+
   } else if (status === 'pending') {
     showToast('Tu pago está pendiente. Te avisamos cuando se acrediten las fichas.', '⏳', 'info');
     history.replaceState(null, '', location.pathname);
