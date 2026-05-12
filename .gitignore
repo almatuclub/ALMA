@@ -1,0 +1,20 @@
+# IDE / editor session files
+*.lock
+.vscode/
+.idea/
+
+# Environment variables — never commit secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Vercel local config
+.vercel/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Node (if dependencies are ever added)
+node_modules/
