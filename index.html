@@ -47,56 +47,100 @@
 <!-- ─── Hero ─── -->
 <section class="hero">
   <div class="container hero__inner">
+
     <div class="hero__text">
-      <div class="hero__badge">
+      <div class="hero__eyebrow">
         <span class="dot"></span>
-        Más de 480 profesionales verificados
+        480+ profesionales verificados en Uruguay
       </div>
       <h1>Tu bienestar a un <span class="gradient-text">clic de distancia</span></h1>
-      <p class="hero__sub">Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados. Elegís a quién, cuándo y cómo.</p>
+      <p class="hero__lead">Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados. Elegís a quién, cuándo y cómo — con fichas, sin intermediarios.</p>
       <div class="hero__actions">
         <a href="professionals.html" class="btn btn-primary btn-lg">Encontrar profesional →</a>
-        <a href="login.html" class="btn btn-outline btn-lg">Ingresar</a>
+        <a href="payment.html" class="btn btn-outline btn-lg">Ver paquetes de fichas</a>
       </div>
-      <div class="ficha-strip">
-        <span class="ficha"><span class="symbol">+</span> fichas</span>
-        <span>— la moneda de alma+. Comprás fichas y las usás para reservar sesiones.</span>
-      </div>
-    </div>
-    <div class="hero__visual">
-      <img src="img-therapy.png" alt="Sesión de terapia profesional" class="hero__img-main" />
-      <div class="hero__img-badge">
-        <div class="icon">📅</div>
-        <div>
-          <strong>Próxima sesión disponible</strong>
-          <span>Hoy · 17:00 hs</span>
+      <div class="hero__trust">
+        <div class="hero__trust-item">
+          <div class="check">✓</div>
+          Perfiles verificados
+        </div>
+        <div class="hero__trust-item">
+          <div class="check">✓</div>
+          Precios transparentes
+        </div>
+        <div class="hero__trust-item">
+          <div class="check">✓</div>
+          Agenda en tiempo real
         </div>
       </div>
     </div>
+
+    <!-- Floating cards visual -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__blob"></div>
+
+      <!-- Professional profile card -->
+      <div class="hcard hcard--prof">
+        <div class="hcard__avatar">🧠</div>
+        <div>
+          <div class="hcard__name">Lic. Valentina Suárez</div>
+          <div class="hcard__spec">Psicología · TCC &amp; Mindfulness</div>
+          <div class="hcard__stars">
+            <span class="s">★★★★★</span>
+            <span class="n">4.9 · 142 sesiones</span>
+          </div>
+        </div>
+        <div class="hcard__avail">
+          <span class="hcard__avail-dot"></span>
+          Disponible hoy
+        </div>
+      </div>
+
+      <!-- Session booked card -->
+      <div class="hcard hcard--session">
+        <div class="hcard__icon-wrap">📅</div>
+        <div>
+          <div class="hcard__label">Próxima sesión</div>
+          <div class="hcard__val">Hoy · 17:00 hs</div>
+        </div>
+      </div>
+
+      <!-- Fichas balance card -->
+      <div class="hcard hcard--fichas">
+        <div class="hcard__label">Tu saldo</div>
+        <div class="hcard__big">24<em>+</em></div>
+        <div class="hcard__bar"><div class="hcard__bar-fill"></div></div>
+        <div class="hcard__bar-lbl">fichas disponibles</div>
+      </div>
+
+      <!-- Floating rating pill -->
+      <div class="hero__pill">⭐ 4.9 · 12k+ sesiones</div>
+    </div>
+
   </div>
 </section>
 
 <!-- ─── Stats strip ─── -->
-<section style="padding: 40px 0; background: white; border-bottom: 1px solid var(--border);">
+<section class="stats-row-section">
   <div class="container" style="display:flex;justify-content:center">
     <div class="stats-strip">
       <div class="stats-strip__item">
-        <span class="stats-strip__val">480<span>+</span></span>
+        <span class="stats-strip__val">480<em>+</em></span>
         <div class="stats-strip__lbl">Profesionales activos</div>
       </div>
       <div class="stats-strip__sep"></div>
       <div class="stats-strip__item">
-        <span class="stats-strip__val">12k<span>+</span></span>
+        <span class="stats-strip__val">12k<em>+</em></span>
         <div class="stats-strip__lbl">Sesiones realizadas</div>
       </div>
       <div class="stats-strip__sep"></div>
       <div class="stats-strip__item">
-        <span class="stats-strip__val">4.9<span>★</span></span>
+        <span class="stats-strip__val">4.9<em>★</em></span>
         <div class="stats-strip__lbl">Calificación promedio</div>
       </div>
       <div class="stats-strip__sep"></div>
       <div class="stats-strip__item">
-        <span class="stats-strip__val">5<span>+</span></span>
+        <span class="stats-strip__val">5<em>+</em></span>
         <div class="stats-strip__lbl">Especialidades</div>
       </div>
     </div>
@@ -126,7 +170,7 @@
         <div class="step">
           <div class="step-bubble">3</div>
           <h4>Pagás con fichas</h4>
-          <p>Cada sesión tiene un precio fijo en fichas +.</p>
+          <p>Cada sesión tiene un precio fijo y transparente.</p>
         </div>
         <div class="step">
           <div class="step-bubble">4</div>
@@ -217,7 +261,7 @@
   </div>
 </section>
 
-<!-- ─── Fichas explainer ─── -->
+<!-- ─── Fichas explainer (dark) ─── -->
 <section class="section" style="padding-top:0">
   <div class="container">
     <div class="fichas-section reveal">
@@ -225,8 +269,8 @@
         <div>
           <span class="badge" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.2);margin-bottom:22px">Sistema de fichas</span>
           <h2>¿Qué son las fichas <span style="color:#FF8A80">+</span>?</h2>
-          <p>Las fichas son la moneda de alma+. Comprás un paquete de fichas y las usás para reservar sesiones con cualquier profesional del directorio. Sin sorpresas, sin comisiones ocultas.</p>
-          <a href="payment.html" class="btn btn-white btn-lg" style="margin-top:32px">Ver paquetes de fichas →</a>
+          <p class="fs-body">Las fichas son la moneda de alma+. Comprás un paquete y las usás para reservar sesiones con cualquier profesional del directorio. Sin sorpresas, sin comisiones ocultas.</p>
+          <a href="payment.html" class="btn btn-primary btn-lg" style="margin-top:4px">Ver paquetes de fichas →</a>
         </div>
         <div class="fichas-grid">
           <div class="ficha-item">
@@ -273,6 +317,7 @@
       <p>Verificados, matriculados y con disponibilidad inmediata.</p>
     </div>
     <div class="profs-preview stagger-children">
+
       <div class="prof-mini">
         <div class="prof-mini-head">
           <div class="prof-mini-avatar">🧠</div>
@@ -290,6 +335,7 @@
         </div>
         <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
       </div>
+
       <div class="prof-mini">
         <div class="prof-mini-head">
           <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#FF7043,#E53935)">🏋️</div>
@@ -307,6 +353,7 @@
         </div>
         <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
       </div>
+
       <div class="prof-mini">
         <div class="prof-mini-head">
           <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">🥗</div>
@@ -324,6 +371,7 @@
         </div>
         <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
       </div>
+
     </div>
     <div style="text-align:center;margin-top:40px">
       <a href="professionals.html" class="btn btn-primary btn-lg">Ver todos los profesionales →</a>
@@ -331,15 +379,15 @@
   </div>
 </section>
 
-<!-- ─── CTA ─── -->
+<!-- ─── CTA band ─── -->
 <section class="section">
   <div class="container">
     <div class="cta-band reveal">
       <h2>¿Sos profesional de la salud?</h2>
       <p>Sumáte a alma+ y gestioná tu agenda, pacientes y pagos en un solo lugar.</p>
       <div class="btn-group">
-        <a href="apply.html" class="btn btn-white btn-lg">Registrarme como profesional</a>
-        <a href="professionals.html" class="btn btn-lg btn-transparent">Conocer el directorio</a>
+        <a href="apply.html" class="btn btn-primary btn-lg">Registrarme como profesional</a>
+        <a href="professionals.html" class="btn-outline-white">Conocer el directorio</a>
       </div>
     </div>
   </div>
