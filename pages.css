@@ -9,7 +9,8 @@
 .hero {
   min-height: 100vh;
   padding-top: var(--nav-h);
-  background: white;
+  /* Subtle warm gradient — white at top, soft ivory/cream toward bottom */
+  background: linear-gradient(175deg, #FFFFFF 0%, #FDFCFB 45%, #F8F4EE 100%);
   position: relative;
   overflow: hidden;
 }
@@ -378,9 +379,62 @@
    INDEX · FOUNDERS
    ═══════════════════════════════════════════════════════ */
 
+/* ── Founders — dark premium section (Linear / Stripe team-section style) ── */
 .founders-section {
-  background: linear-gradient(180deg, var(--bg) 0%, white 100%);
-  border-top: 1px solid var(--border);
+  background: linear-gradient(150deg, #0E0D1C 0%, #171530 55%, #1E1938 100%);
+  border-top: none;
+  position: relative;
+  overflow: hidden;
+}
+/* Atmospheric coral glow — top right */
+.founders-section::before {
+  content: ''; position: absolute;
+  width: 720px; height: 720px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,69,60,0.11) 0%, transparent 60%);
+  top: -280px; right: -180px; pointer-events: none;
+}
+/* Indigo glow — bottom left */
+.founders-section::after {
+  content: ''; position: absolute;
+  width: 520px; height: 520px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(110,90,230,0.09) 0%, transparent 60%);
+  bottom: -180px; left: -120px; pointer-events: none;
+}
+/* Keep content above pseudo-element glows */
+.founders-section > .container { position: relative; z-index: 1; }
+
+/* Section header — dark bg overrides */
+.founders-section .section-header h2       { color: white; }
+.founders-section .section-header p        { color: rgba(255,255,255,0.52); }
+
+/* Founder cards — glassmorphism on dark */
+.founders-section .founder-card {
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.40);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.founders-section .founder-card:hover {
+  background: rgba(255,255,255,0.095);
+  border-color: rgba(232,69,60,0.28);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.07),
+              0 32px 80px rgba(0,0,0,0.50);
+  transform: translateY(-7px);
+}
+.founders-section .founder-name { color: white; }
+.founders-section .founder-bio  { color: rgba(255,255,255,0.55); }
+/* founder-role is already var(--coral) — reads well on dark */
+
+.founders-section .founder-linkedin {
+  color: rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+.founders-section .founder-linkedin:hover {
+  background: #0A66C2; color: white;
+  border-color: #0A66C2;
+  box-shadow: 0 4px 16px rgba(10,102,194,0.40);
 }
 
 .founders-grid {

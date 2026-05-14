@@ -581,17 +581,16 @@ body.page-alt { background: var(--bg); }
   position: fixed; inset: 0; z-index: 99999;
   display: flex; align-items: center; justify-content: center;
   background: var(--dark);
-  /* CSS-only auto-dismiss fallback (JS overrides this) */
-  animation: introAutoExit 0.5s ease 2.6s forwards;
+  /* CSS-only auto-dismiss fallback — JS overrides at 2.6 s */
+  animation: introAutoExit 0.64s ease 3.6s forwards;
 }
 #alma-intro.is-exit {
-  /* JS-driven exit — supersedes CSS fallback */
   animation: none;
   opacity: 0;
   transform: scale(1.025);
   pointer-events: none;
-  transition: opacity 0.51s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.51s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.66s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.66s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @keyframes introAutoExit {
   to { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -625,30 +624,31 @@ body.page-alt { background: var(--bg); }
   position: relative; z-index: 1;
 }
 
-/* Heart mark */
+/* Heart mark — springs in from below with overshoot */
 .intro__mark {
   position: relative; margin-bottom: 26px;
-  animation: introHeartIn 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: introHeartIn 0.95s cubic-bezier(0.34, 1.44, 0.64, 1) 0.14s both;
 }
 .intro__glow {
   position: absolute; inset: -36px; border-radius: 50%;
   background: radial-gradient(circle, rgba(232,69,60,0.38) 0%, transparent 65%);
-  animation: introGlowBreath 1.9s ease-out both;
+  animation: introGlowBreath 2.2s ease-out 0.12s both;
 }
 @keyframes introHeartIn {
-  from { opacity: 0; transform: scale(0.5) translateY(12px); }
-  to   { opacity: 1; transform: scale(1)   translateY(0); }
+  0%   { opacity: 0; transform: scale(0.38) translateY(24px); }
+  70%  { opacity: 1; transform: scale(1.07) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
 }
 @keyframes introGlowBreath {
-  0%   { opacity: 0; transform: scale(0.55); }
-  45%  { opacity: 1; transform: scale(1.12); }
+  0%   { opacity: 0; transform: scale(0.5); }
+  45%  { opacity: 1; transform: scale(1.16); }
   100% { opacity: 0.65; transform: scale(1); }
 }
 
 /* Brand wordmark */
 .intro__brand {
   display: flex; align-items: baseline;
-  animation: introBrandIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.46s both;
+  animation: introBrandIn 0.70s cubic-bezier(0.22, 1, 0.36, 1) 0.74s both;
 }
 .intro__brand-word {
   font-family: var(--font); font-size: 3.2rem; font-weight: 500;
@@ -661,15 +661,16 @@ body.page-alt { background: var(--bg); }
   background: var(--coral-gradient);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: introPlusIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+  animation: introPlusIn 0.80s cubic-bezier(0.34, 1.44, 0.64, 1) 0.96s both;
 }
 @keyframes introBrandIn {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes introPlusIn {
-  from { opacity: 0; transform: scale(0.65) translateY(8px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  0%   { opacity: 0; transform: scale(0.52) translateY(12px); }
+  70%  { opacity: 1; transform: scale(1.09) translateY(-3px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
 }
 
 /* Tagline */
@@ -677,20 +678,21 @@ body.page-alt { background: var(--bg); }
   font-family: var(--font); font-size: 0.84rem; font-weight: 400;
   color: rgba(255,255,255,0.38); letter-spacing: 0.025em;
   margin-top: 18px;
-  animation: introBrandIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both;
+  animation: introBrandIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 1.14s both;
 }
 
 /* Progress bar */
 .intro__progress {
-  width: 110px; height: 1.5px; border-radius: 2px;
+  width: 120px; height: 1.5px; border-radius: 2px;
   background: rgba(255,255,255,0.07);
-  margin-top: 34px; overflow: hidden;
-  animation: introBrandIn 0.4s ease 0.8s both;
+  margin-top: 36px; overflow: hidden;
+  animation: introBrandIn 0.5s ease 1.22s both;
 }
 .intro__progress::after {
   content: ''; display: block; height: 100%; width: 0;
   background: var(--coral-gradient); border-radius: 2px;
-  animation: introProgress 1.44s cubic-bezier(0.42, 0, 0.58, 1) 0.24s both;
+  /* 2.5 s sweep starting at 0.4 s — reaches ~86 % when JS dismisses at 2.6 s */
+  animation: introProgress 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s both;
 }
 @keyframes introProgress {
   from { width: 0; }

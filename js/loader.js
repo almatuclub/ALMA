@@ -19,8 +19,8 @@
   } catch (e) { /* private browsing / storage blocked — show normally */ }
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hold    = reduced ? 80  : 1440; /* ms before auto-dismiss */
-  var fade    = reduced ? 80  : 520;  /* matches CSS transition duration */
+  var hold    = reduced ? 80  : 2600; /* ms before auto-dismiss */
+  var fade    = reduced ? 80  : 660;  /* matches CSS transition duration */
 
   /* Prevent background scroll while intro is visible */
   document.body.style.overflow = 'hidden';
