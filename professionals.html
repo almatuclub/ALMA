@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Encontrar Profesional | alma+</title>
   <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
-  <link rel="stylesheet" href="style.css?v=7"/>
-  <link rel="stylesheet" href="pages.css?v=7"/>
+  <link rel="stylesheet" href="style.css?v=8"/>
+  <link rel="stylesheet" href="pages.css?v=8"/>
   <!-- Leaflet.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
@@ -14,7 +14,18 @@
 <body>
 <nav class="navbar">
   <div class="navbar__inner">
-    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <a href="index.html" class="navbar__logo">
+      <svg class="logo-mark" width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="alma-nav-g-pros" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF8573"/>
+            <stop offset="100%" stop-color="#DC3B35"/>
+          </linearGradient>
+        </defs>
+        <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#alma-nav-g-pros)"/>
+      </svg>
+      <span class="logo-wordmark">alma<span class="logo-plus">+</span></span>
+    </a>
     <ul class="navbar__nav">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="professionals.html" class="active">Profesionales</a></li>
@@ -382,7 +393,18 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div>
+        <div class="footer__logo">
+          <svg class="logo-mark" width="20" height="18" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="alma-footer-g-pros" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF8573"/>
+                <stop offset="100%" stop-color="#DC3B35"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#alma-footer-g-pros)"/>
+          </svg>
+          <span>alma<span class="plus">+</span></span>
+        </div>
         <p>Bienestar que suma. La primer red interdisciplinaria de bienestar en Uruguay.</p>
       </div>
       <div class="footer__col"><h5>Servicios</h5><a href="?s=psicologia">Psicología</a><a href="?s=psiquiatria">Psiquiatría</a><a href="?s=nutricion">Nutrición</a><a href="?s=trainer">Trainer</a><a href="?s=coaching">Coaching</a></div>

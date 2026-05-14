@@ -180,31 +180,8 @@ function initJobsFilter() {
 }
 
 // ─── Apply form ───
-function initApplyForm() {
-  const form = document.getElementById('apply-form');
-  if (!form) return;
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const btn = form.querySelector('[type="submit"]');
-    btn.disabled = true;
-    btn.innerHTML = '<span style="display:inline-block;animation:spin 0.7s linear infinite">⟳</span> Enviando...';
-
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.innerHTML = '✓ Postulación enviada';
-      btn.style.background = 'linear-gradient(135deg,#34d399,#059669)';
-      showToast('¡Postulación enviada con éxito! Te contactaremos pronto.', '✓', 'success');
-      form.classList.add('submitted');
-      const success = document.getElementById('apply-success');
-      if (success) {
-        success.style.display = 'flex';
-        form.style.display = 'none';
-        success.style.animation = 'fadeUp 0.6s ease forwards';
-      }
-    }, 1800);
-  });
-}
+// No-op: form submit is fully handled by js/apply.js (auth check + Supabase insert)
+function initApplyForm() {}
 
 // ─── Counter animation ───
 function animateCounters() {

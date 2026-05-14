@@ -88,7 +88,7 @@ function updateSummary() {
   const days  = selectedDays.size;
   const times = selectedTimes.size;
   if (!days && !times) {
-    sumEl.innerHTML = 'Seleccioná días en el calendario y luego los horarios disponibles.';
+    sumEl.innerHTML = "Seleccioná días en el calendario y luego los horarios disponibles.";
   } else {
     const daysStr  = days  ? `<strong style='color:var(--red-dark)'>${days} día${days > 1 ? 's' : ''}</strong> seleccionado${days > 1 ? 's' : ''}` : '0 días';
     const timesStr = times ? `<strong style='color:var(--red-dark)'>${[...selectedTimes].sort().join(', ')}</strong>` : 'ningún horario';
@@ -136,16 +136,42 @@ function updateProgress() {
   document.getElementById('pv-pct').textContent       = pct + '%';
 }
 
+/* ─── Auth banner ─── */
+async function checkAuthBanner() {
+  if (!window.supabase) return;
+  const { data: { session } } = await window.supabase.auth.getSession();
+  const banner = document.getElementById('auth-banner');
+  if (!session && banner) banner.style.display = 'block';
+}
+
 /* ─── Form submit ─── */
 document.addEventListener('DOMContentLoaded', () => {
+  checkAuthBanner();
+
   document.getElementById('apply-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = document.getElementById('submit-btn');
+
+    // ── Supabase guard ──
+    if (!window.supabase) {
+      showToast('Error: cliente Supabase no disponible.', '❌', 'error');
+      return;
+    }
+
+    // ── Auth guard ──
+    const { data: { session } } = await window.supabase.auth.getSession();
+    if (!session) {
+      sessionStorage.setItem('alma-return', 'apply.html');
+      showToast('Necesitás ingresar antes de enviar tu perfil.', '🔒', 'error');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1400);
+      return;
+    }
+
     btn.disabled    = true;
     btn.textContent = 'Enviando...';
 
-    const fn    = document.getElementById('fn').value;
-    const ln    = document.getElementById('ln').value;
+    const fn    = document.getElementById('fn').value.trim();
+    const ln    = document.getElementById('ln').value.trim();
     const svcEl = document.getElementById('svc-select');
     const svcId = svcEl.value;
     const spec  = svcEl.options[svcEl.selectedIndex]?.text || '';
@@ -159,52 +185,52 @@ document.addEventListener('DOMContentLoaded', () => {
       const [y, mo, d] = dateStr.split('-');
       const dateObj = new Date(+y, +mo - 1, +d);
       dateObj.setHours(0, 0, 0, 0);
-      const isToday  = dateObj.getTime() === today.getTime();
+      const isToday   = dateObj.getTime() === today.getTime();
       const dayPrefix = isToday ? 'Hoy' : `${dateObj.getDate()}/${dateObj.getMonth() + 1}`;
       selectedTimes.forEach(t => scheduleArray.push(`${dayPrefix} ${t}`));
     });
 
-    // Save to Supabase
-    if (window.supabase) {
-      const { data: { session } } = await window.supabase.auth.getSession();
+    const payload = {
+      user_id:  session.user.id,
+      name:     `${fn} ${ln}`,
+      spec,
+      svc_id:   svcId,
+      barrio:   document.getElementById('ciudad')?.value || 'Montevideo',
+      price,
+      lat:      -34.90 + (Math.random() * 0.04 - 0.02),
+      lng:      -56.16 + (Math.random() * 0.04 - 0.02),
+      color:    colorMap[svcId] || colorMap.otro,
+      icon:     iconMap[svcId]  || iconMap.otro,
+      uyu:      '$' + (price * 400).toLocaleString('es-UY') + ' UYU',
+      schedule: scheduleArray,
+      status:   'pending',
+    };
 
-      const { error: insertErr } = await window.supabase
-        .from('professional_listings')
-        .insert({
-          user_id:  session?.user?.id || null,
-          name:     `${fn} ${ln}`,
-          spec,
-          svc_id:   svcId,
-          barrio:   'Montevideo',
-          price,
-          lat:      -34.90 + (Math.random() * 0.04 - 0.02),
-          lng:      -56.16 + (Math.random() * 0.04 - 0.02),
-          color:    colorMap[svcId] || colorMap.otro,
-          icon:     iconMap[svcId]  || iconMap.otro,
-          uyu:      '$' + (price * 400).toLocaleString('es-UY') + ' UYU',
-          schedule: scheduleArray,
-          status:   'pending',
-        });
+    console.log('[apply] Inserting listing:', payload);
 
-      if (insertErr) {
-        showToast('Error al enviar: ' + insertErr.message, '❌', 'error');
-        btn.disabled    = false;
-        btn.textContent = 'Enviar solicitud';
-        return;
-      }
+    const { error: insertErr } = await window.supabase
+      .from('professional_listings')
+      .insert(payload);
 
-      // Mark the logged-in user as a pro
-      if (session) {
-        await window.supabase
-          .from('profiles')
-          .update({ role: 'pro' })
-          .eq('id', session.user.id);
-      }
+    if (insertErr) {
+      console.error('[apply] Insert error:', insertErr);
+      showToast('Error al enviar: ' + insertErr.message, '❌', 'error');
+      btn.disabled    = false;
+      btn.textContent = 'Enviar perfil →';
+      return;
     }
 
-    // UX delay then show success
-    await new Promise(r => setTimeout(r, 1600));
+    console.log('[apply] Insert OK — status: pending, user:', session.user.id);
 
+    // Update profile role to 'pro'
+    const { error: roleErr } = await window.supabase
+      .from('profiles')
+      .update({ role: 'pro' })
+      .eq('id', session.user.id);
+
+    if (roleErr) console.warn('[apply] Role update warning:', roleErr);
+
+    // Show success state
     const success = document.getElementById('apply-success');
     success.style.display = 'flex';
     this.querySelectorAll('.form-card:not(#apply-success)').forEach(c => c.style.display = 'none');

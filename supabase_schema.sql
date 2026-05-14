@@ -84,6 +84,11 @@ drop policy if exists "Anyone can view approved listings." on professional_listi
 create policy "Anyone can view approved listings."
   on professional_listings for select using (status = 'approved');
 
+-- Allow authenticated users to view their own listings (pending, rejected, approved)
+drop policy if exists "Users can view own listings." on professional_listings;
+create policy "Users can view own listings."
+  on professional_listings for select using (auth.uid() = user_id);
+
 drop policy if exists "Authenticated users can submit listings." on professional_listings;
 create policy "Authenticated users can submit listings."
   on professional_listings for insert with check (auth.uid() is not null);
