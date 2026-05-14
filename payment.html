@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Comprar Fichas | alma+</title>
-  <meta name="description" content="Comprá fichas alma+ de forma segura y cifrada. Más fichas, menor precio por unidad."/>
-  <link rel="stylesheet" href="style.css?v=5"/>
-  <link rel="stylesheet" href="pages.css?v=5"/>
+  <meta name="description" content="ComprÃ¡ fichas alma+ de forma segura y cifrada. MÃ¡s fichas, menor precio por unidad."/>
+  <link rel="stylesheet" href="style.css?v=6"/>
+  <link rel="stylesheet" href="pages.css?v=6"/>
 </head>
 <body>
 <nav class="navbar">
   <div class="navbar__inner">
-    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">â¤</div><span>alma<span class="plus">+</span></span></a>
     <ul class="navbar__nav">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="professionals.html">Profesionales</a></li>
@@ -22,7 +22,7 @@
       <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
       <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
     </div>
-    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    <button class="hamburger" aria-label="MenÃº"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <nav class="mobile-nav">
@@ -33,14 +33,14 @@
 
 <div class="page-hero">
   <div class="container">
-    <span class="badge badge-red" style="margin-bottom:14px">💰 Sistema de fichas alma+</span>
-    <h1>Comprá tus <span class="gradient-text">fichas +</span></h1>
-    <p>Más fichas = menor precio por unidad. Usálas cuando quieras con cualquier profesional.</p>
+    <span class="badge badge-red" style="margin-bottom:14px">ðŸ’° Sistema de fichas alma+</span>
+    <h1>ComprÃ¡ tus <span class="gradient-text">fichas +</span></h1>
+    <p>MÃ¡s fichas = menor precio por unidad. UsÃ¡las cuando quieras con cualquier profesional.</p>
     <div class="secure-badges">
-      <div class="secure-badge">🔒 Pago 100% cifrado SSL</div>
-      <div class="secure-badge">🛡 Datos protegidos</div>
-      <div class="secure-badge">✅ Fichas sin vencimiento</div>
-      <div class="secure-badge">🇺🇾 Precios en UYU</div>
+      <div class="secure-badge">ðŸ”’ Pago 100% cifrado SSL</div>
+      <div class="secure-badge">ðŸ›¡ Datos protegidos</div>
+      <div class="secure-badge">âœ… Fichas sin vencimiento</div>
+      <div class="secure-badge">ðŸ‡ºðŸ‡¾ Precios en UYU</div>
     </div>
   </div>
 </div>
@@ -50,9 +50,9 @@
   <!-- Combo selector -->
   <div class="section-header reveal" style="margin-bottom:32px">
     <div class="overline">Paquetes de fichas</div>
-    <h2>Elegí tu combo</h2>
+    <h2>ElegÃ­ tu combo</h2>
     <div class="divider"></div>
-    <p>1 ficha = <strong style="color:var(--red)">$400 UYU</strong> · Precio base</p>
+    <p>1 ficha = <strong style="color:var(--red)">$400 UYU</strong> Â· Precio base</p>
   </div>
 
   <div class="combos-grid stagger-children">
@@ -68,34 +68,34 @@
       <div class="combo-label">fichas</div>
       <div class="combo-price">$9.000</div>
       <div class="combo-per">$360 por ficha</div>
-      <div class="combo-saving">Ahorrás 10%</div>
+      <div class="combo-saving">AhorrÃ¡s 10%</div>
     </div>
     <div class="combo-card popular" onclick="selectCombo(this, 50, 16000, 320, 20)" id="combo-50">
-      <div class="combo-badge">⭐ Más popular</div>
+      <div class="combo-badge">â­ MÃ¡s popular</div>
       <div class="combo-fichas">50<span>+</span></div>
       <div class="combo-label">fichas</div>
       <div class="combo-price">$16.000</div>
       <div class="combo-per">$320 por ficha</div>
-      <div class="combo-saving">Ahorrás 20%</div>
+      <div class="combo-saving">AhorrÃ¡s 20%</div>
     </div>
     <div class="combo-card" onclick="selectCombo(this, 100, 28000, 280, 30)" id="combo-100">
       <div class="combo-fichas">100<span>+</span></div>
       <div class="combo-label">fichas</div>
       <div class="combo-price">$28.000</div>
       <div class="combo-per">$280 por ficha</div>
-      <div class="combo-saving">Ahorrás 30%</div>
+      <div class="combo-saving">AhorrÃ¡s 30%</div>
     </div>
   </div>
 
   <!-- What you can do with fichas -->
   <div class="reveal" style="margin-bottom:48px">
-    <h3 style="text-align:center;margin-bottom:20px;font-size:1.1rem;color:var(--text-2)">Con <strong id="combo-desc" style="color:var(--red)">50 fichas</strong> podés obtener:</h3>
+    <h3 style="text-align:center;margin-bottom:20px;font-size:1.1rem;color:var(--text-2)">Con <strong id="combo-desc" style="color:var(--red)">50 fichas</strong> podÃ©s obtener:</h3>
     <div class="can-do-grid" id="can-do-grid">
-      <div class="can-do-item"><div class="icon">🧠</div><div class="svc">Psicología</div><div class="cost" id="psi-count">6 sesiones</div><div class="sessions">45–60 min</div></div>
-      <div class="can-do-item"><div class="icon">💊</div><div class="svc">Psiquiatría</div><div class="cost" id="psi2-count">4 consultas</div><div class="sessions">30–45 min</div></div>
-      <div class="can-do-item"><div class="icon">🥗</div><div class="svc">Nutrición</div><div class="cost" id="nut-count">8 sesiones</div><div class="sessions">50–60 min</div></div>
-      <div class="can-do-item"><div class="icon">🏋️</div><div class="svc">Trainer</div><div class="cost" id="tra-count">10 sesiones</div><div class="sessions">60 min</div></div>
-      <div class="can-do-item"><div class="icon">🎯</div><div class="svc">Coaching</div><div class="cost" id="coa-count">7 sesiones</div><div class="sessions">50–60 min</div></div>
+      <div class="can-do-item"><div class="icon">ðŸ§ </div><div class="svc">PsicologÃ­a</div><div class="cost" id="psi-count">6 sesiones</div><div class="sessions">45â€“60 min</div></div>
+      <div class="can-do-item"><div class="icon">ðŸ’Š</div><div class="svc">PsiquiatrÃ­a</div><div class="cost" id="psi2-count">4 consultas</div><div class="sessions">30â€“45 min</div></div>
+      <div class="can-do-item"><div class="icon">ðŸ¥—</div><div class="svc">NutriciÃ³n</div><div class="cost" id="nut-count">8 sesiones</div><div class="sessions">50â€“60 min</div></div>
+      <div class="can-do-item"><div class="icon">ðŸ‹ï¸</div><div class="svc">Trainer</div><div class="cost" id="tra-count">10 sesiones</div><div class="sessions">60 min</div></div>
+      <div class="can-do-item"><div class="icon">ðŸŽ¯</div><div class="svc">Coaching</div><div class="cost" id="coa-count">7 sesiones</div><div class="sessions">50â€“60 min</div></div>
     </div>
   </div>
 
@@ -104,7 +104,7 @@
     <div>
       <div class="payment-card" id="payment-form-card">
         <!-- Order summary -->
-        <h3>🛒 Resumen de compra</h3>
+        <h3>ðŸ›’ Resumen de compra</h3>
         <div class="order-summary">
           <div class="order-row"><span>Combo seleccionado</span><span id="sum-combo">50 fichas</span></div>
           <div class="order-row"><span>Precio por ficha</span><span id="sum-per">$320</span></div>
@@ -113,11 +113,11 @@
         </div>
 
         <div class="form-sep" style="margin:20px 0"></div>
-        <h3>💳 Método de pago</h3>
+        <h3>ðŸ’³ MÃ©todo de pago</h3>
 
         <p style="font-size:0.85rem;color:var(--text-2);line-height:1.65;margin-bottom:16px">
-          Serás redirigido al checkout seguro de <strong>Mercado Pago</strong> para pagar con
-          tarjeta de crédito, débito, efectivo (Abitab / RedPagos) o transferencia bancaria.
+          SerÃ¡s redirigido al checkout seguro de <strong>Mercado Pago</strong> para pagar con
+          tarjeta de crÃ©dito, dÃ©bito, efectivo (Abitab / RedPagos) o transferencia bancaria.
         </p>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
@@ -129,24 +129,24 @@
         </div>
 
         <div class="security-note">
-          🔒 Pago procesado por Mercado Pago con cifrado SSL de 256 bits. No almacenamos datos de tarjeta.
+          ðŸ”’ Pago procesado por Mercado Pago con cifrado SSL de 256 bits. No almacenamos datos de tarjeta.
         </div>
 
         <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:4px;background:#009EE3;border-color:#009EE3" id="pay-btn">
-          💳 Pagar $<span id="pay-amount">16.000</span> UYU con Mercado Pago →
+          ðŸ’³ Pagar $<span id="pay-amount">16.000</span> UYU con Mercado Pago â†’
         </button>
       </div>
 
       <!-- Success state -->
       <div class="payment-card payment-success" id="payment-success">
-        <div class="success-circle">✓</div>
-        <h2 style="margin-bottom:10px">¡Pago exitoso!</h2>
-        <p style="color:var(--text-2);margin-bottom:6px">Tus fichas ya están en tu cuenta.</p>
+        <div class="success-circle">âœ“</div>
+        <h2 style="margin-bottom:10px">Â¡Pago exitoso!</h2>
+        <p style="color:var(--text-2);margin-bottom:6px">Tus fichas ya estÃ¡n en tu cuenta.</p>
         <div style="font-size:4rem;font-weight:900;color:var(--red);margin:20px 0"><span id="success-fichas">50</span><span style="font-size:1.5rem">+</span></div>
-        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:28px">Fichas acreditadas · Recibirás confirmación por email</p>
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:28px">Fichas acreditadas Â· RecibirÃ¡s confirmaciÃ³n por email</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-          <a href="professionals.html" class="btn btn-primary">Reservar sesión →</a>
-          <a href="donate.html" class="btn btn-outline">Donar fichas ♥</a>
+          <a href="professionals.html" class="btn btn-primary">Reservar sesiÃ³n â†’</a>
+          <a href="donate.html" class="btn btn-outline">Donar fichas â™¥</a>
         </div>
       </div>
     </div>
@@ -154,28 +154,28 @@
     <!-- Sidebar -->
     <aside>
       <div class="sidebar-summary-card">
-        <h4>Tu selección</h4>
+        <h4>Tu selecciÃ³n</h4>
         <div class="fichas-big"><span id="sb-fichas">50</span><span>+</span></div>
         <p style="text-align:center;font-size:0.82rem;color:var(--text-muted);margin-top:6px">fichas = <strong id="sb-price" style="color:var(--red)">$16.000 UYU</strong></p>
         <div id="sb-saving-wrap" style="text-align:center;margin-top:8px">
-          <span class="combo-saving" id="sb-saving">Ahorrás 20% ($4.000)</span>
+          <span class="combo-saving" id="sb-saving">AhorrÃ¡s 20% ($4.000)</span>
         </div>
       </div>
 
       <div class="sidebar-summary-card">
-        <h4>🛡 Pago 100% seguro</h4>
+        <h4>ðŸ›¡ Pago 100% seguro</h4>
         <div class="trust-list">
-          <div class="trust-item"><span class="icon">🔒</span>Cifrado SSL 256-bit</div>
-          <div class="trust-item"><span class="icon">🚫</span>No guardamos datos de tarjeta</div>
-          <div class="trust-item"><span class="icon">✅</span>Fichas sin vencimiento</div>
-          <div class="trust-item"><span class="icon">🔄</span>Devolución en 48hs si hay problemas</div>
-          <div class="trust-item"><span class="icon">🇺🇾</span>Procesado en Uruguay</div>
+          <div class="trust-item"><span class="icon">ðŸ”’</span>Cifrado SSL 256-bit</div>
+          <div class="trust-item"><span class="icon">ðŸš«</span>No guardamos datos de tarjeta</div>
+          <div class="trust-item"><span class="icon">âœ…</span>Fichas sin vencimiento</div>
+          <div class="trust-item"><span class="icon">ðŸ”„</span>DevoluciÃ³n en 48hs si hay problemas</div>
+          <div class="trust-item"><span class="icon">ðŸ‡ºðŸ‡¾</span>Procesado en Uruguay</div>
         </div>
       </div>
 
       <div class="sidebar-summary-card" style="background:var(--red-50);border-color:var(--red-200)">
-        <h4 style="color:var(--red-dark)">❤️ ¿Querés donar?</h4>
-        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.7;margin-bottom:14px">Con cada compra, podés donar fichas para que otras personas accedan a sesiones gratuitas.</p>
+        <h4 style="color:var(--red-dark)">â¤ï¸ Â¿QuerÃ©s donar?</h4>
+        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.7;margin-bottom:14px">Con cada compra, podÃ©s donar fichas para que otras personas accedan a sesiones gratuitas.</p>
         <a href="donate.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Ver programa de donaciones</a>
       </div>
     </aside>
@@ -185,12 +185,12 @@
 <footer>
   <div class="container">
     <div class="footer__grid">
-      <div class="footer__brand"><div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div><p>La primer red interdisciplinaria de bienestar en Uruguay. Bienestar que suma.</p></div>
+      <div class="footer__brand"><div class="footer__logo"><div class="logo-icon">â¤</div><span>alma<span class="plus">+</span></span></div><p>La primer red interdisciplinaria de bienestar en Uruguay. Bienestar que suma.</p></div>
       <div class="footer__col"><h5>Servicios</h5><a href="professionals.html">Ver profesionales</a><a href="payment.html">Comprar fichas</a><a href="donate.html">Donar fichas</a></div>
       <div class="footer__col"><h5>Profesionales</h5><a href="apply.html">Registrarme</a><a href="login.html">Mi panel</a></div>
-      <div class="footer__col"><h5>alma+</h5><a href="about.html">Sobre nosotros</a><a href="about.html">Políticas y Contacto</a></div>
+      <div class="footer__col"><h5>alma+</h5><a href="about.html">Sobre nosotros</a><a href="about.html">PolÃ­ticas y Contacto</a></div>
     </div>
-    <div class="footer__bottom"><span>© 2026 alma+ · Montevideo, Uruguay</span></div>
+    <div class="footer__bottom"><span>Â© 2026 alma+ Â· Montevideo, Uruguay</span></div>
   </div>
 </footer>
 

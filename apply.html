@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registrarme como profesional | alma+</title>
-  <meta name="description" content="Sumáte a alma+ como profesional de salud privado. Configurá tu perfil, horarios y precio en fichas."/>
-  <link rel="stylesheet" href="style.css?v=5"/>
-  <link rel="stylesheet" href="pages.css?v=5"/>
+  <meta name="description" content="SumÃ¡te a alma+ como profesional de salud privado. ConfigurÃ¡ tu perfil, horarios y precio en fichas."/>
+  <link rel="stylesheet" href="style.css?v=6"/>
+  <link rel="stylesheet" href="pages.css?v=6"/>
 </head>
 <body>
 <nav class="navbar">
   <div class="navbar__inner">
-    <a href="index.html" class="navbar__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></a>
+    <a href="index.html" class="navbar__logo"><div class="logo-icon">â¤</div><span>alma<span class="plus">+</span></span></a>
     <ul class="navbar__nav">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="professionals.html">Profesionales</a></li>
@@ -23,7 +23,7 @@
       <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
       <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
     </div>
-    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    <button class="hamburger" aria-label="MenÃº"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <nav class="mobile-nav">
@@ -33,9 +33,9 @@
 
 <div class="page-hero">
   <div class="container">
-    <span class="badge badge-red" style="margin-bottom:14px">🩺 Para profesionales de la salud</span>
-    <h1>Sumáte a <span class="gradient-text">alma+</span></h1>
-    <p>Configurá tu perfil, disponibilidad y precio. Empezá a recibir pacientes en 24hs.</p>
+    <span class="badge badge-red" style="margin-bottom:14px">ðŸ©º Para profesionales de la salud</span>
+    <h1>SumÃ¡te a <span class="gradient-text">alma+</span></h1>
+    <p>ConfigurÃ¡ tu perfil, disponibilidad y precio. EmpezÃ¡ a recibir pacientes en 24hs.</p>
   </div>
 </div>
 
@@ -47,17 +47,17 @@
 
         <!-- 1. Datos personales -->
         <div class="form-card">
-          <div class="form-section-title"><div class="ico">👤</div>Datos personales</div>
+          <div class="form-section-title"><div class="ico">ðŸ‘¤</div>Datos personales</div>
           <div class="form-2col">
             <div class="form-group"><label class="form-label">Nombre *</label><input id="fn" class="form-input" type="text" placeholder="Ej: Valentina" required onkeyup="previewUpdate()"/></div>
-            <div class="form-group"><label class="form-label">Apellido *</label><input id="ln" class="form-input" type="text" placeholder="Ej: Suárez" required onkeyup="previewUpdate()"/></div>
+            <div class="form-group"><label class="form-label">Apellido *</label><input id="ln" class="form-input" type="text" placeholder="Ej: SuÃ¡rez" required onkeyup="previewUpdate()"/></div>
             <div class="form-group"><label class="form-label">Email *</label><input class="form-input" type="email" placeholder="hola@tu-email.com" required/></div>
-            <div class="form-group"><label class="form-label">Teléfono *</label><input class="form-input" type="tel" placeholder="+54 11 1234-5678" required/></div>
+            <div class="form-group"><label class="form-label">TelÃ©fono *</label><input class="form-input" type="tel" placeholder="+54 11 1234-5678" required/></div>
             <div class="form-group"><label class="form-label">Ciudad *</label>
               <select class="form-select" required>
-                <option value="">Seleccioná</option>
+                <option value="">SeleccionÃ¡</option>
                 <option>Buenos Aires (CABA)</option><option>Buenos Aires (GBA)</option>
-                <option>Córdoba</option><option>Rosario</option><option>Mendoza</option><option>Otra</option>
+                <option>CÃ³rdoba</option><option>Rosario</option><option>Mendoza</option><option>Otra</option>
               </select>
             </div>
             <div class="form-group"><label class="form-label">Modalidad *</label>
@@ -70,35 +70,35 @@
 
         <!-- 2. Especialidad -->
         <div class="form-card">
-          <div class="form-section-title"><div class="ico">🏥</div>Especialidad y formación</div>
+          <div class="form-section-title"><div class="ico">ðŸ¥</div>Especialidad y formaciÃ³n</div>
           <div class="form-2col">
             <div class="form-group form-full">
-              <label class="form-label">Servicio que ofrecés *</label>
+              <label class="form-label">Servicio que ofrecÃ©s *</label>
               <select id="svc-select" class="form-select" required onchange="updateServiceInfo()">
-                <option value="">Seleccioná</option>
-                <option value="psicologia" data-fichas="8" data-dur="45 – 60 min">Psicología</option>
-                <option value="psiquiatria" data-fichas="12" data-dur="30 – 45 min">Psiquiatría</option>
-                <option value="nutricion" data-fichas="6" data-dur="50 – 60 min">Nutrición y Dietética</option>
+                <option value="">SeleccionÃ¡</option>
+                <option value="psicologia" data-fichas="8" data-dur="45 â€“ 60 min">PsicologÃ­a</option>
+                <option value="psiquiatria" data-fichas="12" data-dur="30 â€“ 45 min">PsiquiatrÃ­a</option>
+                <option value="nutricion" data-fichas="6" data-dur="50 â€“ 60 min">NutriciÃ³n y DietÃ©tica</option>
                 <option value="trainer" data-fichas="5" data-dur="60 min">Personal Trainer</option>
-                <option value="coaching" data-fichas="7" data-dur="50 – 60 min">Coaching</option>
-                <option value="otro" data-fichas="6" data-dur="60 min">Otro (detallá abajo)</option>
+                <option value="coaching" data-fichas="7" data-dur="50 â€“ 60 min">Coaching</option>
+                <option value="otro" data-fichas="6" data-dur="60 min">Otro (detallÃ¡ abajo)</option>
               </select>
             </div>
             <div class="ficha-display form-full" id="ficha-display" style="display:none">
-              <span style="font-size:1.5rem">💰</span>
+              <span style="font-size:1.5rem">ðŸ’°</span>
               <div>
-                <div class="val"><span id="ficha-val">–</span><span style="font-size:0.8rem;font-weight:500;color:var(--text-muted)"> fichas por sesión (precio fijo)</span></div>
-                <div class="lbl">Duración: <strong id="dur-val" style="color:var(--text)">–</strong></div>
+                <div class="val"><span id="ficha-val">â€“</span><span style="font-size:0.8rem;font-weight:500;color:var(--text-muted)"> fichas por sesiÃ³n (precio fijo)</span></div>
+                <div class="lbl">DuraciÃ³n: <strong id="dur-val" style="color:var(--text)">â€“</strong></div>
               </div>
             </div>
-            <div class="form-group"><label class="form-label">Matrícula profesional *</label><input class="form-input" type="text" placeholder="MN / MP 12345" required/></div>
-            <div class="form-group"><label class="form-label">Años de experiencia</label>
+            <div class="form-group"><label class="form-label">MatrÃ­cula profesional *</label><input class="form-input" type="text" placeholder="MN / MP 12345" required/></div>
+            <div class="form-group"><label class="form-label">AÃ±os de experiencia</label>
               <select class="form-select">
-                <option>Menos de 2 años</option><option>2–5 años</option><option>5–10 años</option><option>+10 años</option>
+                <option>Menos de 2 aÃ±os</option><option>2â€“5 aÃ±os</option><option>5â€“10 aÃ±os</option><option>+10 aÃ±os</option>
               </select>
             </div>
             <div class="form-group form-full"><label class="form-label">Mini-bio (visible en tu perfil)</label>
-              <textarea class="form-textarea" placeholder="Contá brevemente tu enfoque, especialización y cómo trabajás con tus pacientes/clientes..." style="min-height:90px"></textarea>
+              <textarea class="form-textarea" placeholder="ContÃ¡ brevemente tu enfoque, especializaciÃ³n y cÃ³mo trabajÃ¡s con tus pacientes/clientes..." style="min-height:90px"></textarea>
             </div>
             <div class="form-group form-full"><label class="form-label">Obras sociales / Coberturas</label>
               <div class="check-group">
@@ -106,75 +106,75 @@
                 <label class="check-pill"><input type="checkbox"> OSDE</label>
                 <label class="check-pill"><input type="checkbox"> Swiss Medical</label>
                 <label class="check-pill"><input type="checkbox"> Galeno</label>
-                <label class="check-pill"><input type="checkbox"> Medifé</label>
+                <label class="check-pill"><input type="checkbox"> MedifÃ©</label>
                 <label class="check-pill"><input type="checkbox"> PAMI</label>
               </div>
             </div>
           </div>
           <div class="form-sep"></div>
-          <div style="font-size:0.9rem;font-weight:700;margin-bottom:12px">📄 CV / Certificaciones</div>
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:12px">ðŸ“„ CV / Certificaciones</div>
           <div class="file-upload">
             <input type="file" accept=".pdf,.doc,.docx,.jpg,.png"/>
-            <div class="up-icon">📎</div>
-            <p><strong>Arrastrá tu CV o diploma</strong><br>PDF, DOC, imagen · Máx. 5 MB</p>
+            <div class="up-icon">ðŸ“Ž</div>
+            <p><strong>ArrastrÃ¡ tu CV o diploma</strong><br>PDF, DOC, imagen Â· MÃ¡x. 5 MB</p>
           </div>
         </div>
 
         <!-- 3. Disponibilidad con calendario -->
         <div class="form-card">
-          <div class="form-section-title"><div class="ico">📅</div>Disponibilidad horaria</div>
-          <p class="cal-intro">Marcá los días y horarios en los que querés recibir turnos. Los pacientes solo podrán reservar en los espacios que hayas habilitado.</p>
+          <div class="form-section-title"><div class="ico">ðŸ“…</div>Disponibilidad horaria</div>
+          <p class="cal-intro">MarcÃ¡ los dÃ­as y horarios en los que querÃ©s recibir turnos. Los pacientes solo podrÃ¡n reservar en los espacios que hayas habilitado.</p>
 
           <div class="calendar-wrap">
             <div class="calendar-header">
-              <button type="button" class="cal-nav" onclick="changeMonth(-1)">◀</button>
+              <button type="button" class="cal-nav" onclick="changeMonth(-1)">â—€</button>
               <h4 id="cal-month-label">Marzo 2026</h4>
-              <button type="button" class="cal-nav" onclick="changeMonth(1)">▶</button>
+              <button type="button" class="cal-nav" onclick="changeMonth(1)">â–¶</button>
             </div>
             <div class="cal-day-names">
               <div class="cal-day-name">Dom</div><div class="cal-day-name">Lun</div>
-              <div class="cal-day-name">Mar</div><div class="cal-day-name">Mié</div>
+              <div class="cal-day-name">Mar</div><div class="cal-day-name">MiÃ©</div>
               <div class="cal-day-name">Jue</div><div class="cal-day-name">Vie</div>
-              <div class="cal-day-name">Sáb</div>
+              <div class="cal-day-name">SÃ¡b</div>
             </div>
             <div class="cal-days" id="cal-days"></div>
           </div>
 
           <div style="margin-top:18px">
             <div style="font-size:0.85rem;font-weight:600;margin-bottom:8px;color:var(--text)">
-              Horarios disponibles para <span id="selected-date-label" style="color:var(--red)">los días seleccionados</span>:
+              Horarios disponibles para <span id="selected-date-label" style="color:var(--red)">los dÃ­as seleccionados</span>:
             </div>
             <div class="time-grid" id="time-grid"></div>
             <div class="selected-summary" id="avail-summary">
-              Seleccioná días en el calendario y luego los horarios disponibles.
+              SeleccionÃ¡ dÃ­as en el calendario y luego los horarios disponibles.
             </div>
           </div>
         </div>
 
-        <!-- 4. Presentación -->
+        <!-- 4. PresentaciÃ³n -->
         <div class="form-card">
-          <div class="form-section-title"><div class="ico">✉️</div>Carta de presentación</div>
+          <div class="form-section-title"><div class="ico">âœ‰ï¸</div>Carta de presentaciÃ³n</div>
           <div class="form-group">
-            <label class="form-label">¿Por qué querés ser parte de alma+?</label>
-            <textarea class="form-textarea" placeholder="Contanos tu motivación y el valor que querés aportarle a tus pacientes/clientes..." style="min-height:110px"></textarea>
+            <label class="form-label">Â¿Por quÃ© querÃ©s ser parte de alma+?</label>
+            <textarea class="form-textarea" placeholder="Contanos tu motivaciÃ³n y el valor que querÃ©s aportarle a tus pacientes/clientes..." style="min-height:110px"></textarea>
           </div>
           <div style="margin-top:16px">
             <label class="check-pill" style="width:fit-content">
               <input type="checkbox" required>
-              Acepto los <a href="#" style="color:var(--red);font-weight:600">Términos y Condiciones</a> de alma+
+              Acepto los <a href="#" style="color:var(--red);font-weight:600">TÃ©rminos y Condiciones</a> de alma+
             </label>
           </div>
           <div class="submit-row">
-            <div style="font-size:0.8rem;color:var(--text-muted)">🔒 Tus datos están protegidos</div>
-            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Enviar perfil →</button>
+            <div style="font-size:0.8rem;color:var(--text-muted)">ðŸ”’ Tus datos estÃ¡n protegidos</div>
+            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Enviar perfil â†’</button>
           </div>
         </div>
 
         <!-- Success -->
         <div class="form-card" id="apply-success">
-          <div class="success-circle">✓</div>
-          <h3>¡Perfil enviado con éxito!</h3>
-          <p>Revisaremos tu información en las próximas 24–48 hs. Una vez aprobado, tu perfil estará visible para los pacientes.</p>
+          <div class="success-circle">âœ“</div>
+          <h3>Â¡Perfil enviado con Ã©xito!</h3>
+          <p>Revisaremos tu informaciÃ³n en las prÃ³ximas 24â€“48 hs. Una vez aprobado, tu perfil estarÃ¡ visible para los pacientes.</p>
           <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;justify-content:center">
             <a href="dashboard.html" class="btn btn-primary">Ir a mi panel</a>
             <a href="index.html" class="btn btn-outline">Volver al inicio</a>
@@ -186,7 +186,7 @@
     <!-- Sidebar -->
     <aside>
       <div class="prof-preview">
-        <div class="preview-avatar" id="pv-avatar">🩺</div>
+        <div class="preview-avatar" id="pv-avatar">ðŸ©º</div>
         <div class="preview-name" id="pv-name">Tu nombre</div>
         <div class="preview-spec" id="pv-spec">Especialidad</div>
         <div class="progress-bar"><div class="progress-fill" id="pv-progress"></div></div>
@@ -194,16 +194,16 @@
       </div>
 
       <div class="sidebar-card">
-        <h4>✨ Beneficios</h4>
-        <div class="benefit-item"><div class="bi">🎯</div><p><strong>Pacientes verificados</strong>Solo personas que buscan activamente tu servicio.</p></div>
-        <div class="benefit-item"><div class="bi">💰</div><p><strong>Cobros seguros</strong>Recibís fichas por cada sesión, sin intermediarios.</p></div>
-        <div class="benefit-item"><div class="bi">📅</div><p><strong>Agenda propia</strong>Controlás tus horarios 100%.</p></div>
-        <div class="benefit-item"><div class="bi">📈</div><p><strong>Crecé tu práctica</strong>El 80% de los profesionales triplica consultas en 3 meses.</p></div>
+        <h4>âœ¨ Beneficios</h4>
+        <div class="benefit-item"><div class="bi">ðŸŽ¯</div><p><strong>Pacientes verificados</strong>Solo personas que buscan activamente tu servicio.</p></div>
+        <div class="benefit-item"><div class="bi">ðŸ’°</div><p><strong>Cobros seguros</strong>RecibÃ­s fichas por cada sesiÃ³n, sin intermediarios.</p></div>
+        <div class="benefit-item"><div class="bi">ðŸ“…</div><p><strong>Agenda propia</strong>ControlÃ¡s tus horarios 100%.</p></div>
+        <div class="benefit-item"><div class="bi">ðŸ“ˆ</div><p><strong>CrecÃ© tu prÃ¡ctica</strong>El 80% de los profesionales triplica consultas en 3 meses.</p></div>
       </div>
 
       <div class="sidebar-card" style="background:var(--red-50);border-color:var(--red-200)">
-        <h4 style="color:var(--red-dark)">📋 Proceso rápido</h4>
-        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.7">Revisamos tu perfil en <strong>24–48hs</strong>. Una vez aprobado, empezás a recibir pacientes de inmediato.</p>
+        <h4 style="color:var(--red-dark)">ðŸ“‹ Proceso rÃ¡pido</h4>
+        <p style="font-size:0.82rem;color:var(--text-2);line-height:1.7">Revisamos tu perfil en <strong>24â€“48hs</strong>. Una vez aprobado, empezÃ¡s a recibir pacientes de inmediato.</p>
       </div>
     </aside>
 
@@ -213,12 +213,12 @@
 <footer>
   <div class="container">
     <div class="footer__grid">
-      <div class="footer__brand"><div class="footer__logo"><div class="logo-icon">❤</div><span>alma<span class="plus">+</span></span></div><p>Profesionales privados verificados.</p></div>
+      <div class="footer__brand"><div class="footer__logo"><div class="logo-icon">â¤</div><span>alma<span class="plus">+</span></span></div><p>Profesionales privados verificados.</p></div>
       <div class="footer__col"><h5>Servicios</h5><a href="professionals.html">Ver directorio</a></div>
       <div class="footer__col"><h5>Profesionales</h5><a href="apply.html">Registrarme</a><a href="login.html">Mi panel</a></div>
       <div class="footer__col"><h5>alma+</h5><a href="#">Contacto</a><a href="#">Privacidad</a></div>
     </div>
-    <div class="footer__bottom"><span>© 2026 alma+</span></div>
+    <div class="footer__bottom"><span>Â© 2026 alma+</span></div>
   </div>
 </footer>
 

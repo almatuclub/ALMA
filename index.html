@@ -6,10 +6,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>alma+ | Tu plataforma de salud y bienestar</title>
 <meta name="description" content="Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Uruguay. Reservá con fichas, sin intermediarios."/>
-<link rel="stylesheet" href="style.css?v=5"/>
-<link rel="stylesheet" href="pages.css?v=5"/>
+<link rel="stylesheet" href="style.css?v=6"/>
+<link rel="stylesheet" href="pages.css?v=6"/>
 </head>
 <body>
+
+<!-- ─── Intro / Loading Screen ─── -->
+<div id="alma-intro" aria-hidden="true" role="presentation">
+  <div class="intro__atmo intro__atmo--coral"></div>
+  <div class="intro__atmo intro__atmo--indigo"></div>
+  <div class="intro__center">
+    <div class="intro__mark">
+      <div class="intro__glow"></div>
+      <svg width="68" height="62" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="intro-heart-g" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF8B7A"/>
+            <stop offset="100%" stop-color="#DC3B35"/>
+          </linearGradient>
+        </defs>
+        <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#intro-heart-g)"/>
+      </svg>
+    </div>
+    <div class="intro__brand">
+      <span class="intro__brand-word">alma</span><span class="intro__brand-plus">+</span>
+    </div>
+    <div class="intro__sub">Tu bienestar, en buenas manos</div>
+    <div class="intro__progress"></div>
+  </div>
+</div>
 
 <nav class="navbar">
   <div class="navbar__inner">
@@ -488,5 +513,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="db.js" defer></script>
 <script src="script.js" defer></script>
+<script src="js/loader.js" defer></script>
 </body>
 </html>
