@@ -46,10 +46,11 @@
 
 .hero__eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--coral-50); border: 1px solid var(--coral-100);
-  border-radius: var(--radius-full); padding: 6px 14px 6px 8px;
-  font-size: 0.78rem; font-weight: 700; color: var(--coral-dark);
+  background: white; border: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--radius-full); padding: 6px 16px 6px 9px;
+  font-size: 0.77rem; font-weight: 600; color: var(--text-2);
   margin-bottom: 28px; animation: fadeUp 0.5s ease both;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
 }
 .hero__eyebrow .dot {
   width: 7px; height: 7px; background: var(--coral);
@@ -90,6 +91,7 @@
 .hero__trust-item .check {
   width: 18px; height: 18px; border-radius: 50%;
   background: var(--green-light); color: var(--green);
+  border: 1px solid rgba(5,150,105,0.18);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.6rem; font-weight: 900; flex-shrink: 0;
 }
@@ -122,12 +124,12 @@
 /* Card base */
 .hcard {
   position: absolute;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid rgba(255,255,255,1);
   border-radius: var(--radius-xl);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 28px rgba(0,0,0,0.09), 0 0 0 0.5px rgba(0,0,0,0.05);
 }
 
 /* Professional profile card */
@@ -205,9 +207,9 @@
    ═══════════════════════════════════════════════════════ */
 
 .stats-row-section {
-  background: linear-gradient(135deg, rgba(232,69,60,0.06) 0%, var(--bg) 55%, rgba(102,126,234,0.04) 100%);
-  padding: 52px 0;
-  border-top: 1px solid rgba(232,69,60,0.10);
+  background: white;
+  padding: 56px 0;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   position: relative;
 }
@@ -274,9 +276,9 @@
 }
 .service-card:hover::before { transform: scaleX(1); }
 .service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 48px rgba(232,69,60,0.11), 0 4px 16px rgba(0,0,0,0.06);
-  border-color: rgba(232,69,60,0.16);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06), 0 14px 40px rgba(232,69,60,0.09), 0 0 0 1px rgba(232,69,60,0.08);
+  border-color: rgba(232,69,60,0.12);
 }
 .service-card:hover .service-arrow { transform: translate(4px, -4px); opacity: 1; }
 .service-card:hover .service-icon {
@@ -286,8 +288,10 @@
 .service-icon {
   width: 52px; height: 52px; border-radius: var(--radius-lg);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem; margin-bottom: 18px;
-  background: var(--bg); border: 1px solid var(--border);
+  font-size: 1.5rem; margin-bottom: 20px;
+  background: white; border: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: var(--transition);
 }
 .service-card h3 { font-size: 1rem; margin-bottom: 8px; }
 .service-card .desc { font-size: 0.84rem; color: var(--text-2); line-height: 1.65; margin-bottom: 20px; }
@@ -1243,29 +1247,27 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   HERO CLICK ANIMATION  v10
+   HERO CLICK ANIMATION  v11
    ═══════════════════════════════════════════════════════ */
 
 /*
   .clic-word is nested inside .gradient-text which sets
-  -webkit-text-fill-color: transparent on the parent.
-  The child inherits that value BUT its own background is
-  transparent by default — so text would disappear.
-  Fix: re-declare the gradient explicitly on .clic-word
-  so it always has its own background to clip against.
+  -webkit-text-fill-color: transparent. The child inherits
+  that but its own background is transparent → text invisible.
+  Fix: re-declare the gradient directly on .clic-word.
 */
 .clic-word {
   position: relative;
   display: inline-block;
-  background: linear-gradient(135deg, #FF8573 0%, #DC3B35 100%);
+  background: var(--coral-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  border-radius: 4px;   /* softens the box-shadow ripple ring */
+  border-radius: 4px;
   cursor: default;
 }
 
-/* ── Press + ripple ring: combined in one keyframe ── */
+/* ── Combined press + ripple ring ── */
 @keyframes clicPressRipple {
   0%   { transform: scale(1);    box-shadow: 0 0 0 0px  rgba(220,59,53,0.45); }
   16%  { transform: scale(0.87); box-shadow: 0 0 0 3px  rgba(220,59,53,0.32); }
@@ -1278,12 +1280,26 @@
   animation: clicPressRipple 0.72s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 
-/* ── Subtle coral glow (text-shadow works with background-clip:text) ── */
+/* ── Coral glow ── */
 .clic-word.clic-glow {
   text-shadow: 0 0 14px rgba(220,59,53,0.55), 0 0 32px rgba(220,59,53,0.22);
 }
 
-/* ── Background ring expanding from the click point ── */
+/* ── Cursor — small, appears near the word only ── */
+.hero-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.25));
+}
+
+/* ── Background ring ── */
 .hero-ring {
   position: absolute;
   width: 1px;
@@ -1309,7 +1325,7 @@
   animation: heroRingExpand 1.3s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 
-/* ── Card reactions: box-shadow only — preserves the float transform ── */
+/* ── Card reactions: box-shadow only (preserves float transform) ── */
 .hcard.hcard--react {
   box-shadow: 0 8px 40px rgba(232,69,60,0.18), 0 0 0 1.5px rgba(232,69,60,0.13) !important;
   transition: box-shadow 0.5s ease !important;
@@ -1326,6 +1342,7 @@
 @media (prefers-reduced-motion: reduce) {
   .clic-word.clic-active      { animation: none; box-shadow: none; }
   .clic-word.clic-glow        { text-shadow: none; }
+  .hero-cursor                { display: none !important; }
   .hero-ring.hero-ring-active { animation: none; opacity: 0; }
   .hcard.hcard--react,
   .hero__pill.pill-react      { box-shadow: none !important; border-color: transparent !important; }
