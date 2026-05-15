@@ -80,6 +80,12 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --transition:      all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.40s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Icon system */
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 28px;
 }
 
 /* ─── Reset ─── */
@@ -247,6 +253,8 @@ h4 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
   transition: var(--transition);
 }
 .mobile-nav a:hover { background: var(--bg); color: var(--text); }
+.mobile-nav a:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.mobile-nav a:last-child  { border-radius: 0 0 var(--radius-md) var(--radius-md); margin-top: 8px; background: var(--coral-50); color: var(--coral-dark); font-weight: 600; }
 
 /* ─── Buttons ─── */
 .btn {
@@ -307,7 +315,8 @@ h4 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
   border-radius: var(--radius-xl); overflow: hidden;
   box-shadow: var(--shadow-card); transition: var(--transition);
 }
-.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: rgba(0,0,0,0.12); }
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: rgba(0,0,0,0.12); }
+@media (hover: none) { .card:hover { transform: none; box-shadow: var(--shadow-card); } }
 
 /* Glass card */
 .card-glass {
@@ -721,6 +730,30 @@ body.page-alt { background: var(--bg); }
   .intro__progress::after              { animation: none !important; width: 100%; }
 }
 
+/* ─── SVG Icon system ─── */
+.icon-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+.icon-svg svg { display: block; }
+.svc-icon-svg  { width: var(--icon-xl); height: var(--icon-xl); color: var(--coral); }
+.star-svg      { width: 13px; height: 13px; fill: #F59E0B; display: inline-block; vertical-align: middle; margin-top: -2px; }
+.hcard-icon-svg { width: 22px; height: 22px; color: white; }
+.prof-icon-svg  { width: 26px; height: 26px; }
+
+/* Touch device hover suppression — no accidental hover states */
+@media (hover: none) {
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-ghost:hover { transform: none !important; }
+  .service-card:hover { transform: none !important; box-shadow: var(--shadow-card) !important; }
+  .prof-mini:hover    { transform: none !important; box-shadow: var(--shadow-card) !important; }
+  .card:hover         { transform: none !important; }
+}
+
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE — mobile-first overhaul
    ═══════════════════════════════════════════════════════ */
@@ -746,19 +779,21 @@ body.page-alt { background: var(--bg); }
   .hamburger    { display: flex; }
   /* Hide "Ingresar" ghost btn — keep only "Registrarme" + hamburger */
   .navbar__actions .btn-ghost { display: none; }
+  .navbar__actions .btn-primary { padding: 9px 18px; font-size: 0.84rem; }
 
   /* Utility grids */
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
 
-  /* Stats strip — 2-col pill */
+  /* Stats strip — 2×2 grid */
   .stats-strip {
     width: 100%; display: grid;
     grid-template-columns: 1fr 1fr;
     border-radius: var(--radius-lg);
   }
-  .stats-strip__item { padding: 18px 16px; }
+  .stats-strip__item { padding: 20px 16px; }
   .stats-strip__item + .stats-strip__item::before { top: 20%; bottom: 20%; }
-  .stats-strip__val  { font-size: 1.55rem; }
+  .stats-strip__val  { font-size: 1.6rem; }
+  .stats-strip__lbl  { font-size: 0.74rem; }
 
   /* Section header */
   .section-header { margin-bottom: 44px; }
@@ -800,8 +835,9 @@ body.page-alt { background: var(--bg); }
   .navbar__actions .btn-primary { padding: 7px 14px; font-size: 0.78rem; }
 
   /* Buttons */
-  .btn-lg { padding: 13px 22px; font-size: 0.9rem; }
-  .btn    { font-size: 0.875rem; }
+  .btn-lg { padding: 14px 24px; font-size: 0.92rem; }
+  .btn    { font-size: 0.88rem; min-height: 44px; } /* 44px touch target */
+  .btn-sm { min-height: 36px; }
 
   /* Stats strip */
   .stats-strip__item { padding: 14px 12px; }

@@ -1,16 +1,15 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   hero-click.js  ·  alma+  v11
-   Micro-animation on the "clic" word:
-     cursor appears near word → short glide → click →
-     press+ripple+glow → cards react → cursor fades
-   Respects prefers-reduced-motion. Desktop only (hover:hover).
+   hero-click.js  ·  alma+  v12
+   Desktop: cursor appears near word → short glide → click → effects.
+   Mobile:  simplified pulse on "clic" word, no cursor.
+   Respects prefers-reduced-motion.
 ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (!window.matchMedia('(hover: hover)').matches) return;
 
+  var isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var busy = false;
 
   function init() {
@@ -21,7 +20,16 @@
     var cards  = document.querySelectorAll('.hcard');
     var pill   = document.querySelector('.hero__pill');
 
-    if (!clicEl || !hero || !cursor) return;
+    if (!clicEl) return;
+
+    /* ── Utility ── */
+    function pulse(el, cls, ms) {
+      if (!el) return;
+      el.classList.remove(cls);
+      void el.offsetWidth;
+      el.classList.add(cls);
+      setTimeout(function () { el.classList.remove(cls); }, ms);
+    }
 
     function getTarget() {
       var heroRect = hero.getBoundingClientRect();
@@ -32,20 +40,21 @@
       };
     }
 
-    function pulse(el, cls, ms) {
-      el.classList.remove(cls);
-      void el.offsetWidth;
-      el.classList.add(cls);
-      setTimeout(function () { el.classList.remove(cls); }, ms);
+    /* ── Mobile simplified: just pulse the word ── */
+    function mobilePlay() {
+      if (busy) return;
+      busy = true;
+      pulse(clicEl, 'clic-active', 800);
+      setTimeout(function () { pulse(clicEl, 'clic-glow', 680); }, 70);
+      setTimeout(function () { busy = false; }, 1200);
     }
 
-    function play() {
-      if (busy) return;
+    /* ── Desktop full: cursor glide + all effects ── */
+    function desktopPlay() {
+      if (busy || !hero || !cursor) return;
       busy = true;
 
       var t = getTarget();
-
-      /* Start position: just below-right of word (very close) */
       var sx = t.x + 20;
       var sy = t.y + 14;
 
@@ -54,31 +63,30 @@
       cursor.style.transform  = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.9)';
       cursor.style.opacity    = '0';
 
-      /* t=80ms — fade in at start position */
+      /* t=80ms — fade in */
       setTimeout(function () {
         cursor.style.transition = 'opacity 180ms ease';
         cursor.style.opacity    = '0.88';
       }, 80);
 
-      /* t=340ms — short glide to word center */
+      /* t=340ms — glide to word */
       setTimeout(function () {
         cursor.style.transition = 'transform 300ms cubic-bezier(0.4,0,0.2,1), opacity 180ms ease';
         cursor.style.transform  = 'translate(' + (t.x - 3) + 'px, ' + (t.y - 2) + 'px) scale(1)';
       }, 340);
 
-      /* t=660ms — press down */
+      /* t=660ms — press */
       setTimeout(function () {
         cursor.style.transition = 'transform 75ms ease-in';
         cursor.style.transform  = 'translate(' + (t.x - 3) + 'px, ' + (t.y - 2) + 'px) scale(0.78)';
       }, 660);
 
-      /* t=750ms — release + fire all effects */
+      /* t=750ms — release + fire effects */
       setTimeout(function () {
         cursor.style.transition = 'transform 190ms cubic-bezier(0.34,1.56,0.64,1)';
         cursor.style.transform  = 'translate(' + (t.x - 3) + 'px, ' + (t.y - 2) + 'px) scale(1)';
 
         pulse(clicEl, 'clic-active', 800);
-
         setTimeout(function () { pulse(clicEl, 'clic-glow', 680); }, 70);
 
         if (ring) {
@@ -92,10 +100,9 @@
         });
 
         if (pill) setTimeout(function () { pulse(pill, 'pill-react', 700); }, 120);
-
       }, 750);
 
-      /* t=1150ms — cursor drifts slightly and fades out */
+      /* t=1150ms — cursor fades out */
       setTimeout(function () {
         cursor.style.transition = 'opacity 220ms ease, transform 220ms ease';
         cursor.style.opacity    = '0';
@@ -106,8 +113,15 @@
       setTimeout(function () { busy = false; }, 1500);
     }
 
-    setTimeout(play, 2800);
-    setInterval(play, 5800);
+    /* ── Schedule ── */
+    if (isDesktop) {
+      setTimeout(desktopPlay, 2800);
+      setInterval(desktopPlay, 5800);
+    } else {
+      /* Mobile: slower repeat, subtle */
+      setTimeout(mobilePlay, 3500);
+      setInterval(mobilePlay, 8000);
+    }
   }
 
   if (document.readyState === 'loading') {

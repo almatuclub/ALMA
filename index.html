@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>alma+ | Tu plataforma de salud y bienestar</title>
 <meta name="description" content="Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Uruguay. Reservá con fichas, sin intermediarios."/>
-<link rel="stylesheet" href="style.css?v=11"/>
-<link rel="stylesheet" href="pages.css?v=11"/>
+<link rel="stylesheet" href="style.css?v=12"/>
+<link rel="stylesheet" href="pages.css?v=12"/>
 </head>
 <body>
 
@@ -114,12 +114,12 @@
 
       <!-- Professional profile card -->
       <div class="hcard hcard--prof">
-        <div class="hcard__avatar">🧠</div>
+        <div class="hcard__avatar" aria-hidden="true">VS</div>
         <div>
           <div class="hcard__name">Lic. Valentina Suárez</div>
           <div class="hcard__spec">Psicología · TCC &amp; Mindfulness</div>
           <div class="hcard__stars">
-            <span class="s">★★★★★</span>
+            <span class="s" aria-label="5 estrellas">★★★★★</span>
             <span class="n">4.9 · 142 sesiones</span>
           </div>
         </div>
@@ -131,7 +131,7 @@
 
       <!-- Session booked card -->
       <div class="hcard hcard--session">
-        <div class="hcard__icon-wrap">📅</div>
+        <div class="hcard__icon-wrap"><svg class="hcard-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div>
           <div class="hcard__label">Próxima sesión</div>
           <div class="hcard__val">Hoy · 17:00 hs</div>
@@ -147,7 +147,7 @@
       </div>
 
       <!-- Floating rating pill -->
-      <div class="hero__pill">⭐ 4.9 · 12k+ sesiones</div>
+      <div class="hero__pill"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.9 · 12k+ sesiones</div>
     </div>
 
   </div>
@@ -232,7 +232,7 @@
     <div class="services-grid stagger-children">
 
       <a href="professionals.html?s=psicologia" class="service-card">
-        <div class="service-icon">🧠</div>
+        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.04-4.78 2.5 2.5 0 0 1-.46-4.88 2.5 2.5 0 0 1 2-4.38z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.04-4.78 2.5 2.5 0 0 0 .46-4.88 2.5 2.5 0 0 0-2-4.38z"/></svg></div>
         <h3>Psicología</h3>
         <p class="desc">Terapia individual con psicólogos y psicólogas especializados en diferentes enfoques.</p>
         <div class="session-info">⏱ Sesiones de 45 a 60 minutos</div>
@@ -243,7 +243,7 @@
       </a>
 
       <a href="professionals.html?s=psiquiatria" class="service-card">
-        <div class="service-icon">💊</div>
+        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg></div>
         <h3>Psiquiatría</h3>
         <p class="desc">Consultas psiquiátricas para diagnóstico, seguimiento y ajuste de tratamiento.</p>
         <div class="session-info">⏱ Consultas de 30 a 45 minutos</div>
@@ -254,7 +254,7 @@
       </a>
 
       <a href="professionals.html?s=nutricion" class="service-card">
-        <div class="service-icon">🥗</div>
+        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
         <h3>Nutrición</h3>
         <p class="desc">Planes de alimentación personalizados con nutricionistas diplomados.</p>
         <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
@@ -265,7 +265,7 @@
       </a>
 
       <a href="professionals.html?s=trainer" class="service-card">
-        <div class="service-icon">🏋️</div>
+        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
         <h3>Personal Trainer</h3>
         <p class="desc">Entrenamiento físico personalizado online o presencial, adaptado a tus objetivos.</p>
         <div class="session-info">⏱ Sesiones de 60 minutos</div>
@@ -276,7 +276,7 @@
       </a>
 
       <a href="professionals.html?s=coaching" class="service-card">
-        <div class="service-icon">🎯</div>
+        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         <h3>Coaching</h3>
         <p class="desc">Acompañamiento profesional para metas de vida, carrera y transformación personal.</p>
         <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
@@ -287,7 +287,7 @@
       </a>
 
       <a href="professionals.html" class="service-card service-card--dashed">
-        <div class="service-icon" style="margin:0 auto 14px">➕</div>
+        <div class="service-icon" style="margin:0 auto 14px"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
         <h3>Otro profesional</h3>
         <p class="desc">¿Buscás otro tipo de profesional de salud privado? Explorá el directorio completo.</p>
         <div style="margin-top:16px">
@@ -312,27 +312,27 @@
         </div>
         <div class="fichas-grid">
           <div class="ficha-item">
-            <div class="svc">🧠 Psicología</div>
+            <div class="svc">Psicología</div>
             <div class="price">8<span>+ fichas</span></div>
             <div class="duration">45 – 60 min por sesión</div>
           </div>
           <div class="ficha-item">
-            <div class="svc">💊 Psiquiatría</div>
+            <div class="svc">Psiquiatría</div>
             <div class="price">12<span>+ fichas</span></div>
             <div class="duration">30 – 45 min por consulta</div>
           </div>
           <div class="ficha-item">
-            <div class="svc">🥗 Nutrición</div>
+            <div class="svc">Nutrición</div>
             <div class="price">6<span>+ fichas</span></div>
             <div class="duration">50 – 60 min por sesión</div>
           </div>
           <div class="ficha-item">
-            <div class="svc">🏋️ Personal Trainer</div>
+            <div class="svc">Personal Trainer</div>
             <div class="price">5<span>+ fichas</span></div>
             <div class="duration">60 min por sesión</div>
           </div>
           <div class="ficha-item">
-            <div class="svc">🎯 Coaching</div>
+            <div class="svc">Coaching</div>
             <div class="price">7<span>+ fichas</span></div>
             <div class="duration">50 – 60 min por sesión</div>
           </div>
@@ -358,11 +358,11 @@
 
       <div class="prof-mini">
         <div class="prof-mini-head">
-          <div class="prof-mini-avatar">🧠</div>
+          <div class="prof-mini-avatar">VS</div>
           <div>
             <div class="prof-mini-name">Lic. Valentina Suárez</div>
             <div class="prof-mini-spec">Psicología · TCC</div>
-            <div class="prof-mini-rating">⭐ 4.9 · 142 sesiones</div>
+            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.9 · 142 sesiones</div>
           </div>
         </div>
         <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Vínculos</span><span class="tag">Online</span></div>
@@ -376,11 +376,11 @@
 
       <div class="prof-mini">
         <div class="prof-mini-head">
-          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#FF7043,#E53935)">🏋️</div>
+          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#FF7043,#E53935)">AF</div>
           <div>
             <div class="prof-mini-name">Agustín Ferreyra</div>
             <div class="prof-mini-spec">Personal Trainer</div>
-            <div class="prof-mini-rating">⭐ 5.0 · 98 sesiones</div>
+            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 5.0 · 98 sesiones</div>
           </div>
         </div>
         <div class="tags"><span class="tag">Funcional</span><span class="tag">Presencial</span><span class="tag">CABA</span></div>
@@ -394,11 +394,11 @@
 
       <div class="prof-mini">
         <div class="prof-mini-head">
-          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">🥗</div>
+          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">CR</div>
           <div>
             <div class="prof-mini-name">Lic. Camila Ríos</div>
             <div class="prof-mini-spec">Nutrición</div>
-            <div class="prof-mini-rating">⭐ 4.8 · 207 sesiones</div>
+            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.8 · 207 sesiones</div>
           </div>
         </div>
         <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Online</span></div>
