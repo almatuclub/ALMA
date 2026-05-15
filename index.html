@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>alma+ | Tu plataforma de salud y bienestar</title>
 <meta name="description" content="Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Uruguay. Reservá con fichas, sin intermediarios."/>
-<link rel="stylesheet" href="style.css?v=7"/>
-<link rel="stylesheet" href="pages.css?v=7"/>
+<link rel="stylesheet" href="style.css?v=9"/>
+<link rel="stylesheet" href="pages.css?v=9"/>
 </head>
 <body>
 
@@ -86,7 +86,7 @@
         <span class="dot"></span>
         480+ profesionales verificados en Uruguay
       </div>
-      <h1>Tu bienestar a un <span class="gradient-text">clic de distancia</span></h1>
+      <h1>Tu bienestar a un <span class="gradient-text"><span class="clic-word" id="clic-word">clic</span> de distancia</span></h1>
       <p class="hero__lead">Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados. Elegís a quién, cuándo y cómo — con fichas, sin intermediarios.</p>
       <div class="hero__actions">
         <a href="professionals.html" class="btn btn-primary btn-lg">Encontrar profesional →</a>
@@ -151,6 +151,14 @@
     </div>
 
   </div>
+
+  <!-- Hero click animation overlays -->
+  <div class="hero-cursor" id="hero-cursor" aria-hidden="true">
+    <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 2L3 20L7.5 15L10.5 22L13 21L10 14.5H16L3 2Z" fill="white" stroke="#18181b" stroke-width="1.4" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="hero-ring" id="hero-ring" aria-hidden="true"></div>
 </section>
 
 <!-- ─── Stats strip ─── -->
@@ -514,5 +522,6 @@
 <script src="db.js" defer></script>
 <script src="script.js" defer></script>
 <script src="js/loader.js" defer></script>
+<script src="js/hero-click.js" defer></script>
 </body>
 </html>

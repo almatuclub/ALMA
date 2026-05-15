@@ -1241,3 +1241,121 @@
   .job-card       { padding: 14px 12px; }
   .chip           { font-size: 0.72rem; padding: 5px 10px; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   HERO CLICK ANIMATION
+   ═══════════════════════════════════════════════════════ */
+
+/* — clic word — */
+.clic-word {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  transition: text-shadow 0.3s ease;
+}
+
+/* Ripple pseudo-element expands from the word center */
+.clic-word::after {
+  content: '';
+  position: absolute;
+  inset: -6px -10px;
+  border-radius: 10px;
+  background: radial-gradient(ellipse, rgba(232,69,60,0.28) 0%, transparent 68%);
+  opacity: 0;
+  transform: scale(0.35);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.clic-word.clic-ripple-active::after {
+  animation: clicRippleExpand 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+@keyframes clicRippleExpand {
+  0%   { opacity: 1;   transform: scale(0.35); }
+  55%  { opacity: 0.5; }
+  100% { opacity: 0;   transform: scale(4.8); }
+}
+
+/* Word bounce with spring overshoot */
+.clic-word.clic-bounce {
+  animation: clicWordBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+@keyframes clicWordBounce {
+  0%   { transform: scale(1); }
+  28%  { transform: scale(0.86); }
+  62%  { transform: scale(1.14); }
+  80%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+/* Coral glow on word */
+.clic-word.clic-glow {
+  text-shadow: 0 0 16px rgba(232,69,60,0.6), 0 0 36px rgba(232,69,60,0.28);
+}
+
+/* — animated cursor — */
+.hero-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 26px;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.30));
+}
+
+/* — expanding ring from click point — */
+.hero-ring {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(232,69,60,0.22);
+  pointer-events: none;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+}
+
+.hero-ring.hero-ring-active {
+  animation: heroRingExpand 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+@keyframes heroRingExpand {
+  0%   { opacity: 0.65; transform: scale(0); }
+  35%  { opacity: 0.4; }
+  100% { opacity: 0;   transform: scale(700); }
+}
+
+/* — hero card reactions: use box-shadow only (preserves float transform animation) — */
+.hcard.hcard--react {
+  box-shadow: 0 8px 40px rgba(232,69,60,0.2), 0 0 0 1.5px rgba(232,69,60,0.16) !important;
+  transition: box-shadow 0.45s ease !important;
+}
+
+/* — pill reaction — */
+.hero__pill.pill-react {
+  box-shadow: 0 4px 22px rgba(232,69,60,0.3) !important;
+  border-color: rgba(232,69,60,0.38) !important;
+  transition: box-shadow 0.45s ease, border-color 0.45s ease !important;
+}
+
+/* — accessibility: honour reduced motion — */
+@media (prefers-reduced-motion: reduce) {
+  .clic-word::after                    { display: none; }
+  .clic-word.clic-ripple-active::after { animation: none; }
+  .clic-word.clic-bounce               { animation: none; }
+  .clic-word.clic-glow                 { text-shadow: none; }
+  .hero-cursor                         { display: none !important; }
+  .hero-ring.hero-ring-active          { animation: none; opacity: 0; }
+  .hcard.hcard--react,
+  .hero__pill.pill-react               { box-shadow: none !important; border-color: transparent !important; }
+}
