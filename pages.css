@@ -1243,79 +1243,53 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   HERO CLICK ANIMATION
+   HERO CLICK ANIMATION  v10
    ═══════════════════════════════════════════════════════ */
 
-/* — clic word — */
+/*
+  .clic-word is nested inside .gradient-text which sets
+  -webkit-text-fill-color: transparent on the parent.
+  The child inherits that value BUT its own background is
+  transparent by default — so text would disappear.
+  Fix: re-declare the gradient explicitly on .clic-word
+  so it always has its own background to clip against.
+*/
 .clic-word {
   position: relative;
   display: inline-block;
+  background: linear-gradient(135deg, #FF8573 0%, #DC3B35 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-radius: 4px;   /* softens the box-shadow ripple ring */
   cursor: default;
-  transition: text-shadow 0.3s ease;
 }
 
-/* Ripple pseudo-element expands from the word center */
-.clic-word::after {
-  content: '';
-  position: absolute;
-  inset: -6px -10px;
-  border-radius: 10px;
-  background: radial-gradient(ellipse, rgba(232,69,60,0.28) 0%, transparent 68%);
-  opacity: 0;
-  transform: scale(0.35);
-  transform-origin: center;
-  pointer-events: none;
+/* ── Press + ripple ring: combined in one keyframe ── */
+@keyframes clicPressRipple {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0px  rgba(220,59,53,0.45); }
+  16%  { transform: scale(0.87); box-shadow: 0 0 0 3px  rgba(220,59,53,0.32); }
+  50%  { transform: scale(1.09); box-shadow: 0 0 0 14px rgba(220,59,53,0.11); }
+  74%  { transform: scale(0.98); box-shadow: 0 0 0 23px rgba(220,59,53,0.04); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 34px rgba(220,59,53,0);    }
 }
 
-.clic-word.clic-ripple-active::after {
-  animation: clicRippleExpand 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+.clic-word.clic-active {
+  animation: clicPressRipple 0.72s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 
-@keyframes clicRippleExpand {
-  0%   { opacity: 1;   transform: scale(0.35); }
-  55%  { opacity: 0.5; }
-  100% { opacity: 0;   transform: scale(4.8); }
-}
-
-/* Word bounce with spring overshoot */
-.clic-word.clic-bounce {
-  animation: clicWordBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-
-@keyframes clicWordBounce {
-  0%   { transform: scale(1); }
-  28%  { transform: scale(0.86); }
-  62%  { transform: scale(1.14); }
-  80%  { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
-/* Coral glow on word */
+/* ── Subtle coral glow (text-shadow works with background-clip:text) ── */
 .clic-word.clic-glow {
-  text-shadow: 0 0 16px rgba(232,69,60,0.6), 0 0 36px rgba(232,69,60,0.28);
+  text-shadow: 0 0 14px rgba(220,59,53,0.55), 0 0 32px rgba(220,59,53,0.22);
 }
 
-/* — animated cursor — */
-.hero-cursor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 26px;
-  pointer-events: none;
-  z-index: 20;
-  opacity: 0;
-  will-change: transform, opacity;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.30));
-}
-
-/* — expanding ring from click point — */
+/* ── Background ring expanding from the click point ── */
 .hero-ring {
   position: absolute;
   width: 1px;
   height: 1px;
   border-radius: 50%;
-  border: 1.5px solid rgba(232,69,60,0.22);
+  border: 1.5px solid rgba(232,69,60,0.20);
   pointer-events: none;
   z-index: 0;
   top: 0;
@@ -1325,37 +1299,34 @@
   transform-origin: center;
 }
 
-.hero-ring.hero-ring-active {
-  animation: heroRingExpand 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
-}
-
 @keyframes heroRingExpand {
-  0%   { opacity: 0.65; transform: scale(0); }
-  35%  { opacity: 0.4; }
-  100% { opacity: 0;   transform: scale(700); }
+  0%   { opacity: 0.55; transform: scale(0); }
+  40%  { opacity: 0.25; }
+  100% { opacity: 0;    transform: scale(650); }
 }
 
-/* — hero card reactions: use box-shadow only (preserves float transform animation) — */
+.hero-ring.hero-ring-active {
+  animation: heroRingExpand 1.3s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+/* ── Card reactions: box-shadow only — preserves the float transform ── */
 .hcard.hcard--react {
-  box-shadow: 0 8px 40px rgba(232,69,60,0.2), 0 0 0 1.5px rgba(232,69,60,0.16) !important;
-  transition: box-shadow 0.45s ease !important;
+  box-shadow: 0 8px 40px rgba(232,69,60,0.18), 0 0 0 1.5px rgba(232,69,60,0.13) !important;
+  transition: box-shadow 0.5s ease !important;
 }
 
-/* — pill reaction — */
+/* ── Pill reaction ── */
 .hero__pill.pill-react {
-  box-shadow: 0 4px 22px rgba(232,69,60,0.3) !important;
-  border-color: rgba(232,69,60,0.38) !important;
-  transition: box-shadow 0.45s ease, border-color 0.45s ease !important;
+  box-shadow: 0 4px 20px rgba(232,69,60,0.28) !important;
+  border-color: rgba(232,69,60,0.36) !important;
+  transition: box-shadow 0.5s ease, border-color 0.5s ease !important;
 }
 
-/* — accessibility: honour reduced motion — */
+/* ── Respect prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .clic-word::after                    { display: none; }
-  .clic-word.clic-ripple-active::after { animation: none; }
-  .clic-word.clic-bounce               { animation: none; }
-  .clic-word.clic-glow                 { text-shadow: none; }
-  .hero-cursor                         { display: none !important; }
-  .hero-ring.hero-ring-active          { animation: none; opacity: 0; }
+  .clic-word.clic-active      { animation: none; box-shadow: none; }
+  .clic-word.clic-glow        { text-shadow: none; }
+  .hero-ring.hero-ring-active { animation: none; opacity: 0; }
   .hcard.hcard--react,
-  .hero__pill.pill-react               { box-shadow: none !important; border-color: transparent !important; }
+  .hero__pill.pill-react      { box-shadow: none !important; border-color: transparent !important; }
 }
