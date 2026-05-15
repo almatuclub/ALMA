@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Encontrar Profesional | alma+</title>
   <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
-  <link rel="stylesheet" href="style.css?v=12"/>
-  <link rel="stylesheet" href="pages.css?v=12"/>
+  <link rel="stylesheet" href="style.css?v=14"/>
+  <link rel="stylesheet" href="pages.css?v=14"/>
   <!-- Leaflet.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
@@ -48,7 +48,7 @@
 
 <div class="page-hero">
   <div class="container">
-    <span class="badge badge-red" style="margin-bottom:14px">📍 Montevideo, Uruguay</span>
+    <span class="badge badge-red" style="margin-bottom:14px">Montevideo, Uruguay</span>
     <h1>Encontrá tu <span class="gradient-text">especialista ideal</span></h1>
     <p>Profesionales privados verificados cerca tuyo. Precio en fichas +, sin obra social, sin esperas.</p>
     <div class="search-wrap">
@@ -57,11 +57,11 @@
     </div>
     <div class="service-chips" id="chips">
       <button class="chip active" onclick="filterChip(this,'')">Todos</button>
-      <button class="chip" onclick="filterChip(this,'psicologia')">🧠 Psicología</button>
-      <button class="chip" onclick="filterChip(this,'psiquiatria')">💊 Psiquiatría</button>
-      <button class="chip" onclick="filterChip(this,'nutricion')">🥗 Nutrición</button>
-      <button class="chip" onclick="filterChip(this,'trainer')">🏋️ Personal Trainer</button>
-      <button class="chip" onclick="filterChip(this,'coaching')">🎯 Coaching</button>
+      <button class="chip" onclick="filterChip(this,'psicologia')">Psicología</button>
+      <button class="chip" onclick="filterChip(this,'psiquiatria')">Psiquiatría</button>
+      <button class="chip" onclick="filterChip(this,'nutricion')">Nutrición</button>
+      <button class="chip" onclick="filterChip(this,'trainer')">Personal Trainer</button>
+      <button class="chip" onclick="filterChip(this,'coaching')">Coaching</button>
     </div>
   </div>
 </div>
@@ -74,7 +74,7 @@
       <!-- Map -->
       <div class="map-section">
         <div class="map-header">
-          <h3>🗺 Profesionales en Montevideo</h3>
+          <h3>Profesionales en Montevideo</h3>
           <div class="map-toggle">
             <button class="map-toggle-btn active" onclick="setMapView('map')">Mapa</button>
             <button class="map-toggle-btn" onclick="setMapView('satellite')">Vista aérea</button>
@@ -102,12 +102,12 @@
       <div class="prof-list" id="prof-list">
 
         <div class="prof-card reveal" data-svc="psicologia" data-id="0" onclick="highlightMap(0)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCDD2,#EF9A9A)">🧠</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCDD2,#EF9A9A)">VS</div>
           <div>
             <div class="prof-name">Lic. Valentina Suárez</div>
             <div class="prof-spec">Psicología · Terapia Cognitivo-Conductual</div>
             <div class="prof-meta">
-              <span>⭐ 4.9 (142)</span><span>🖥 Online</span><span>⏱ 45–60 min</span><span>📍 Pocitos</span>
+              <span>★ 4.9 (142)</span><span>Online</span><span>45–60 min</span><span>Pocitos</span>
             </div>
             <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Duelo</span><span class="tag">Relaciones</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -126,12 +126,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="psiquiatria" data-id="1" onclick="highlightMap(1)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#CE93D8,#7B1FA2)">💊</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#CE93D8,#7B1FA2)">RM</div>
           <div>
             <div class="prof-name">Dr. Rodrigo Mena</div>
             <div class="prof-spec">Psiquiatría · Adultos y Adolescentes</div>
             <div class="prof-meta">
-              <span>⭐ 4.8 (89)</span><span>🏥 Presencial + Online</span><span>⏱ 30–45 min</span><span>📍 Cordón</span>
+              <span>★ 4.8 (89)</span><span>Presencial + Online</span><span>30–45 min</span><span>Cordón</span>
             </div>
             <div class="tags"><span class="tag">Depresión</span><span class="tag">Bipolar</span><span class="tag">TDAH</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -149,12 +149,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="nutricion" data-id="2" onclick="highlightMap(2)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#A5D6A7,#2E7D32)">🥗</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#A5D6A7,#2E7D32)">CR</div>
           <div>
             <div class="prof-name">Lic. Camila Ríos</div>
             <div class="prof-spec">Nutrición · Deportiva y Clínica</div>
             <div class="prof-meta">
-              <span>⭐ 4.8 (207)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Punta Carretas</span>
+              <span>★ 4.8 (207)</span><span>Online</span><span>50–60 min</span><span>Punta Carretas</span>
             </div>
             <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Pérdida de peso</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -172,12 +172,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="trainer" data-id="3" onclick="highlightMap(3)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCC80,#E65100)">🏋️</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#FFCC80,#E65100)">AF</div>
           <div>
             <div class="prof-name">Agustín Ferreyra</div>
             <div class="prof-spec">Personal Trainer · Funcional y Fuerza</div>
             <div class="prof-meta">
-              <span>⭐ 5.0 (98)</span><span>📍 Presencial · Parque Rodó</span><span>⏱ 60 min</span>
+              <span>★ 5.0 (98)</span><span>Presencial · Parque Rodó</span><span>60 min</span>
             </div>
             <div class="tags"><span class="tag">Funcional</span><span class="tag">Pérdida peso</span><span class="tag">Hipertrofia</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -195,12 +195,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="coaching" data-id="4" onclick="highlightMap(4)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#80DEEA,#00695C)">🎯</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#80DEEA,#00695C)">LM</div>
           <div>
             <div class="prof-name">Lucía Montoya</div>
             <div class="prof-spec">Coaching Ontológico · Vida y Carrera</div>
             <div class="prof-meta">
-              <span>⭐ 4.7 (64)</span><span>🖥 Online</span><span>⏱ 50–60 min</span><span>📍 Ciudad Vieja</span>
+              <span>★ 4.7 (64)</span><span>Online</span><span>50–60 min</span><span>Ciudad Vieja</span>
             </div>
             <div class="tags"><span class="tag">Propósito</span><span class="tag">Liderazgo</span><span class="tag">Carrera</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -218,12 +218,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="psicologia" data-id="5" onclick="highlightMap(5)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#F48FB1,#880E4F)">🧠</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#F48FB1,#880E4F)">IP</div>
           <div>
             <div class="prof-name">Lic. Ignacio Pereyra</div>
             <div class="prof-spec">Psicología · Gestalt e Infanto-Juvenil</div>
             <div class="prof-meta">
-              <span>⭐ 4.9 (180)</span><span>🏥 Presencial + Online</span><span>⏱ 45–60 min</span><span>📍 Aguada</span>
+              <span>★ 4.9 (180)</span><span>Presencial + Online</span><span>45–60 min</span><span>Aguada</span>
             </div>
             <div class="tags"><span class="tag">Niños</span><span class="tag">Adolescentes</span><span class="tag">Familia</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -240,12 +240,12 @@
         </div>
 
         <div class="prof-card reveal" data-svc="nutricion" data-id="6" onclick="highlightMap(6)">
-          <div class="prof-avatar" style="background:linear-gradient(135deg,#C8E6C9,#1B5E20)">🥗</div>
+          <div class="prof-avatar" style="background:linear-gradient(135deg,#C8E6C9,#1B5E20)">SA</div>
           <div>
             <div class="prof-name">Lic. Sofía Álvarez</div>
             <div class="prof-spec">Nutrición · Clínica y Embarazo</div>
             <div class="prof-meta">
-              <span>⭐ 4.8 (93)</span><span>🖥 Online</span><span>⏱ 50 min</span><span>📍 Malvín</span>
+              <span>★ 4.8 (93)</span><span>Online</span><span>50 min</span><span>Malvín</span>
             </div>
             <div class="tags"><span class="tag">Embarazo</span><span class="tag">Diabetes</span><span class="tag">Celiaquía</span></div>
             <div style="font-size:0.73rem;color:var(--text-2);font-weight:500;margin-top:8px">Próximos turnos:</div>
@@ -284,16 +284,16 @@
       </div>
 
       <div class="filter-card">
-        <h4>🔧 Filtrar</h4>
+        <h4>Filtrar</h4>
         <div class="form-group">
           <label class="form-label">Servicio</label>
           <select id="filter-svc" class="form-select" onchange="applyFilter()">
             <option value="">Todos</option>
-            <option value="psicologia">🧠 Psicología</option>
-            <option value="psiquiatria">💊 Psiquiatría</option>
-            <option value="nutricion">🥗 Nutrición</option>
-            <option value="trainer">🏋️ Personal Trainer</option>
-            <option value="coaching">🎯 Coaching</option>
+            <option value="psicologia">Psicología</option>
+            <option value="psiquiatria">Psiquiatría</option>
+            <option value="nutricion">Nutrición</option>
+            <option value="trainer">Personal Trainer</option>
+            <option value="coaching">Coaching</option>
           </select>
         </div>
         <div class="filter-sep"></div>
@@ -325,7 +325,7 @@
       </div>
 
       <div class="filter-card" style="background:var(--red-50);border-color:var(--red-200)">
-        <h4 style="color:var(--red-dark)">❤️ Donar fichas</h4>
+        <h4 style="color:var(--red-dark)">Donar fichas</h4>
         <p style="font-size:0.82rem;color:var(--text-2);line-height:1.6;margin-bottom:12px">Donás fichas y alguien accede gratis a una sesión de salud.</p>
         <a href="donate.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex">Ver programa</a>
       </div>

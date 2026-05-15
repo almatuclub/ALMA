@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Donar Fichas | alma+</title>
   <meta name="description" content="Doná fichas alma+ para que otros accedan a sesiones de salud gratuitas. Bienestar que suma."/>
-  <link rel="stylesheet" href="style.css?v=12"/>
-  <link rel="stylesheet" href="pages.css?v=12"/>
+  <link rel="stylesheet" href="style.css?v=14"/>
+  <link rel="stylesheet" href="pages.css?v=14"/>
 </head>
 <body>
 <nav class="navbar">
@@ -45,7 +45,7 @@
 
 <div class="donate-hero">
   <div class="container">
-    <span class="badge badge-red" style="margin-bottom:14px">❤️ Programa de donaciones</span>
+    <span class="badge badge-red" style="margin-bottom:14px">Programa de donaciones</span>
     <h1>Bienestar que <span class="gradient-text">suma</span></h1>
     <p>Donás fichas, alguien accede a su primera sesión gratuita. La primer red interdisciplinaria de bienestar en Uruguay construida entre tod@s.</p>
     <a href="#donate-form" class="btn btn-primary btn-lg">Quiero donar</a>
@@ -69,17 +69,23 @@
       </div>
       <div class="donate-steps">
         <div class="donate-step">
-          <div class="donate-step-icon">💰</div>
+          <div class="donate-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v2m0 6v2M9.5 14a2.5 2.5 0 0 0 2.5 1.5A2 2 0 0 0 14 13.5c0-1-.8-1.5-2-2s-2-1.2-2-2.5a2 2 0 0 1 2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
           <h4>Vos donás fichas</h4>
           <p>Desde tu balance de fichas, elegís cuántas querés donar al pool comunitario de alma+.</p>
         </div>
         <div class="donate-step">
-          <div class="donate-step-icon">🏦</div>
+          <div class="donate-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
           <h4>Van al pool</h4>
           <p>Las fichas se acumulan junto con los aportes de los profesionales (5% de cada sesión).</p>
         </div>
         <div class="donate-step">
-          <div class="donate-step-icon">🎁</div>
+          <div class="donate-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21c-1-1-8-5.5-8-11a6 6 0 0 1 8-5.6A6 6 0 0 1 20 10c0 5.5-7 10-8 11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </div>
           <h4>Alguien recibe</h4>
           <p>Personas que lo necesitan pueden acceder a sesiones gratuitas usando fichas del pool.</p>
         </div>
@@ -98,11 +104,11 @@
       <p>El 5% de cada sesión aportada por los profesionales va al fondo comunitario.</p>
     </div>
     <div class="contribution-grid stagger-children">
-      <div class="contrib-item"><div class="icon">🧠</div><div class="svc">Psicología</div><div class="pct">5%</div><div class="lbl">0.4 fichas por sesión</div></div>
-      <div class="contrib-item"><div class="icon">💊</div><div class="svc">Psiquiatría</div><div class="pct">5%</div><div class="lbl">0.6 fichas por consulta</div></div>
-      <div class="contrib-item"><div class="icon">🥗</div><div class="svc">Nutrición</div><div class="pct">5%</div><div class="lbl">0.3 fichas por sesión</div></div>
-      <div class="contrib-item"><div class="icon">🏋️</div><div class="svc">Trainer</div><div class="pct">5%</div><div class="lbl">0.25 fichas por sesión</div></div>
-      <div class="contrib-item"><div class="icon">🎯</div><div class="svc">Coaching</div><div class="pct">5%</div><div class="lbl">0.35 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon" style="background:#E53935;border-radius:50%"></div><div class="svc">Psicología</div><div class="pct">5%</div><div class="lbl">0.4 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon" style="background:#7B1FA2;border-radius:50%"></div><div class="svc">Psiquiatría</div><div class="pct">5%</div><div class="lbl">0.6 fichas por consulta</div></div>
+      <div class="contrib-item"><div class="icon" style="background:#2E7D32;border-radius:50%"></div><div class="svc">Nutrición</div><div class="pct">5%</div><div class="lbl">0.3 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon" style="background:#E65100;border-radius:50%"></div><div class="svc">Trainer</div><div class="pct">5%</div><div class="lbl">0.25 fichas por sesión</div></div>
+      <div class="contrib-item"><div class="icon" style="background:#00695C;border-radius:50%"></div><div class="svc">Coaching</div><div class="pct">5%</div><div class="lbl">0.35 fichas por sesión</div></div>
     </div>
   </div>
 </section>
@@ -118,7 +124,7 @@
     <div class="donate-layout">
       <div>
         <div class="d-card" id="donate-form-card">
-          <h3>🎁 Cantidad de fichas a donar</h3>
+          <h3>Cantidad de fichas a donar</h3>
           <div class="ficha-picker">
             <button class="fp-btn" onclick="selectDonate(this,1)">
               <div class="fp-num">1+</div><div class="fp-lbl">ficha</div><div class="fp-val">$400</div>
@@ -175,7 +181,7 @@
       <!-- Sidebar -->
       <aside>
         <div class="d-sidebar-card">
-          <h4>🏦 Estado del pool comunitario</h4>
+          <h4>Estado del pool comunitario</h4>
           <div style="font-size:2rem;font-weight:900;color:var(--red)">2.847 <span style="font-size:1rem;font-weight:600">fichas</span></div>
           <div class="pool-bar"><div class="pool-fill"></div></div>
           <div class="pool-labels"><span>0</span><span>Meta: 4.000 fichas</span></div>
@@ -183,7 +189,7 @@
         </div>
 
         <div class="d-sidebar-card" style="background:var(--red-50);border-color:var(--red-200)">
-          <h4 style="color:var(--red-dark)">💡 Tu impacto</h4>
+          <h4 style="color:var(--red-dark)">Tu impacto</h4>
           <div class="ficha-impact">
             <div class="fi-row"><span class="fi-num">1+</span><span style="color:var(--text-2)">= 1 persona accede a asesoramiento</span></div>
             <div class="fi-row"><span class="fi-num">5+</span><span style="color:var(--text-2)">= 1 sesión completa de nutrición</span></div>
@@ -193,7 +199,7 @@
         </div>
 
         <div class="d-sidebar-card">
-          <h4>📋 Solicitar fichas del pool</h4>
+          <h4>Solicitar fichas del pool</h4>
           <p style="font-size:0.82rem;color:var(--text-2);line-height:1.6;margin-bottom:14px">¿Estás en una situación vulnerable y necesitás acceder a un servicio? Podés solicitar fichas del pool.</p>
           <a href="login.html" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;display:flex">Solicitar acceso gratuito</a>
         </div>

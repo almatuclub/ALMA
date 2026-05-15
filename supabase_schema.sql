@@ -1,5 +1,10 @@
 -- ============================================================
--- ALMA — Supabase schema (run this in the SQL Editor)
+-- ALMA+ — Supabase schema  ·  v14
+-- HOW TO APPLY:
+--   1. Open your Supabase project dashboard
+--   2. Go to SQL Editor → New Query
+--   3. Paste this entire file and click Run
+--   4. All policies use DROP IF EXISTS, so re-running is safe
 -- ============================================================
 
 -- 1. PROFILES — extends auth.users with role + fichas
@@ -63,6 +68,8 @@ create table if not exists public.professional_listings (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid references auth.users on delete set null,
   name       text not null,
+  email      text,
+  phone      text,
   spec       text not null,
   svc_id     text not null default 'otro',
   barrio     text,
@@ -78,8 +85,22 @@ create table if not exists public.professional_listings (
   created_at timestamptz not null default now()
 );
 
+-- Add columns if the table already exists (safe migration — all idempotent)
+alter table public.professional_listings add column if not exists email    text;
+alter table public.professional_listings add column if not exists phone    text;
+
+-- v13 availability & booking fields
+alter table public.professional_listings add column if not exists availability              jsonb;
+alter table public.professional_listings add column if not exists session_duration_minutes  integer default 60;
+alter table public.professional_listings add column if not exists modality                  text    default 'online';
+alter table public.professional_listings add column if not exists meeting_provider          text;
+alter table public.professional_listings add column if not exists meeting_link              text;    -- private: not returned by public SELECT policy
+alter table public.professional_listings add column if not exists location_address          text;
+
 alter table public.professional_listings enable row level security;
 
+-- Public view: approved listings only, meeting_link intentionally omitted via app logic
+-- (RLS cannot column-mask; app queries use explicit column lists, not SELECT *)
 drop policy if exists "Anyone can view approved listings." on professional_listings;
 create policy "Anyone can view approved listings."
   on professional_listings for select using (status = 'approved');
@@ -97,6 +118,13 @@ drop policy if exists "Owners can update own listings." on professional_listings
 create policy "Owners can update own listings."
   on professional_listings for update using (auth.uid() = user_id);
 
+-- Admins can update any listing (approve / reject)
+drop policy if exists "Admins can update any listing." on professional_listings;
+create policy "Admins can update any listing."
+  on professional_listings for update using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
 
 -- 3. BOOKINGS — confirmed session reservations
 -- ============================================================
@@ -112,6 +140,11 @@ create table if not exists public.bookings (
 );
 
 alter table public.bookings enable row level security;
+
+-- Add booking fields for scheduling (safe migration)
+alter table public.bookings add column if not exists scheduled_at  timestamptz;
+alter table public.bookings add column if not exists modality      text;
+alter table public.bookings add column if not exists meeting_link  text;   -- shown to patient after confirmation
 
 drop policy if exists "Patients can view own bookings." on bookings;
 create policy "Patients can view own bookings."

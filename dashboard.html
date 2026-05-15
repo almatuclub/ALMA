@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mi Panel Profesional | alma+</title>
   <meta name="description" content="Gestioná tus turnos, revisá tus ganancias y leé las reseñas de tus pacientes en alma+."/>
-  <link rel="stylesheet" href="style.css?v=12"/>
-  <link rel="stylesheet" href="pages.css?v=12"/>
+  <link rel="stylesheet" href="style.css?v=14"/>
+  <link rel="stylesheet" href="pages.css?v=14"/>
 </head>
 <body>
 <nav class="navbar">
@@ -41,7 +41,9 @@
 <div class="dash-header">
   <div class="container">
     <div class="dash-user">
-      <div class="dash-avatar" id="dash-avatar-icon">👩‍⚕️</div>
+      <div class="dash-avatar" id="dash-avatar-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="10" r="5" stroke="white" stroke-width="1.8"/><path d="M4 26c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
       <div class="dash-user-info">
         <h1 id="dash-name">Cargando...</h1>
         <p id="dash-role">Profesional verificado en alma+</p>
@@ -56,7 +58,10 @@
     <!-- Metrics -->
     <div class="dash-card">
       <div class="dash-card-header">
-        <div class="dash-card-title"><span>💰</span> Balance y Ganancias</div>
+        <div class="dash-card-title">
+          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v1m0 5v1M6 9.5a2 2 0 0 0 2 1A1.5 1.5 0 0 0 9.5 9c0-.83-.67-1.2-1.5-1.5S6.5 7 6.5 6.5A1.5 1.5 0 0 1 8 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          Balance y Ganancias
+        </div>
         <button class="btn btn-outline btn-sm">Retirar fondos</button>
       </div>
       <div class="metrics-grid">
@@ -69,7 +74,7 @@
           <div class="m-lbl">UYU Estimados</div>
         </div>
         <div class="metric-box">
-          <div class="m-val" style="color:var(--text)">4.8<span>⭐</span></div>
+          <div class="m-val" style="color:var(--text)">4.8<span style="font-size:1rem;color:#D97706">★</span></div>
           <div class="m-lbl">Calificación Promedio</div>
         </div>
       </div>
@@ -78,7 +83,10 @@
     <!-- Calendar -->
     <div class="dash-card">
       <div class="dash-card-header">
-        <div class="dash-card-title"><span>📅</span> Próximos Turnos</div>
+        <div class="dash-card-title">
+          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          Próximos Turnos
+        </div>
         <a href="apply.html" class="btn btn-outline btn-sm" style="font-size:0.75rem">Configurar disponibilidad</a>
       </div>
       <div class="apt-list">
@@ -126,7 +134,10 @@
     <!-- Reviews -->
     <div class="dash-card">
       <div class="dash-card-header">
-        <div class="dash-card-title"><span>💬</span> Últimas Reseñas</div>
+        <div class="dash-card-title">
+          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 2H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3l2 3 2-3h3a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+          Últimas Reseñas
+        </div>
       </div>
       <div class="review-list">
         <div class="review-item">

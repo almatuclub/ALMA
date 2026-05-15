@@ -1394,3 +1394,336 @@
   .hcard.hcard--react,
   .hero__pill.pill-react      { box-shadow: none !important; border-color: transparent !important; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   v13 — SVG ICON SYSTEM
+   ═══════════════════════════════════════════════════════ */
+
+/* Prof avatar: initials mode (replaces emoji approach) */
+.prof-avatar {
+  font-size: 0.78rem !important;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Benefit row / apply form section: SVG icon containers already flex */
+.benefit-row .ico,
+.form-section-title .ico { color: var(--red); }
+.benefit-row .ico svg,
+.form-section-title .ico svg { display: block; }
+
+/* Login tab: SVG icon sizing */
+.t-icon { display: flex; align-items: center; justify-content: center; }
+.t-icon svg { color: currentColor; }
+
+/* Input wrapper: SVG icon alignment */
+.input-icon-wrap .icon {
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+/* Payment can-do grid: icon as colored tile */
+.can-do-item .icon {
+  width: 48px !important; height: 48px !important;
+  font-size: 0 !important;               /* hide any fallback text */
+  border-radius: 12px !important;
+  display: flex !important; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+}
+
+/* Donate contribution grid: icon as colored circle */
+.contrib-item .icon {
+  width: 36px !important; height: 36px !important;
+  font-size: 0 !important;
+  margin: 0 auto 8px;
+}
+
+/* Donate steps: icon as flex center */
+.donate-step-icon {
+  font-size: 0;                          /* hide fallback */
+  display: flex;
+  align-items: center; justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--red-50);
+  border: 1.5px solid var(--red-100);
+  margin: 0 auto 14px;
+  color: var(--red);
+}
+.donate-step-icon svg { display: block; }
+
+/* Trust list checkmarks */
+.trust-item .icon {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.9rem !important;
+  width: 18px; text-align: center;
+}
+
+/* Dashboard avatar: SVG inside flex container */
+.dash-avatar {
+  font-size: 0 !important;              /* SVG replaces emoji */
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Secure badge: no longer needs icon gap */
+.secure-badge { gap: 0; }
+
+/* ── Apply form: auth banner SVG lock ── */
+.auth-banner-lock { display: none; } /* keep banner text only */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   v14 — AVAILABILITY CONFIGURATOR  (apply.html)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Day picker row */
+.day-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.day-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  line-height: 1;
+}
+.day-btn:hover   { border-color: var(--red-200); color: var(--red); background: var(--red-50); }
+.day-btn.active  { border-color: var(--red); background: var(--red); color: white; }
+
+/* Hint shown when no days are selected */
+.avail-empty-hint {
+  font-size: 0.8rem;
+  color: var(--text-3, #aaa);
+  margin: 8px 0 0;
+}
+
+/* Container for per-day time rows */
+.day-time-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+
+/* Individual day+time row */
+.day-time-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface, #fafafa);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex-wrap: wrap;
+}
+
+.dtr-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 52px;
+}
+
+.dtr-times {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.dtr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dtr-field span {
+  font-size: 0.68rem;
+  color: var(--text-2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dtr-input {
+  padding: 5px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  background: white;
+  width: 104px;
+  transition: border-color 0.15s;
+}
+.dtr-input:focus { outline: none; border-color: var(--red); }
+
+.dtr-arrow {
+  font-size: 1rem;
+  color: var(--text-3, #bbb);
+  margin-top: 14px; /* align with input */
+}
+
+.dtr-remove {
+  margin-left: auto;
+  padding: 5px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--text-3, #bbb);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.dtr-remove:hover { background: var(--red-50); color: var(--red); }
+
+/* Session duration + modality grid */
+.avail-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+@media (max-width: 560px) { .avail-options-grid { grid-template-columns: 1fr; } }
+
+/* Modality selector */
+.modality-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.modality-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.modality-btn:hover  { border-color: var(--red-200); color: var(--red); }
+.modality-btn.active { border-color: var(--red); background: var(--red-50); color: var(--red); }
+
+/* Meeting provider selector */
+.provider-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.provider-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.provider-btn:hover  { border-color: #4285F4; color: #4285F4; }
+.provider-btn.active { border-color: #4285F4; background: #EAF2FF; color: #1a5db2; }
+
+/* Meeting and location sections */
+.meeting-section,
+.location-section {
+  margin-top: 16px;
+}
+
+/* Small hint text below inputs */
+.form-label-hint {
+  font-size: 0.74rem;
+  color: var(--text-2);
+  margin-top: 5px;
+}
+
+/* Availability live preview */
+.avail-preview {
+  background: var(--surface, #fafafa);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  color: var(--text);
+  margin-top: 4px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.avail-preview-empty {
+  color: var(--text-3, #bbb);
+  font-size: 0.8rem;
+}
+
+.avail-preview-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.prev-day   { font-weight: 700; color: var(--text); }
+.prev-time  { color: var(--text-2); }
+.prev-dot   { color: var(--text-3, #bbb); margin: 0 2px; }
+.prev-section { color: var(--text-2); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   v14 — PROFESSIONALS PAGE  (professionals.html)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Modality badges on prof cards */
+.badge-online {
+  background: #EAF2FF;
+  color: #1a5db2;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+.badge-presencial {
+  background: #E8F5E9;
+  color: #2E7D32;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+.badge-online + .badge-presencial { margin-left: 3px; }
+
+/* Availability string on dynamic prof cards */
+.prof-avail-block {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.prof-avail-block::before {
+  content: '';
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green, #2E7D32);
+  flex-shrink: 0;
+}
