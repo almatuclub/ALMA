@@ -4,8 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chat | alma+</title>
-  <link rel="stylesheet" href="style.css?v=16"/>
-  <link rel="stylesheet" href="pages.css?v=16"/>
+  <link rel="stylesheet" href="style.css?v=17"/>
+  <link rel="stylesheet" href="pages.css?v=17"/>
   <style>
     html, body { height: 100%; overflow: hidden; }
     body { display: flex; flex-direction: column; }
@@ -282,10 +282,9 @@ async function sendMessage() {
 
 /* ═══ Init ═══ */
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.supabase) { location.href = 'login.html'; return; }
-
-  const { data: { session } } = await window.supabase.auth.getSession();
-  if (!session)               { location.href = 'login.html'; return; }
+  /* requireAuth() is defined in db.js (loaded defer before this fires) */
+  const session = await requireAuth('login.html');
+  if (!session) return;
 
   _myId      = session.user.id;
   _bookingId = new URLSearchParams(location.search).get('booking');

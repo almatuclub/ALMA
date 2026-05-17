@@ -498,10 +498,10 @@ async function updateBookingStatus(bookingId, newStatus, btn) {
    MAIN INIT
    ═══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.supabase) { location.href = 'login.html'; return; }
 
-  const { data: { session } } = await window.supabase.auth.getSession();
-  if (!session)               { location.href = 'login.html'; return; }
+  /* ─── Auth guard: wait for session (handles refresh/timing) ─── */
+  const session = await requireAuth('login.html');
+  if (!session) return; // requireAuth redirected
 
   /* ─── Load profile ─── */
   const { data: profile, error: profileErr } = await window.supabase
@@ -510,10 +510,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     .eq('id', session.user.id)
     .single();
 
-  if (profileErr || !profile) { location.href = 'login.html'; return; }
+  if (profileErr || !profile) {
+    console.error('[dash] Profile load failed:', profileErr?.message);
+    location.href = 'login.html';
+    return;
+  }
 
-  /* Redirect to onboarding if not completed */
+  /* ─── Redirect to onboarding if not completed ─── */
   if (!profile.onboarding_complete) {
+    console.log('[dash] Onboarding not complete → onboarding.html');
     location.href = 'onboarding.html';
     return;
   }

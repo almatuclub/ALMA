@@ -4,8 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bienvenido/a | alma+</title>
-  <link rel="stylesheet" href="style.css?v=16"/>
-  <link rel="stylesheet" href="pages.css?v=16"/>
+  <link rel="stylesheet" href="style.css?v=17"/>
+  <link rel="stylesheet" href="pages.css?v=17"/>
   <style>
     body { background: #FAFAF9; min-height: 100vh; display: flex; flex-direction: column; }
     .ob-page { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px 48px; }
@@ -396,10 +396,9 @@ async function skipOnboarding() {
 
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.supabase) { location.href = 'login.html'; return; }
-
-  const { data: { session } } = await window.supabase.auth.getSession();
-  if (!session) { location.href = 'login.html'; return; }
+  /* requireAuth() is defined in db.js (loaded defer before this fires) */
+  const session = await requireAuth('login.html');
+  if (!session) return;
   _session = session;
 
   const { data: profile } = await window.supabase

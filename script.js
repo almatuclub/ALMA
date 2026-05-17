@@ -211,95 +211,71 @@ const statsSection = document.getElementById('stats');
 if (statsSection) statsObserver.observe(statsSection);
 
 // ─── User Session Management ───
-window.logout = async function() {
-  if (window.supabase) await window.supabase.auth.signOut();
+
+/* Global logout — works on any page.
+   signOut() clears the Supabase session (including our alma_sb_v1 key). */
+window.logout = async function () {
+  console.log('[auth] logout() called');
+  try {
+    if (window.supabase) await window.supabase.auth.signOut();
+  } catch (e) {
+    console.warn('[auth] signOut error:', e.message);
+  }
   localStorage.removeItem('alma_user');
-  location.href = 'index.html';
+  location.href = 'login.html';
 };
 
+/* initUserSession — personalises the navbar on public pages.
+   Uses optionalAuth() (never redirects) so public pages stay accessible. */
 async function initUserSession() {
+  /* optionalAuth is defined in db.js which loads before script.js */
+  const session = typeof optionalAuth === 'function' ? await optionalAuth() : null;
   let user = null;
-  
-  if (window.supabase) {
-    const { data: { session } } = await window.supabase.auth.getSession();
-    
-    if (session) {
+
+  if (session) {
+    try {
       const { data: profile } = await window.supabase
         .from('profiles')
-        .select('*')
+        .select('username, full_name, role, fichas')
         .eq('id', session.user.id)
         .single();
-        
+
       if (profile) {
         user = profile;
+        /* Cache for quick reads (avatar in navbar etc.) */
         localStorage.setItem('alma_user', JSON.stringify(profile));
-      } else {
-        user = {
-          username: session.user.user_metadata.username || session.user.email.split('@')[0],
-          role: session.user.user_metadata.role || 'patient',
-          fichas: 0
-        };
       }
-    }
+    } catch { /* non-critical */ }
   }
 
+  /* Fallback to cached profile for UI (does NOT grant auth) */
   if (!user) {
-    user = JSON.parse(localStorage.getItem('alma_user'));
+    try { user = JSON.parse(localStorage.getItem('alma_user') || 'null'); } catch { user = null; }
   }
 
-  if (!user || (!user.username && !user.email)) return; // Not logged in
+  if (!user) return; // Not logged in — leave navbar as-is (shows Login button)
 
-  const actionContainers = document.querySelectorAll('.navbar__actions');
-  const navContainer = document.querySelectorAll('.navbar__nav');
-  
-  actionContainers.forEach(container => {
-    container.innerHTML = ''; // Clear default login/register buttons
-    
-    // Create the session info element
-    const sessionDiv = document.createElement('div');
-    sessionDiv.style.display = 'flex';
-    sessionDiv.style.alignItems = 'center';
-    sessionDiv.style.gap = '14px';
-    
-    if (user.role === 'pro' || user.role === 'admin') {
-      sessionDiv.innerHTML = `
-        <a href="dashboard.html" class="btn btn-primary btn-sm" style="display:flex;align-items:center;gap:6px">
-          📊 Mi Panel
-        </a>
-        <a href="javascript:void(0)" onclick="logout()" style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Cerrar sesión</a>
-      `;
-    } else {
-      // Patient
-      sessionDiv.innerHTML = `
-        <div style="display:flex;align-items:center;background:var(--bg-2);padding:6px 12px;border-radius:var(--radius-full);font-size:0.85rem;font-weight:600;gap:8px">
-          👤 ${user.username} <span style="color:var(--red)">${user.fichas || 0}+ </span>
-        </div>
-        <a href="javascript:void(0)" onclick="logout()" style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Cerrar sesión</a>
-      `;
+  const displayName = user.full_name || user.username || '';
+  const fichas      = user.fichas ?? 0;
+
+  /* Update navbar__actions on pages that have the default login/register buttons
+     (dashboard.html has its own navbar — skip those) */
+  document.querySelectorAll('.navbar__actions').forEach(container => {
+    /* Only replace if the container still has the default login buttons */
+    if (!container.querySelector('[data-session-ui]') &&
+        (container.querySelector('a[href="login.html"]') || container.children.length === 0)) {
+      container.innerHTML = '';
+      const div = document.createElement('div');
+      div.setAttribute('data-session-ui', '1');
+      div.style.cssText = 'display:flex;align-items:center;gap:12px';
+      div.innerHTML = (user.role === 'pro' || user.role === 'admin')
+        ? `<a href="dashboard.html" class="btn btn-primary btn-sm">Mi Panel</a>
+           <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>`
+        : `<span style="font-size:0.85rem;font-weight:600;color:var(--text)">${displayName}</span>
+           <span style="font-size:0.82rem;color:var(--red);font-weight:700">${fichas}+</span>
+           <a href="dashboard.html" class="btn btn-outline btn-sm">Mi Panel</a>`;
+      container.appendChild(div);
     }
-    
-    container.appendChild(sessionDiv);
-  });
-  
-  // Also update Mobile Nav
-  const mobileNavs = document.querySelectorAll('.mobile-nav');
-  mobileNavs.forEach(nav => {
-    // Remove old login links
-    const loginLinks = Array.from(nav.querySelectorAll('a')).filter(a => a.href.includes('login.html'));
-    loginLinks.forEach(l => l.remove());
-    
-    const panelLink = document.createElement('a');
-    panelLink.href = (user.role === 'pro' || user.role === 'admin') ? 'dashboard.html' : 'professionals.html';
-    panelLink.innerHTML = (user.role === 'pro' || user.role === 'admin') ? '📊 Mi Panel' : `👤 ${user.username} (${user.fichas}+)`;
-    panelLink.style.fontWeight = 'bold';
-    panelLink.style.color = 'var(--red)';
-    
-    const logoutLink = document.createElement('a');
-    logoutLink.href = "javascript:logout()";
-    logoutLink.textContent = "Cerrar sesión";
-    
-    nav.appendChild(panelLink);
-    nav.appendChild(logoutLink);
   });
 }
 

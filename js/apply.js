@@ -221,12 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    /* Auth guard */
-    const { data: { session } } = await window.supabase.auth.getSession();
+    /* Auth guard — uses requireAuth() which handles refresh/timing */
+    const session = await requireAuth('login.html');
     if (!session) {
-      sessionStorage.setItem('alma-return', 'apply.html');
       showToast('Necesitás ingresar antes de enviar tu perfil.', '🔒', 'error');
-      setTimeout(() => { window.location.href = 'login.html'; }, 1400);
       return;
     }
 

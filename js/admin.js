@@ -243,10 +243,10 @@ function renderListingsTable(listings) {
    MAIN INIT
    ═══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.supabase) { location.href = 'login.html'; return; }
 
-  const { data: { session } } = await window.supabase.auth.getSession();
-  if (!session)               { location.href = 'login.html'; return; }
+  /* ─── Auth guard ─── */
+  const session = await requireAuth('login.html');
+  if (!session) return;
 
   /* Role check */
   const { data: profile } = await window.supabase
