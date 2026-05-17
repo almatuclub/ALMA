@@ -4,8 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin | alma+</title>
-  <link rel="stylesheet" href="style.css?v=15"/>
-  <link rel="stylesheet" href="pages.css?v=15"/>
+  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="pages.css?v=16"/>
 </head>
 <body>
 
@@ -60,6 +60,22 @@
   </div>
 
   <div class="container admin-body">
+
+    <!-- Charts row -->
+    <div class="admin-chart-section" id="admin-chart-section" style="display:none">
+      <div class="admin-chart-card">
+        <div class="admin-chart-card__title">Sesiones — últimos 7 días</div>
+        <div class="admin-bar-chart" id="admin-weekly-chart">
+          <!-- filled by admin.js -->
+        </div>
+      </div>
+      <div class="admin-chart-card">
+        <div class="admin-chart-card__title">Actividad reciente</div>
+        <div class="activity-feed" id="admin-activity-feed">
+          <div style="font-size:0.82rem;color:var(--text-2);padding:12px 0">Cargando...</div>
+        </div>
+      </div>
+    </div>
 
     <!-- Stats row -->
     <div class="admin-stats" id="admin-stats">

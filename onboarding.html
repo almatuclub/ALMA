@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bienvenido/a | alma+</title>
+  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="pages.css?v=16"/>
+  <style>
+    body { background: #FAFAF9; min-height: 100vh; display: flex; flex-direction: column; }
+    .ob-page { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px 48px; }
+    .ob-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; margin-bottom: 36px; }
+    .ob-logo svg { width: 28px; height: 26px; }
+    .ob-logo span { font-size: 1.3rem; font-weight: 900; color: var(--text); letter-spacing: -0.02em; }
+    .ob-logo span .p { color: var(--red); }
+    .ob-card { background: white; border: 1.5px solid var(--border); border-radius: 24px; padding: 40px 36px; max-width: 520px; width: 100%; box-shadow: 0 4px 32px rgba(0,0,0,0.07); }
+    @media (max-width:540px) { .ob-card { padding: 28px 20px; border-radius: 20px; } }
+    /* Progress */
+    .ob-progress { display: flex; align-items: center; gap: 8px; margin-bottom: 32px; }
+    .ob-step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background .3s, width .3s; }
+    .ob-step-dot.active { background: var(--red); width: 24px; border-radius: 4px; }
+    .ob-step-dot.done   { background: #34d399; }
+    /* Steps */
+    .ob-step { display: none; animation: obFadeIn .3s ease; }
+    .ob-step.active { display: block; }
+    @keyframes obFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    .ob-eyebrow { font-size: 0.75rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .ob-title   { font-size: 1.5rem; font-weight: 900; color: var(--text); margin: 0 0 6px; line-height: 1.2; }
+    .ob-sub     { font-size: 0.88rem; color: var(--text-2); margin: 0 0 28px; }
+    /* Goal chips */
+    .ob-chips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    @media (max-width:400px) { .ob-chips-grid { grid-template-columns: 1fr; } }
+    .ob-chip {
+      padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px;
+      background: white; text-align: left; cursor: pointer;
+      transition: border-color .15s, background .15s;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ob-chip__icon { font-size: 1.4rem; line-height: 1; }
+    .ob-chip__label { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .ob-chip__sub   { font-size: 0.72rem; color: var(--text-2); margin-top: 2px; }
+    .ob-chip.selected { border-color: var(--red); background: var(--red-50); }
+    .ob-chip.selected .ob-chip__label { color: var(--red); }
+    /* Modality choice */
+    .ob-modality-row { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .ob-mod-btn {
+      flex: 1; min-width: 120px; padding: 14px 12px; border: 1.5px solid var(--border);
+      border-radius: 12px; background: white; cursor: pointer;
+      text-align: center; transition: border-color .15s, background .15s;
+    }
+    .ob-mod-btn__icon { font-size: 1.2rem; margin-bottom: 4px; }
+    .ob-mod-btn__label { font-size: 0.82rem; font-weight: 700; color: var(--text); display: block; }
+    .ob-mod-btn.selected { border-color: var(--red); background: var(--red-50); }
+    .ob-mod-btn.selected .ob-mod-btn__label { color: var(--red); }
+    /* Time prefs */
+    .ob-time-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .ob-time-btn {
+      padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 999px;
+      background: white; font-size: 0.82rem; font-weight: 600; color: var(--text-2);
+      cursor: pointer; transition: all .15s;
+    }
+    .ob-time-btn.selected { border-color: var(--red); background: var(--red); color: white; }
+    /* Bio textarea */
+    .ob-textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+      border-radius: 12px; font-size: 0.88rem; font-family: inherit;
+      resize: vertical; min-height: 100px; color: var(--text);
+      transition: border-color .15s;
+    }
+    .ob-textarea:focus { outline: none; border-color: var(--red); }
+    /* Input */
+    .ob-input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.88rem; font-family: inherit;
+      color: var(--text); transition: border-color .15s; margin-bottom: 12px; box-sizing: border-box;
+    }
+    .ob-input:focus { outline: none; border-color: var(--red); }
+    /* Done step */
+    .ob-done-icon { width: 72px; height: 72px; border-radius: 50%; background: #D1FAE5; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .ob-done-title { font-size: 1.6rem; font-weight: 900; text-align: center; margin-bottom: 8px; }
+    .ob-done-sub   { color: var(--text-2); text-align: center; font-size: 0.9rem; margin-bottom: 28px; }
+    .ob-done-prefs { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .ob-done-row   { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
+    .ob-done-row svg { color: #34d399; flex-shrink: 0; }
+    /* Buttons */
+    .ob-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+    .ob-btn-next { flex: 1; }
+    .ob-btn-skip { font-size: 0.82rem; color: var(--text-2); background: none; border: none; cursor: pointer; padding: 8px; }
+    .ob-btn-skip:hover { color: var(--text); text-decoration: underline; }
+    /* Pro info box */
+    .ob-info-box { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .ob-info-box__avatar { width: 48px; height: 48px; border-radius: 14px; background: var(--red); color: white; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .ob-info-box__name { font-weight: 700; font-size: 0.95rem; }
+    .ob-info-box__sub  { font-size: 0.78rem; color: var(--text-2); margin-top: 2px; }
+    /* Day chips inline */
+    .ob-day-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .ob-day-chip { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 0.8rem; font-weight: 600; color: var(--text-2); background: white; cursor: pointer; transition: all .15s; }
+    .ob-day-chip.selected { border-color: var(--red); background: var(--red); color: white; }
+    /* Alert box */
+    .ob-alert { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 12px 16px; font-size: 0.82rem; color: #92400E; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+<div class="ob-page" id="ob-page">
+
+  <!-- Logo -->
+  <a href="index.html" class="ob-logo">
+    <svg viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ob-g" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FF8573"/><stop offset="100%" stop-color="#DC3B35"/>
+        </linearGradient>
+      </defs>
+      <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#ob-g)"/>
+    </svg>
+    <span>alma<span class="p">+</span></span>
+  </a>
+
+  <!-- Loading -->
+  <div id="ob-loading" class="ob-card" style="text-align:center;padding:60px 36px">
+    <div style="color:var(--text-2);font-size:0.9rem">Cargando tu perfil...</div>
+  </div>
+
+  <!-- ═══ PATIENT ONBOARDING ═══ -->
+  <div id="flow-patient" class="ob-card" style="display:none">
+    <div class="ob-progress" id="patient-dots"></div>
+
+    <!-- Step 1: Goals -->
+    <div class="ob-step active" id="p-step-1">
+      <div class="ob-eyebrow">Paso 1 de 3</div>
+      <h1 class="ob-title">¿Qué te trajo por acá?</h1>
+      <p class="ob-sub">Elegí todo lo que aplique. Usaremos esto para recomendarte el profesional ideal.</p>
+      <div class="ob-chips-grid" id="goal-chips">
+        <button class="ob-chip" data-goal="ansiedad" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Ansiedad y estrés</div><div class="ob-chip__sub">Manejo emocional</div></div>
+        </button>
+        <button class="ob-chip" data-goal="depresion" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Bienestar emocional</div><div class="ob-chip__sub">Depresión, estado de ánimo</div></div>
+        </button>
+        <button class="ob-chip" data-goal="nutricion" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Alimentación</div><div class="ob-chip__sub">Nutrición y hábitos</div></div>
+        </button>
+        <button class="ob-chip" data-goal="entrenamiento" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Ejercicio físico</div><div class="ob-chip__sub">Entrenamiento y salud</div></div>
+        </button>
+        <button class="ob-chip" data-goal="coaching" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Desarrollo personal</div><div class="ob-chip__sub">Coaching y propósito</div></div>
+        </button>
+        <button class="ob-chip" data-goal="otro" onclick="toggleGoal(this)">
+          <div><div class="ob-chip__label">Otro objetivo</div><div class="ob-chip__sub">Algo diferente</div></div>
+        </button>
+      </div>
+      <div class="ob-actions">
+        <button class="btn btn-primary ob-btn-next" onclick="nextStep('patient', 1)">Continuar →</button>
+        <button class="ob-btn-skip" onclick="skipOnboarding()">Omitir</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Preferences -->
+    <div class="ob-step" id="p-step-2">
+      <div class="ob-eyebrow">Paso 2 de 3</div>
+      <h1 class="ob-title">¿Cómo preferís las sesiones?</h1>
+      <p class="ob-sub">Esto nos ayuda a mostrarte los profesionales más compatibles.</p>
+
+      <div style="font-size:0.78rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Modalidad</div>
+      <div class="ob-modality-row">
+        <button class="ob-mod-btn" data-mod="online" onclick="selectMod(this)">
+          <div class="ob-mod-btn__label">Online</div>
+          <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px">Videollamada</div>
+        </button>
+        <button class="ob-mod-btn" data-mod="presencial" onclick="selectMod(this)">
+          <div class="ob-mod-btn__label">Presencial</div>
+          <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px">En consultorio</div>
+        </button>
+        <button class="ob-mod-btn selected" data-mod="both" onclick="selectMod(this)">
+          <div class="ob-mod-btn__label">Me da igual</div>
+          <div style="font-size:0.72rem;color:var(--red);margin-top:3px">Cualquiera</div>
+        </button>
+      </div>
+
+      <div style="font-size:0.78rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Horarios preferidos</div>
+      <div class="ob-time-row">
+        <button class="ob-time-btn" data-time="mañana" onclick="toggleTime(this)">Mañanas</button>
+        <button class="ob-time-btn" data-time="tarde" onclick="toggleTime(this)">Tardes</button>
+        <button class="ob-time-btn" data-time="noche" onclick="toggleTime(this)">Noches</button>
+        <button class="ob-time-btn" data-time="finde" onclick="toggleTime(this)">Fines de semana</button>
+      </div>
+
+      <div class="ob-actions">
+        <button class="btn btn-primary ob-btn-next" onclick="nextStep('patient', 2)">Continuar →</button>
+        <button class="ob-btn-skip" onclick="prevStep('patient', 2)">← Atrás</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Done -->
+    <div class="ob-step" id="p-step-3">
+      <div style="text-align:center">
+        <div class="ob-done-icon">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#065F46" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="ob-done-title">¡Tu espacio está listo!</div>
+        <p class="ob-done-sub">Configuramos tu perfil según tus preferencias. Ahora encontrá al profesional ideal.</p>
+      </div>
+      <div class="ob-done-prefs" id="patient-prefs-summary"></div>
+      <a id="patient-cta-pros" href="professionals.html" class="btn btn-primary" style="width:100%;text-align:center;margin-bottom:10px">Ver profesionales recomendados →</a>
+      <a href="dashboard.html" class="btn btn-outline" style="width:100%;text-align:center">Ir a mi panel</a>
+    </div>
+  </div>
+
+  <!-- ═══ PROFESSIONAL ONBOARDING ═══ -->
+  <div id="flow-pro" class="ob-card" style="display:none">
+    <div class="ob-progress" id="pro-dots"></div>
+
+    <!-- Step 1: Welcome + bio -->
+    <div class="ob-step active" id="pro-step-1">
+      <div class="ob-eyebrow">Paso 1 de 3</div>
+      <h1 class="ob-title">Bienvenido/a al equipo</h1>
+      <p class="ob-sub">Completá tu perfil para aparecer en el directorio y empezar a recibir pacientes.</p>
+      <div class="ob-info-box">
+        <div class="ob-info-box__avatar" id="pro-ob-avatar">?</div>
+        <div>
+          <div class="ob-info-box__name" id="pro-ob-name">Cargando...</div>
+          <div class="ob-info-box__sub">Profesional en alma+</div>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--text-2);margin-bottom:6px">Tu descripción profesional</div>
+      <textarea class="ob-textarea" id="pro-ob-bio" placeholder="Contá en pocas palabras quién sos, tu enfoque y experiencia. Esto lo verán los pacientes en tu perfil..."></textarea>
+      <div class="ob-actions">
+        <button class="btn btn-primary ob-btn-next" onclick="nextStep('pro', 1)">Continuar →</button>
+        <button class="ob-btn-skip" onclick="skipOnboarding()">Omitir</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Quick availability -->
+    <div class="ob-step" id="pro-step-2">
+      <div class="ob-eyebrow">Paso 2 de 3</div>
+      <h1 class="ob-title">¿Cuándo estás disponible?</h1>
+      <p class="ob-sub">Seleccioná los días en que atendés. Podés configurar los horarios exactos después.</p>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--text-2);margin-bottom:10px">Días de atención</div>
+      <div class="ob-day-row">
+        <button class="ob-day-chip" data-day="lunes"     onclick="toggleDay(this)">Lun</button>
+        <button class="ob-day-chip" data-day="martes"    onclick="toggleDay(this)">Mar</button>
+        <button class="ob-day-chip" data-day="miercoles" onclick="toggleDay(this)">Mié</button>
+        <button class="ob-day-chip" data-day="jueves"    onclick="toggleDay(this)">Jue</button>
+        <button class="ob-day-chip" data-day="viernes"   onclick="toggleDay(this)">Vie</button>
+        <button class="ob-day-chip" data-day="sabado"    onclick="toggleDay(this)">Sáb</button>
+        <button class="ob-day-chip" data-day="domingo"   onclick="toggleDay(this)">Dom</button>
+      </div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--text-2);margin-bottom:10px">Franjas horarias</div>
+      <div class="ob-time-row">
+        <button class="ob-time-btn" data-range="manana" onclick="toggleTime(this)">Mañanas (8–13)</button>
+        <button class="ob-time-btn" data-range="tarde"  onclick="toggleTime(this)">Tardes (13–19)</button>
+        <button class="ob-time-btn" data-range="noche"  onclick="toggleTime(this)">Noches (19–22)</button>
+      </div>
+      <div class="ob-alert">
+        Para configurar horarios exactos y disponibilidad completa, usá la sección
+        <a href="apply.html" style="color:var(--red);font-weight:700">Registrarme como profesional</a>.
+      </div>
+      <div class="ob-actions">
+        <button class="btn btn-primary ob-btn-next" onclick="nextStep('pro', 2)">Continuar →</button>
+        <button class="ob-btn-skip" onclick="prevStep('pro', 2)">← Atrás</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Done -->
+    <div class="ob-step" id="pro-step-3">
+      <div style="text-align:center">
+        <div class="ob-done-icon">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#065F46" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="ob-done-title">¡Configuración lista!</div>
+        <p class="ob-done-sub">Tu perfil está en revisión. Te avisaremos cuando sea aprobado.</p>
+      </div>
+      <div class="ob-done-prefs" id="pro-prefs-summary"></div>
+      <a href="apply.html" class="btn btn-primary" style="width:100%;text-align:center;margin-bottom:10px">Completar perfil detallado →</a>
+      <a href="dashboard.html" class="btn btn-outline" style="width:100%;text-align:center">Ir a mi panel</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script>
+/* ─── State ─── */
+const state = {
+  role:          'patient',
+  goals:         [],
+  modality:      'both',
+  times:         [],
+  days:          [],
+  ranges:        [],
+  bio:           '',
+  displayName:   '',
+};
+
+let _session = null;
+
+/* ─── Toggle helpers ─── */
+function toggleGoal(btn) {
+  btn.classList.toggle('selected');
+  const g = btn.dataset.goal;
+  state.goals = state.goals.includes(g) ? state.goals.filter(x=>x!==g) : [...state.goals, g];
+}
+function selectMod(btn) {
+  document.querySelectorAll('.ob-mod-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.modality = btn.dataset.mod;
+}
+function toggleTime(btn) {
+  btn.classList.toggle('selected');
+  const k = btn.dataset.time || btn.dataset.range;
+  state.times = state.times.includes(k) ? state.times.filter(x=>x!==k) : [...state.times, k];
+}
+function toggleDay(btn) {
+  btn.classList.toggle('selected');
+  const d = btn.dataset.day;
+  state.days = state.days.includes(d) ? state.days.filter(x=>x!==d) : [...state.days, d];
+}
+
+/* ─── Progress dots ─── */
+function renderDots(containerId, total, current) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = Array.from({length:total},(_,i) =>
+    `<div class="ob-step-dot ${i+1===current?'active':i+1<current?'done':''}"></div>`
+  ).join('');
+}
+
+/* ─── Step navigation ─── */
+function nextStep(role, currentStep) {
+  const totalSteps = role === 'patient' ? 3 : 3;
+  const next = currentStep + 1;
+  if (next > totalSteps) { finishOnboarding(role); return; }
+
+  document.getElementById(`${role==='patient'?'p':'pro'}-step-${currentStep}`).classList.remove('active');
+  document.getElementById(`${role==='patient'?'p':'pro'}-step-${next}`).classList.add('active');
+  renderDots(role==='patient'?'patient-dots':'pro-dots', totalSteps, next);
+
+  if (next === totalSteps) buildSummary(role);
+}
+
+function prevStep(role, currentStep) {
+  const prev = currentStep - 1;
+  if (prev < 1) return;
+  document.getElementById(`${role==='patient'?'p':'pro'}-step-${currentStep}`).classList.remove('active');
+  document.getElementById(`${role==='patient'?'p':'pro'}-step-${prev}`).classList.add('active');
+  renderDots(role==='patient'?'patient-dots':'pro-dots', 3, prev);
+}
+
+/* ─── Summary for done step ─── */
+function buildSummary(role) {
+  if (role === 'patient') {
+    const GOAL_LABELS = { ansiedad:'Ansiedad y estrés', depresion:'Bienestar emocional',
+      nutricion:'Alimentación', entrenamiento:'Ejercicio físico', coaching:'Desarrollo personal', otro:'Otro objetivo' };
+    const MOD_LABELS  = { online:'Online (videollamada)', presencial:'Presencial', both:'Cualquier modalidad' };
+    const rows = [];
+    if (state.goals.length) rows.push(`<div class="ob-done-row"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>${state.goals.map(g=>GOAL_LABELS[g]||g).join(', ')}</span></div>`);
+    rows.push(`<div class="ob-done-row"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>${MOD_LABELS[state.modality]}</span></div>`);
+    if (state.times.length) rows.push(`<div class="ob-done-row"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Preferencia horaria: ${state.times.join(', ')}</span></div>`);
+    document.getElementById('patient-prefs-summary').innerHTML = rows.join('');
+    // Add modality param to CTA
+    const modParam = state.modality !== 'both' ? `?modality=${state.modality}` : '';
+    document.getElementById('patient-cta-pros').href = `professionals.html${modParam}`;
+  } else {
+    state.bio = document.getElementById('pro-ob-bio')?.value?.trim() || '';
+    const rows = [];
+    if (state.bio) rows.push(`<div class="ob-done-row"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Bio guardada</span></div>`);
+    if (state.days.length) rows.push(`<div class="ob-done-row"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Días disponibles: ${state.days.join(', ')}</span></div>`);
+    document.getElementById('pro-prefs-summary').innerHTML = rows.length ? rows.join('') : '<div class="ob-done-row"><span style="color:var(--text-2)">Completá el perfil detallado para aparecer en el directorio.</span></div>';
+  }
+  finishOnboarding(role); // Save in background
+}
+
+/* ─── Finish & save ─── */
+async function finishOnboarding(role) {
+  if (!window.supabase || !_session) return;
+  const onboardingData = role === 'patient'
+    ? { goals: state.goals, modality: state.modality, times: state.times }
+    : { bio: state.bio, days: state.days, ranges: state.ranges };
+  await window.supabase.from('profiles').update({
+    onboarding_complete: true,
+    onboarding_data: onboardingData,
+    ...(role === 'pro' && state.bio ? { bio: state.bio } : {}),
+  }).eq('id', _session.user.id);
+}
+
+async function skipOnboarding() {
+  if (window.supabase && _session) {
+    await window.supabase.from('profiles')
+      .update({ onboarding_complete: true })
+      .eq('id', _session.user.id);
+  }
+  location.href = state.role === 'pro' ? 'dashboard.html' : 'professionals.html';
+}
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!window.supabase) { location.href = 'login.html'; return; }
+
+  const { data: { session } } = await window.supabase.auth.getSession();
+  if (!session) { location.href = 'login.html'; return; }
+  _session = session;
+
+  const { data: profile } = await window.supabase
+    .from('profiles')
+    .select('username, full_name, role, onboarding_complete')
+    .eq('id', session.user.id)
+    .single();
+
+  if (!profile) { location.href = 'login.html'; return; }
+
+  // If already onboarded, skip
+  if (profile.onboarding_complete) {
+    location.href = profile.role === 'pro' ? 'dashboard.html' : 'professionals.html';
+    return;
+  }
+
+  state.role        = profile.role || 'patient';
+  state.displayName = profile.full_name || profile.username || session.user.email.split('@')[0];
+
+  document.getElementById('ob-loading').style.display = 'none';
+
+  if (state.role === 'pro') {
+    // Pro flow
+    const flow = document.getElementById('flow-pro');
+    flow.style.display = 'block';
+    renderDots('pro-dots', 3, 1);
+    const initials = state.displayName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?';
+    document.getElementById('pro-ob-avatar').textContent = initials;
+    document.getElementById('pro-ob-name').textContent   = state.displayName;
+  } else {
+    // Patient flow
+    document.getElementById('flow-patient').style.display = 'block';
+    renderDots('patient-dots', 3, 1);
+  }
+});
+</script>
+</body>
+</html>

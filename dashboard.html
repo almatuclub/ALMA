@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mi Panel | alma+</title>
   <meta name="description" content="Gestioná tus sesiones, fichas y perfil en alma+."/>
-  <link rel="stylesheet" href="style.css?v=15"/>
-  <link rel="stylesheet" href="pages.css?v=15"/>
+  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="pages.css?v=16"/>
 </head>
 <body>
 
@@ -31,6 +31,25 @@
       <li><a href="dashboard.html" class="active">Mi Panel</a></li>
     </ul>
     <div class="navbar__actions">
+      <!-- Notification Bell -->
+      <div class="notif-bell-wrap" id="notif-bell-wrap">
+        <button class="notif-bell" id="notif-bell-btn" onclick="toggleNotifDropdown()" aria-label="Notificaciones">
+          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+        </button>
+        <div class="notif-dropdown" id="notif-dropdown" style="display:none">
+          <div class="notif-dropdown__head">
+            <span>Notificaciones</span>
+            <button class="notif-mark-all" onclick="markAllNotifRead()">Marcar leídas</button>
+          </div>
+          <div class="notif-list" id="notif-list">
+            <div class="notif-empty">Sin notificaciones nuevas</div>
+          </div>
+        </div>
+      </div>
       <span id="nav-username" style="font-size:0.88rem;font-weight:600;color:var(--text)"></span>
       <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
     </div>
@@ -45,7 +64,23 @@
 </nav>
 
 <!-- ══════════════════════════════════════════════════════════
-     SKELETON LOADING (shown while Supabase loads)
+     PROFILE EDIT DRAWER (shared patient + pro)
+     ══════════════════════════════════════════════════════════ -->
+<div class="edit-drawer-overlay" id="edit-drawer-overlay" onclick="closeEditDrawer()" style="display:none"></div>
+<div class="edit-drawer" id="edit-drawer" style="display:none">
+  <div class="edit-drawer__head">
+    <h3 class="edit-drawer__title" id="edit-drawer-title">Editar perfil</h3>
+    <button class="edit-drawer__close" onclick="closeEditDrawer()">✕</button>
+  </div>
+  <div class="edit-drawer__body" id="edit-drawer-body"></div>
+  <div class="edit-drawer__footer">
+    <button class="edit-btn-cancel" onclick="closeEditDrawer()">Cancelar</button>
+    <button class="edit-btn-save" id="edit-btn-save" onclick="saveProfileEdit()">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SKELETON LOADING
      ══════════════════════════════════════════════════════════ -->
 <div id="dash-loading">
   <div class="dash-hero" style="background:linear-gradient(135deg,#2a2a2a 0%,#1a1a1a 100%)">
@@ -88,6 +123,10 @@
           <div>
             <h1 id="p-name" class="dash-hello">Hola</h1>
             <p class="dash-role-label">Paciente · alma+</p>
+            <button class="dash-hero-edit-btn" onclick="openEditDrawer()" style="margin-top:8px">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar perfil
+            </button>
           </div>
         </div>
         <div class="fichas-hero">
@@ -101,8 +140,6 @@
 
   <!-- Body -->
   <div class="container dash-body">
-
-    <!-- Upcoming sessions -->
     <div class="dash-section">
       <div class="dash-section__head">
         <h2 class="dash-section__title">Próximas sesiones</h2>
@@ -111,14 +148,12 @@
       <div id="p-upcoming-list" class="booking-cards-grid"></div>
     </div>
 
-    <!-- Past sessions -->
     <div class="dash-section" id="p-past-section">
       <div class="dash-section__head">
         <h2 class="dash-section__title">Sesiones pasadas</h2>
       </div>
       <div id="p-past-list" class="booking-past-list"></div>
     </div>
-
   </div>
 </div>
 
@@ -140,8 +175,11 @@
           </div>
         </div>
         <div class="pro-hero-actions">
-          <a href="apply.html" class="btn btn-sm pro-hero-btn">Editar disponibilidad</a>
-          <a href="professionals.html" class="btn btn-ghost btn-sm" style="color:rgba(255,255,255,0.75);font-size:0.8rem">Ver en directorio</a>
+          <button class="dash-hero-edit-btn" onclick="openEditDrawer()">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Editar perfil
+          </button>
+          <a href="apply.html" class="btn btn-ghost btn-sm" style="color:rgba(255,255,255,0.75);font-size:0.8rem">Editar disponibilidad</a>
         </div>
       </div>
 
@@ -169,8 +207,6 @@
 
   <!-- Body -->
   <div class="container dash-body">
-
-    <!-- Pending requests -->
     <div class="dash-section" id="pro-pending-section" style="display:none">
       <div class="dash-section__head">
         <h2 class="dash-section__title">
@@ -181,7 +217,6 @@
       <div id="pro-pending-list" class="booking-past-list"></div>
     </div>
 
-    <!-- Upcoming patients -->
     <div class="dash-section">
       <div class="dash-section__head">
         <h2 class="dash-section__title">Próximos pacientes</h2>
@@ -189,7 +224,6 @@
       </div>
       <div id="pro-upcoming-list" class="booking-past-list"></div>
     </div>
-
   </div>
 </div>
 

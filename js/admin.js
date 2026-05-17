@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/admin.js  ·  alma+  v15
+   js/admin.js  ·  alma+  v16
    Admin panel — approve/reject professionals, view bookings, view stats
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -107,6 +107,106 @@ function renderPendingCard(p) {
   </div>`;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   v16 — WEEKLY CHART
+   ═══════════════════════════════════════════════════════════════════════════ */
+function renderWeeklyChart(bookings) {
+  const chartEl = document.getElementById('admin-weekly-chart');
+  if (!chartEl) return;
+
+  const DAYS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const counts = Array(7).fill(0);
+  const today = new Date();
+
+  bookings.forEach(b => {
+    if (!b.created_at || b.status === 'cancelled') return;
+    const d    = new Date(b.created_at);
+    const diff = Math.floor((today - d) / 86400000);
+    if (diff >= 0 && diff < 7) counts[6 - diff]++;
+  });
+
+  const maxVal = Math.max(...counts, 1);
+
+  // Build labels for last 7 days (oldest → newest)
+  const labels = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    labels.push(DAYS[d.getDay()]);
+  }
+
+  chartEl.innerHTML = counts.map((c, i) => {
+    const pct    = Math.round((c / maxVal) * 100);
+    const height = Math.max(pct, 5);
+    return `<div class="admin-bar-wrap">
+      <div class="admin-bar-val">${c > 0 ? c : ''}</div>
+      <div class="admin-bar ${c === 0 ? 'admin-bar--empty' : ''}" style="height:${height}%"></div>
+      <div class="admin-bar-lbl">${labels[i]}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('admin-chart-section').style.display = 'grid';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v16 — ACTIVITY FEED
+   ═══════════════════════════════════════════════════════════════════════════ */
+function fmtTimeAgoAdmin(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'Ahora mismo';
+  if (m < 60) return `Hace ${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `Hace ${h}h`;
+  return `Hace ${Math.floor(h/24)} días`;
+}
+
+function renderActivityFeed(bookings, listings) {
+  const feedEl = document.getElementById('admin-activity-feed');
+  if (!feedEl) return;
+
+  // Combine events: last 5 bookings + last 5 listing status changes
+  const events = [];
+
+  bookings.slice(0, 6).forEach(b => {
+    events.push({
+      ts:    b.created_at,
+      icon:  '📅',
+      cls:   'activity-icon--booking',
+      title: `Nueva reserva con ${b.pro_name || '—'}`,
+    });
+  });
+
+  listings.filter(l => l.status !== 'pending').slice(0, 4).forEach(l => {
+    const isApproved = l.status === 'approved';
+    events.push({
+      ts:    l.created_at,
+      icon:  isApproved ? '✅' : '❌',
+      cls:   isApproved ? 'activity-icon--approved' : 'activity-icon--cancel',
+      title: `${l.name} — perfil ${isApproved ? 'aprobado' : 'rechazado'}`,
+    });
+  });
+
+  // Sort by timestamp desc
+  events.sort((a, b) => new Date(b.ts) - new Date(a.ts));
+  const top = events.slice(0, 8);
+
+  if (!top.length) {
+    feedEl.innerHTML = `<div style="font-size:0.82rem;color:var(--text-2);padding:12px 0">Sin actividad reciente</div>`;
+    return;
+  }
+
+  feedEl.innerHTML = top.map(ev => `
+    <div class="activity-item">
+      <div class="activity-icon ${ev.cls}">${ev.icon}</div>
+      <div class="activity-content">
+        <div class="activity-title">${ev.title}</div>
+        <div class="activity-time">${fmtTimeAgoAdmin(ev.ts)}</div>
+      </div>
+    </div>`).join('');
+}
+
 /* ─── Filter listings table ─── */
 function filterListings() {
   const filter = document.getElementById('filter-listing-status')?.value || '';
@@ -164,29 +264,41 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('admin-nav-name').textContent = displayName;
   document.getElementById('admin-main').style.display   = 'block';
 
-  /* ─── Load all listings ─── */
-  const { data: listings, error: listErr } = await window.supabase
-    .from('professional_listings')
-    .select('id, name, spec, svc_id, barrio, email, status, created_at')
-    .order('created_at', { ascending: false });
+  /* ─── Load all data in parallel ─── */
+  const [
+    { data: listings,   error: listErr },
+    { data: bookings,   error: bkErr   },
+    { count: userCount },
+  ] = await Promise.all([
+    window.supabase
+      .from('professional_listings')
+      .select('id, name, spec, svc_id, barrio, email, status, created_at')
+      .order('created_at', { ascending: false }),
+    window.supabase
+      .from('bookings')
+      .select('id, pro_name, slot, scheduled_at, modality, status, fichas_spent, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50),
+    window.supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true }),
+  ]);
 
+  /* ─── Render listings ─── */
   if (!listErr && listings) {
     _allListings = listings;
 
-    /* Stats */
     const pending  = listings.filter(l => l.status === 'pending');
     const approved = listings.filter(l => l.status === 'approved');
     document.getElementById('stat-pending-pros').textContent  = pending.length;
     document.getElementById('stat-approved-pros').textContent = approved.length;
 
-    /* Badge */
     const badge = document.getElementById('pending-count-badge');
     if (pending.length > 0) {
-      badge.textContent    = pending.length;
-      badge.style.display  = 'inline-flex';
+      badge.textContent   = pending.length;
+      badge.style.display = 'inline-flex';
     }
 
-    /* Pending cards */
     const pendingEl = document.getElementById('pending-pros-container');
     if (pending.length) {
       pendingEl.innerHTML = pending.map(renderPendingCard).join('');
@@ -194,25 +306,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       pendingEl.innerHTML = `<div class="admin-empty">No hay profesionales pendientes de revisión.</div>`;
     }
 
-    /* All listings table */
     renderListingsTable(listings);
   }
 
-  /* ─── Load bookings ─── */
-  const { data: bookings, error: bkErr } = await window.supabase
-    .from('bookings')
-    .select('id, pro_name, slot, scheduled_at, modality, status, fichas_spent, created_at')
-    .order('created_at', { ascending: false })
-    .limit(50);
-
+  /* ─── Render bookings ─── */
   if (!bkErr && bookings) {
     document.getElementById('stat-total-bookings').textContent = bookings.length;
     const bookingsTbody = document.getElementById('bookings-body');
     if (bookings.length) {
       bookingsTbody.innerHTML = bookings.map(b => {
-        const dateStr = b.scheduled_at
-          ? `${fmtDateAdmin(b.scheduled_at)}`
-          : (b.slot || '—');
+        const dateStr = b.scheduled_at ? fmtDateAdmin(b.scheduled_at) : (b.slot || '—');
         return `<tr>
           <td><strong>${b.pro_name || '—'}</strong></td>
           <td>${dateStr}</td>
@@ -226,11 +329,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  /* ─── Load user count ─── */
-  const { count: userCount } = await window.supabase
-    .from('profiles')
-    .select('id', { count: 'exact', head: true });
+  /* ─── Charts + activity feed (needs both datasets) ─── */
+  if (bookings) renderWeeklyChart(bookings);
+  if (bookings && listings) renderActivityFeed(bookings, listings);
 
+  /* ─── User count ─── */
   document.getElementById('stat-total-users').textContent = userCount ?? '—';
 });
 

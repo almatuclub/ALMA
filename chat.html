@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat | alma+</title>
+  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="pages.css?v=16"/>
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+    /* Chat header */
+    .chat-header {
+      background: white; border-bottom: 1.5px solid var(--border);
+      padding: 12px 20px; display: flex; align-items: center; gap: 14px;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+    }
+    .chat-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; font-weight: 600; color: var(--text-2);
+      text-decoration: none; padding: 6px 10px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: white;
+      transition: all .12s; flex-shrink: 0;
+    }
+    .chat-back:hover { background: var(--surface); color: var(--text); }
+    .chat-header-avatar {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: var(--red); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; min-width: 0; }
+    .chat-header-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .chat-header-sub  { font-size: 0.72rem; color: var(--text-2); margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+    .chat-online-dot  { width: 7px; height: 7px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+    /* Messages area */
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 20px 20px 8px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: #FAFAF9;
+    }
+    /* Message bubble */
+    .msg { display: flex; flex-direction: column; max-width: 72%; }
+    .msg--own   { align-self: flex-end; align-items: flex-end; }
+    .msg--other { align-self: flex-start; align-items: flex-start; }
+    .msg__bubble {
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 0.88rem; line-height: 1.5;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .msg--own   .msg__bubble { background: var(--red); color: white; border-bottom-right-radius: 4px; }
+    .msg--other .msg__bubble { background: white; color: var(--text); border: 1.5px solid var(--border); border-bottom-left-radius: 4px; }
+    .msg__time  { font-size: 0.65rem; color: var(--text-3,#bbb); margin-top: 3px; padding: 0 2px; }
+    .msg__sender { font-size: 0.72rem; font-weight: 600; color: var(--text-2); margin-bottom: 3px; }
+    /* System messages */
+    .msg-system {
+      text-align: center; font-size: 0.74rem; color: var(--text-2);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 999px; padding: 4px 14px; align-self: center;
+    }
+    /* Date divider */
+    .msg-date {
+      text-align: center; font-size: 0.72rem; color: var(--text-2);
+      font-weight: 600; margin: 8px 0;
+    }
+    /* Empty state */
+    .chat-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 20px; color: var(--text-2);
+    }
+    .chat-empty svg { margin-bottom: 12px; color: var(--text-3,#ccc); }
+    .chat-empty h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin: 0 0 6px; }
+    .chat-empty p  { font-size: 0.82rem; margin: 0; }
+    /* Input bar */
+    .chat-input-bar {
+      background: white; border-top: 1.5px solid var(--border);
+      padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; padding: 10px 14px;
+      border: 1.5px solid var(--border); border-radius: 999px;
+      font-size: 0.88rem; font-family: inherit; color: var(--text);
+      background: var(--surface); outline: none;
+      transition: border-color .12s;
+    }
+    .chat-input:focus { border-color: var(--red); background: white; }
+    .chat-send {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--red); color: white; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      transition: opacity .12s, transform .12s;
+    }
+    .chat-send:hover   { opacity: .88; }
+    .chat-send:active  { transform: scale(.93); }
+    .chat-send:disabled { opacity: .4; cursor: default; }
+    /* Auth state */
+    .chat-auth-wall {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 40px 20px;
+    }
+    @media (max-width: 600px) {
+      .chat-messages { padding: 14px 12px 6px; }
+      .msg { max-width: 88%; }
+      .chat-input-bar { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Chat header -->
+<div class="chat-header">
+  <a href="dashboard.html" class="chat-back">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+    Panel
+  </a>
+  <div class="chat-header-avatar" id="chat-other-avatar">?</div>
+  <div class="chat-header-info">
+    <div class="chat-header-name" id="chat-other-name">Cargando...</div>
+    <div class="chat-header-sub">
+      <span class="chat-online-dot"></span>
+      <span id="chat-other-sub">Sesión confirmada · alma+</span>
+    </div>
+  </div>
+</div>
+
+<!-- Messages area -->
+<div class="chat-messages" id="chat-messages">
+  <div class="chat-empty" id="chat-empty">
+    <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <h3>Inicio del chat</h3>
+    <p>Enviá el primer mensaje. Las respuestas llegan en minutos.</p>
+  </div>
+</div>
+
+<!-- Input bar -->
+<div class="chat-input-bar">
+  <input type="text" class="chat-input" id="chat-input" placeholder="Escribí un mensaje..." maxlength="1000"
+    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"/>
+  <button class="chat-send" id="chat-send-btn" onclick="sendMessage()" aria-label="Enviar">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+  </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="db.js" defer></script>
+<script>
+/* ═══ Chat state ═══ */
+let _myId       = null;
+let _bookingId  = null;
+let _booking    = null;
+let _polling    = null;
+let _lastMsgId  = null;
+let _isOtherPro = false; // am I the patient (other = pro) or pro (other = patient)?
+
+const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function fmtTime(iso) {
+  const d = new Date(iso);
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function fmtDate(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  if (d.toDateString() === now.toDateString()) return 'Hoy';
+  const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
+  if (d.toDateString() === yesterday.toDateString()) return 'Ayer';
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
+/* ─── Render a single message bubble ─── */
+function renderMsg(m) {
+  const isOwn = m.sender_id === _myId;
+  const timeStr = fmtTime(m.created_at);
+  return `<div class="msg ${isOwn ? 'msg--own' : 'msg--other'}">
+    <div class="msg__bubble">${escHtml(m.body)}</div>
+    <div class="msg__time">${timeStr}</div>
+  </div>`;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* ─── Load & render messages ─── */
+async function loadMessages(initial = false) {
+  if (!window.supabase || !_bookingId) return;
+
+  let query = window.supabase
+    .from('messages')
+    .select('id, sender_id, body, created_at')
+    .eq('booking_id', _bookingId)
+    .order('created_at', { ascending: true });
+
+  if (_lastMsgId && !initial) {
+    // Only fetch new messages (poll mode)
+    query = query.gt('created_at', _lastMsgId);
+  }
+
+  const { data: msgs, error } = await query;
+  if (error || !msgs || !msgs.length) return;
+
+  const container  = document.getElementById('chat-messages');
+  const emptyState = document.getElementById('chat-empty');
+  if (emptyState) emptyState.remove();
+
+  if (initial) {
+    // Render all messages with date dividers
+    let lastDate = '';
+    let html = '';
+    msgs.forEach(m => {
+      const dateStr = fmtDate(m.created_at);
+      if (dateStr !== lastDate) {
+        html += `<div class="msg-date">${dateStr}</div>`;
+        lastDate = dateStr;
+      }
+      html += renderMsg(m);
+    });
+    container.innerHTML = html;
+  } else {
+    // Append new messages
+    msgs.forEach(m => {
+      const div = document.createElement('div');
+      div.innerHTML = renderMsg(m);
+      container.appendChild(div.firstElementChild);
+    });
+  }
+
+  // Update last seen
+  _lastMsgId = msgs[msgs.length - 1].created_at;
+
+  // Scroll to bottom
+  container.scrollTop = container.scrollHeight;
+}
+
+/* ─── Send a message ─── */
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const body  = input.value.trim();
+  if (!body || !_bookingId || !_myId || !window.supabase) return;
+
+  const btn  = document.getElementById('chat-send-btn');
+  input.value = '';
+  btn.disabled = true;
+
+  const { error } = await window.supabase.from('messages').insert({
+    booking_id: _bookingId,
+    sender_id:  _myId,
+    body,
+  });
+
+  btn.disabled = false;
+
+  if (error) {
+    input.value = body; // restore
+    // Show inline error
+    return;
+  }
+
+  // Optimistically render
+  const container  = document.getElementById('chat-messages');
+  const emptyState = document.getElementById('chat-empty');
+  if (emptyState) emptyState.remove();
+
+  const now  = new Date().toISOString();
+  const div  = document.createElement('div');
+  div.innerHTML = renderMsg({ sender_id: _myId, body, created_at: now });
+  container.appendChild(div.firstElementChild);
+  container.scrollTop = container.scrollHeight;
+  _lastMsgId = now;
+}
+
+/* ═══ Init ═══ */
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!window.supabase) { location.href = 'login.html'; return; }
+
+  const { data: { session } } = await window.supabase.auth.getSession();
+  if (!session)               { location.href = 'login.html'; return; }
+
+  _myId      = session.user.id;
+  _bookingId = new URLSearchParams(location.search).get('booking');
+
+  if (!_bookingId) {
+    document.getElementById('chat-other-name').textContent = 'Reserva no encontrada';
+    return;
+  }
+
+  /* Load booking metadata */
+  const { data: booking } = await window.supabase
+    .from('bookings')
+    .select('id, pro_name, patient_id, listing_id, slot, scheduled_at, status')
+    .eq('id', _bookingId)
+    .single();
+
+  if (!booking) {
+    document.getElementById('chat-other-name').textContent = 'Reserva no encontrada';
+    return;
+  }
+
+  _booking = booking;
+
+  /* Determine who I'm talking to */
+  const amPatient = booking.patient_id === _myId;
+  const otherName = amPatient ? booking.pro_name : 'Paciente';
+
+  const initials = otherName.replace(/^(Lic\.|Dr\.|Prof\.|Mg\.)\s*/i,'')
+                    .split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) || '?';
+  document.getElementById('chat-other-avatar').textContent = initials;
+  document.getElementById('chat-other-name').textContent   = otherName;
+
+  const slot = booking.slot || (booking.scheduled_at
+    ? new Date(booking.scheduled_at).toLocaleString('es-UY', { dateStyle:'short', timeStyle:'short' })
+    : 'Turno confirmado');
+  document.getElementById('chat-other-sub').textContent = `${slot} · alma+`;
+
+  /* Load messages */
+  await loadMessages(true);
+
+  /* Poll for new messages every 4s */
+  _polling = setInterval(() => loadMessages(false), 4000);
+});
+
+/* Cleanup on leave */
+window.addEventListener('beforeunload', () => { if (_polling) clearInterval(_polling); });
+</script>
+</body>
+</html>

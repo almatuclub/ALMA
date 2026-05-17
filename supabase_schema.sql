@@ -1,5 +1,5 @@
 -- ============================================================
--- ALMA+ — Supabase schema  ·  v15
+-- ALMA+ — Supabase schema  ·  v16
 -- HOW TO APPLY:
 --   1. Open your Supabase project dashboard
 --   2. Go to SQL Editor → New Query
@@ -252,3 +252,160 @@ create policy "Admins can view all profiles."
 -- bookings: safe status column (idempotent)
 -- Note: status check constraint cannot be added idempotently in old Postgres;
 -- values used: 'pending' | 'confirmed' | 'completed' | 'cancelled'
+
+
+-- ============================================================
+-- v16 — Notifications, Messages, Onboarding, Profile extras
+-- ============================================================
+
+-- Profile additions (safe migration)
+alter table public.profiles add column if not exists onboarding_complete boolean not null default false;
+alter table public.profiles add column if not exists onboarding_data     jsonb;
+alter table public.profiles add column if not exists bio                 text;
+alter table public.profiles add column if not exists avatar_color        text default '#E53935';
+
+-- Listing bio column
+alter table public.professional_listings add column if not exists bio text;
+
+-- 6. NOTIFICATIONS
+-- ============================================================
+create table if not exists public.notifications (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users on delete cascade,
+  type       text not null,
+  title      text not null,
+  body       text,
+  link       text,
+  read       boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.notifications enable row level security;
+
+drop policy if exists "Users can view own notifications." on notifications;
+create policy "Users can view own notifications."
+  on notifications for select using (auth.uid() = user_id);
+
+drop policy if exists "Users can update own notifications." on notifications;
+create policy "Users can update own notifications."
+  on notifications for update using (auth.uid() = user_id);
+
+-- Triggers insert notifications (security definer) — no INSERT policy needed for users
+-- But allow authenticated inserts as fallback for client-side creation:
+drop policy if exists "Authenticated can insert notifications." on notifications;
+create policy "Authenticated can insert notifications."
+  on notifications for insert with check (auth.uid() is not null);
+
+-- Trigger: notify on new booking
+create or replace function public.handle_new_booking_notification()
+returns trigger as $$
+begin
+  -- Notify patient
+  insert into public.notifications (user_id, type, title, body, link)
+  values (
+    new.patient_id,
+    'booking_created',
+    'Reserva registrada',
+    'Tu reserva con ' || new.pro_name || ' fue creada exitosamente.',
+    'dashboard.html'
+  );
+
+  -- Notify professional (if listing_id is set)
+  if new.listing_id is not null then
+    insert into public.notifications (user_id, type, title, body, link)
+    select
+      pl.user_id,
+      'new_booking',
+      'Nueva solicitud de turno',
+      'Tenés un nuevo turno solicitado para ' || coalesce(new.slot, 'una fecha próxima') || '.',
+      'dashboard.html'
+    from public.professional_listings pl
+    where pl.id = new.listing_id;
+  end if;
+
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_booking_created on bookings;
+create trigger on_booking_created
+  after insert on bookings
+  for each row execute procedure public.handle_new_booking_notification();
+
+-- Trigger: notify on listing status change
+create or replace function public.handle_listing_status_notification()
+returns trigger as $$
+begin
+  if old.status = 'pending' and new.status = 'approved' then
+    insert into public.notifications (user_id, type, title, body, link)
+    values (
+      new.user_id,
+      'listing_approved',
+      '¡Tu perfil fue aprobado!',
+      'Ya aparecés en el directorio de profesionales de alma+.',
+      'dashboard.html'
+    );
+  elsif old.status = 'pending' and new.status = 'rejected' then
+    insert into public.notifications (user_id, type, title, body, link)
+    values (
+      new.user_id,
+      'listing_rejected',
+      'Perfil no aprobado',
+      'Tu perfil no fue aprobado en esta revisión. Podés volver a enviarlo.',
+      'apply.html'
+    );
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_listing_status_changed on professional_listings;
+create trigger on_listing_status_changed
+  after update of status on professional_listings
+  for each row execute procedure public.handle_listing_status_notification();
+
+
+-- 7. MESSAGES (chat between patient and professional)
+-- ============================================================
+create table if not exists public.messages (
+  id         uuid primary key default gen_random_uuid(),
+  booking_id uuid references public.bookings on delete cascade,
+  sender_id  uuid references auth.users on delete cascade,
+  body       text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.messages enable row level security;
+
+drop policy if exists "Chat participants can view messages." on messages;
+create policy "Chat participants can view messages."
+  on messages for select using (
+    exists (
+      select 1 from public.bookings b
+      where b.id = messages.booking_id
+        and (
+          b.patient_id = auth.uid()
+          or exists (
+            select 1 from public.professional_listings pl
+            where pl.id = b.listing_id and pl.user_id = auth.uid()
+          )
+        )
+    )
+  );
+
+drop policy if exists "Chat participants can send messages." on messages;
+create policy "Chat participants can send messages."
+  on messages for insert with check (
+    auth.uid() = sender_id
+    and exists (
+      select 1 from public.bookings b
+      where b.id = messages.booking_id
+        and (
+          b.patient_id = auth.uid()
+          or exists (
+            select 1 from public.professional_listings pl
+            where pl.id = b.listing_id and pl.user_id = auth.uid()
+          )
+        )
+    )
+  );

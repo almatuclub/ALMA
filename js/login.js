@@ -80,7 +80,7 @@ async function handleRegister(e, type) {
     }
 
     showToast('¡Cuenta creada con éxito!', '🎉', 'success');
-    setTimeout(() => { location.href = 'professionals.html'; }, 1500);
+    setTimeout(() => { location.href = 'onboarding.html'; }, 1500);
   }
 }
 
