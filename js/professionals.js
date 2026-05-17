@@ -284,31 +284,25 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
     meeting_link: meetingLink,
   });
 
-  /* Success feedback */
-  showToast(`¡Reserva confirmada con ${name} para el ${slotLabel}!`, '✓', 'success');
+  /* Update fichas widget */
+  const fNum = document.querySelector('.fichas-widget .f-num');
+  if (fNum) fNum.innerHTML = `${newFichas}<span style="font-size:1.4rem">+</span>`;
+
+  /* Mark button as booked */
   evt.target.style.background  = '#4CAF50';
   evt.target.style.borderColor = '#4CAF50';
   evt.target.style.color       = 'white';
   evt.target.textContent       = 'Reservado ✓';
 
-  /* Show meeting link to patient (only after booking) */
-  if (meetingLink) {
-    setTimeout(() => {
-      showToast(
-        `Link de videollamada: <a href="${meetingLink}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">${meetingLink}</a>`,
-        '🔗', 'info'
-      );
-    }, 1200);
-  }
-
-  /* Update fichas widget */
-  const fNum = document.querySelector('.fichas-widget .f-num');
-  if (fNum) fNum.innerHTML = `${newFichas}<span style="font-size:1.4rem">+</span>`;
-
-  /* Close modal after short delay */
-  setTimeout(() => {
-    document.getElementById('booking-modal').style.display = 'none';
-  }, 1800);
+  /* Close booking modal and open confirmation */
+  document.getElementById('booking-modal').style.display = 'none';
+  showBookingConfirm({
+    proName:     name,
+    slotLabel,
+    isoTime,
+    modality:    bookingModality,
+    meetingLink,
+  });
 }
 
 /**
@@ -362,6 +356,48 @@ function openBookingPopup(name, price, listingId) {
 
 /** Escape single quotes in names for use inside onclick strings */
 function esc(str) { return String(str).replace(/'/g, "\\'"); }
+
+/* ─── Booking confirmation overlay ─── */
+function showBookingConfirm({ proName, slotLabel, isoTime, modality, meetingLink }) {
+  const MODALITY_LABELS = { online:'Online (videollamada)', presencial:'Presencial', both:'Online / Presencial' };
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `
+    <div class="confirm-card">
+      <div class="confirm-check">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="confirm-title">¡Reserva confirmada!</h2>
+      <div class="confirm-details">
+        <div class="confirm-row"><span>Profesional</span><strong>${proName}</strong></div>
+        <div class="confirm-row"><span>Fecha y hora</span><strong>${slotLabel}</strong></div>
+        ${modality ? `<div class="confirm-row"><span>Modalidad</span><strong>${MODALITY_LABELS[modality]||modality}</strong></div>` : ''}
+        ${meetingLink ? `<div class="confirm-row"><span>Link de sesión</span>
+          <a href="${meetingLink}" target="_blank" rel="noopener" class="confirm-link">Abrir videollamada →</a></div>` : ''}
+      </div>
+      <div class="confirm-actions">
+        ${isoTime ? `<button class="btn btn-outline btn-sm" onclick="addToGCalPros('${esc(proName)}','${isoTime}','${meetingLink||''}')">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Agregar al calendario
+        </button>` : ''}
+        <a href="dashboard.html" class="btn btn-primary btn-sm">Ver mis sesiones →</a>
+      </div>
+      <button class="confirm-dismiss" onclick="this.closest('.confirm-overlay').remove()">Cerrar</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.querySelector('.confirm-card')?.classList.add('confirm-card--visible'), 10);
+}
+
+function addToGCalPros(proName, isoTime, meetingLink) {
+  if (!isoTime) return;
+  const s = new Date(isoTime);
+  const e = new Date(s.getTime() + 60 * 60000);
+  const fmt = d => d.toISOString().replace(/[-:.]/g,'').slice(0,15) + 'Z';
+  const p = new URLSearchParams({ action:'TEMPLATE', text:`Sesión con ${proName} · alma+`,
+    dates:`${fmt(s)}/${fmt(e)}`, details:meetingLink||'', location:meetingLink||'' });
+  window.open(`https://calendar.google.com/calendar/render?${p}`, '_blank');
+}
 
 /* ─── Admin modal ─── */
 function closeAdminModal() {
@@ -488,7 +524,8 @@ async function loadCustomPros() {
           ${proData.barrio}
         </div>
         <div class="popup-price">Precio: <strong style="color:#E53935">${proData.price}+ fichas</strong> · ${proData.uyu}</div>
-        <button class="popup-btn" onclick="openBookingPopup('${esc(proData.name)}',${proData.price},'${p.id}')">Ver horarios →</button>
+        <a href="profile.html?id=${p.id}" class="popup-btn" style="display:block;text-align:center;text-decoration:none;margin-bottom:6px">Ver perfil completo →</a>
+        <button class="popup-btn" onclick="openBookingPopup('${esc(proData.name)}',${proData.price},'${p.id}')">Reservar ahora</button>
       </div>
     `);
     markers.push(m);

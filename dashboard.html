@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mi Panel Profesional | alma+</title>
-  <meta name="description" content="Gestioná tus turnos, revisá tus ganancias y leé las reseñas de tus pacientes en alma+."/>
-  <link rel="stylesheet" href="style.css?v=14"/>
-  <link rel="stylesheet" href="pages.css?v=14"/>
+  <title>Mi Panel | alma+</title>
+  <meta name="description" content="Gestioná tus sesiones, fichas y perfil en alma+."/>
+  <link rel="stylesheet" href="style.css?v=15"/>
+  <link rel="stylesheet" href="pages.css?v=15"/>
 </head>
 <body>
+
+<!-- ─── Navbar ─── -->
 <nav class="navbar">
   <div class="navbar__inner">
     <a href="index.html" class="navbar__logo">
-      <svg class="logo-mark" width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg class="logo-mark" width="24" height="22" viewBox="0 0 24 22" fill="none" aria-hidden="true">
         <defs>
           <linearGradient id="alma-nav-g-dash" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stop-color="#FF8573"/>
@@ -29,145 +31,185 @@
       <li><a href="dashboard.html" class="active">Mi Panel</a></li>
     </ul>
     <div class="navbar__actions">
-      <div id="user-menu" style="display:flex;align-items:center;gap:12px">
-        <span id="user-display" style="font-weight:600;font-size:0.9rem"></span>
-        <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
-      </div>
+      <span id="nav-username" style="font-size:0.88rem;font-weight:600;color:var(--text)"></span>
+      <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
     </div>
     <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<nav class="mobile-nav">
+  <a href="index.html">Inicio</a>
+  <a href="professionals.html">Profesionales</a>
+  <a href="dashboard.html">Mi Panel</a>
+  <a href="#" onclick="logout();return false">Salir</a>
+</nav>
 
-<div class="dash-header">
-  <div class="container">
-    <div class="dash-user">
-      <div class="dash-avatar" id="dash-avatar-icon">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="10" r="5" stroke="white" stroke-width="1.8"/><path d="M4 26c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </div>
-      <div class="dash-user-info">
-        <h1 id="dash-name">Cargando...</h1>
-        <p id="dash-role">Profesional verificado en alma+</p>
+<!-- ══════════════════════════════════════════════════════════
+     SKELETON LOADING (shown while Supabase loads)
+     ══════════════════════════════════════════════════════════ -->
+<div id="dash-loading">
+  <div class="dash-hero" style="background:linear-gradient(135deg,#2a2a2a 0%,#1a1a1a 100%)">
+    <div class="container">
+      <div class="dash-hero__row">
+        <div style="display:flex;align-items:center;gap:18px">
+          <div class="skel skel-circle" style="width:64px;height:64px;flex-shrink:0"></div>
+          <div>
+            <div class="skel skel-text" style="width:180px;height:22px;margin-bottom:10px"></div>
+            <div class="skel skel-text" style="width:110px;height:14px"></div>
+          </div>
+        </div>
+        <div class="skel skel-block" style="width:150px;height:88px;border-radius:16px"></div>
       </div>
     </div>
+  </div>
+  <div class="container" style="padding-top:36px;padding-bottom:60px">
+    <div class="skel skel-text" style="width:190px;height:18px;margin-bottom:20px"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:36px">
+      <div class="skel skel-block" style="height:150px;border-radius:16px"></div>
+      <div class="skel skel-block" style="height:150px;border-radius:16px"></div>
+    </div>
+    <div class="skel skel-text" style="width:160px;height:18px;margin-bottom:16px"></div>
+    <div class="skel skel-block" style="height:70px;border-radius:12px;margin-bottom:10px"></div>
+    <div class="skel skel-block" style="height:70px;border-radius:12px;opacity:.6"></div>
   </div>
 </div>
 
-<div class="container dash-grid">
-  <!-- Left Column -->
-  <div>
-    <!-- Metrics -->
-    <div class="dash-card">
-      <div class="dash-card-header">
-        <div class="dash-card-title">
-          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v1m0 5v1M6 9.5a2 2 0 0 0 2 1A1.5 1.5 0 0 0 9.5 9c0-.83-.67-1.2-1.5-1.5S6.5 7 6.5 6.5A1.5 1.5 0 0 1 8 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-          Balance y Ganancias
-        </div>
-        <button class="btn btn-outline btn-sm">Retirar fondos</button>
-      </div>
-      <div class="metrics-grid">
-        <div class="metric-box">
-          <div class="m-val">124<span>+</span></div>
-          <div class="m-lbl">Fichas Ganadas (Mes)</div>
-        </div>
-        <div class="metric-box">
-          <div class="m-val"><span style="font-size: 1.2rem; color: var(--text)">$</span>42.000</div>
-          <div class="m-lbl">UYU Estimados</div>
-        </div>
-        <div class="metric-box">
-          <div class="m-val" style="color:var(--text)">4.8<span style="font-size:1rem;color:#D97706">★</span></div>
-          <div class="m-lbl">Calificación Promedio</div>
-        </div>
-      </div>
-    </div>
+<!-- ══════════════════════════════════════════════════════════
+     PATIENT DASHBOARD
+     ══════════════════════════════════════════════════════════ -->
+<div id="dash-patient" class="dash-view" style="display:none">
 
-    <!-- Calendar -->
-    <div class="dash-card">
-      <div class="dash-card-header">
-        <div class="dash-card-title">
-          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-          Próximos Turnos
+  <!-- Hero -->
+  <div class="dash-hero">
+    <div class="container">
+      <div class="dash-hero__row">
+        <div class="dash-identity">
+          <div class="dash-avatar-lg" id="p-avatar">?</div>
+          <div>
+            <h1 id="p-name" class="dash-hello">Hola</h1>
+            <p class="dash-role-label">Paciente · alma+</p>
+          </div>
         </div>
-        <a href="apply.html" class="btn btn-outline btn-sm" style="font-size:0.75rem">Configurar disponibilidad</a>
-      </div>
-      <div class="apt-list">
-        <div class="apt-item">
-          <div class="apt-time">
-            <strong>10:00</strong>
-            <span>Hoy</span>
-          </div>
-          <div class="apt-info">
-            <h4>Luciano B.</h4>
-            <p>Primera sesión · Pago confirmado (8+)</p>
-          </div>
-          <div class="apt-status">Confirmado</div>
-        </div>
-
-        <div class="apt-item">
-          <div class="apt-time">
-            <strong>16:30</strong>
-            <span>Hoy</span>
-          </div>
-          <div class="apt-info">
-            <h4>María Belén G.</h4>
-            <p>Seguimiento · Pago confirmado (8+)</p>
-          </div>
-          <div class="apt-status">Confirmado</div>
-        </div>
-
-        <div class="apt-item" style="border-color: #FFF3E0; background: #FFFBFA">
-          <div class="apt-time">
-            <strong>09:00</strong>
-            <span>Mañana</span>
-          </div>
-          <div class="apt-info">
-            <h4>Tomás R.</h4>
-            <p>Primera sesión · Pendiente de pago</p>
-          </div>
-          <div class="apt-status pending">Pendiente</div>
+        <div class="fichas-hero">
+          <div class="fichas-hero__num"><span id="p-fichas">0</span><span class="fichas-hero__plus">+</span></div>
+          <div class="fichas-hero__lbl">fichas disponibles</div>
+          <a href="payment.html" class="btn btn-sm fichas-hero__cta">Comprar más</a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Right Column -->
-  <aside>
-    <!-- Reviews -->
-    <div class="dash-card">
-      <div class="dash-card-header">
-        <div class="dash-card-title">
-          <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 2H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3l2 3 2-3h3a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
-          Últimas Reseñas
-        </div>
+  <!-- Body -->
+  <div class="container dash-body">
+
+    <!-- Upcoming sessions -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2 class="dash-section__title">Próximas sesiones</h2>
+        <a href="professionals.html" class="dash-section__link">Buscar profesional →</a>
       </div>
-      <div class="review-list">
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-author">Mónica P. <span style="font-size:0.7rem;background:var(--red-50);color:var(--red);padding:2px 6px;border-radius:10px">Verificado</span></div>
-            <div class="review-date">Ayer</div>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <div class="review-text">"Excelente atención. Me sentí muy escuchada y cómoda desde el primer minuto. Empezando un gran proceso."</div>
-        </div>
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-author">Andrés F.</div>
-            <div class="review-date">Hace 1 semana</div>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <div class="review-text">"Puntual, claro en sus explicaciones y muy humano. Totalmente recomendable."</div>
-        </div>
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-author">Carla T.</div>
-            <div class="review-date">Hace 2 semanas</div>
-          </div>
-          <div class="review-stars">★★★★☆</div>
-          <div class="review-text">"Muy buena sesión, me ayudó a ordenar varias ideas que tenía sueltas."</div>
-        </div>
-      </div>
-      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:16px">Ver todas las reseñas</button>
+      <div id="p-upcoming-list" class="booking-cards-grid"></div>
     </div>
-  </aside>
+
+    <!-- Past sessions -->
+    <div class="dash-section" id="p-past-section">
+      <div class="dash-section__head">
+        <h2 class="dash-section__title">Sesiones pasadas</h2>
+      </div>
+      <div id="p-past-list" class="booking-past-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PROFESSIONAL DASHBOARD
+     ══════════════════════════════════════════════════════════ -->
+<div id="dash-pro" class="dash-view" style="display:none">
+
+  <!-- Hero -->
+  <div class="dash-hero dash-hero--pro">
+    <div class="container">
+      <div class="dash-hero__row">
+        <div class="dash-identity">
+          <div class="dash-avatar-lg dash-avatar-lg--pro" id="pro-avatar">?</div>
+          <div>
+            <h1 id="pro-name" class="dash-hello" style="font-size:1.5rem"></h1>
+            <p id="pro-spec" class="dash-role-label" style="opacity:.85"></p>
+            <span id="pro-listing-badge" style="margin-top:6px;display:block"></span>
+          </div>
+        </div>
+        <div class="pro-hero-actions">
+          <a href="apply.html" class="btn btn-sm pro-hero-btn">Editar disponibilidad</a>
+          <a href="professionals.html" class="btn btn-ghost btn-sm" style="color:rgba(255,255,255,0.75);font-size:0.8rem">Ver en directorio</a>
+        </div>
+      </div>
+
+      <!-- Pro stats row -->
+      <div class="pro-stats">
+        <div class="pro-stat">
+          <div class="pro-stat__val" id="stat-today">—</div>
+          <div class="pro-stat__lbl">Sesiones hoy</div>
+        </div>
+        <div class="pro-stat">
+          <div class="pro-stat__val" id="stat-month">—</div>
+          <div class="pro-stat__lbl">Fichas del mes</div>
+        </div>
+        <div class="pro-stat">
+          <div class="pro-stat__val" id="stat-total">—</div>
+          <div class="pro-stat__lbl">Total de sesiones</div>
+        </div>
+        <div class="pro-stat">
+          <div class="pro-stat__val">4.9<span style="font-size:0.85rem;color:#FBBF24">★</span></div>
+          <div class="pro-stat__lbl">Calificación</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="container dash-body">
+
+    <!-- Pending requests -->
+    <div class="dash-section" id="pro-pending-section" style="display:none">
+      <div class="dash-section__head">
+        <h2 class="dash-section__title">
+          Solicitudes pendientes
+          <span class="dot-badge" id="pro-pending-badge">0</span>
+        </h2>
+      </div>
+      <div id="pro-pending-list" class="booking-past-list"></div>
+    </div>
+
+    <!-- Upcoming patients -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2 class="dash-section__title">Próximos pacientes</h2>
+        <a href="apply.html" class="dash-section__link">Editar disponibilidad →</a>
+      </div>
+      <div id="pro-upcoming-list" class="booking-past-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     ADMIN SHORTCUT
+     ══════════════════════════════════════════════════════════ -->
+<div id="dash-admin" class="dash-view" style="display:none">
+  <div class="container" style="padding:80px 0;text-align:center">
+    <div class="admin-shortcut-card">
+      <div class="admin-shortcut-icon">
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+        </svg>
+      </div>
+      <h2>Panel de Administración</h2>
+      <p>Aprobá profesionales, revisá reservas y gestioná usuarios desde el panel admin.</p>
+      <a href="admin.html" class="btn btn-primary" style="width:100%;max-width:320px;margin-bottom:12px">Ir al panel admin →</a><br>
+      <a href="professionals.html" class="btn btn-outline" style="width:100%;max-width:320px">Ver directorio de profesionales</a>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>

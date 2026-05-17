@@ -1,5 +1,5 @@
 -- ============================================================
--- ALMA+ — Supabase schema  ·  v14
+-- ALMA+ — Supabase schema  ·  v15
 -- HOW TO APPLY:
 --   1. Open your Supabase project dashboard
 --   2. Go to SQL Editor → New Query
@@ -187,3 +187,68 @@ create table if not exists public.mp_payments (
 );
 
 alter table public.mp_payments enable row level security;
+
+
+-- ============================================================
+-- v15 — Additional RLS policies for professional & admin access
+-- Re-running this block is safe (DROP IF EXISTS + CREATE)
+-- ============================================================
+
+-- bookings: patient can cancel own booking
+drop policy if exists "Patients can update own bookings." on bookings;
+create policy "Patients can update own bookings."
+  on bookings for update using (auth.uid() = patient_id);
+
+-- bookings: professional sees bookings linked to their listing
+drop policy if exists "Professionals can view own listing bookings." on bookings;
+create policy "Professionals can view own listing bookings."
+  on bookings for select using (
+    exists (
+      select 1 from public.professional_listings pl
+      where pl.id = bookings.listing_id
+        and pl.user_id = auth.uid()
+    )
+  );
+
+-- bookings: professional can confirm / complete / cancel sessions
+drop policy if exists "Professionals can update own listing bookings." on bookings;
+create policy "Professionals can update own listing bookings."
+  on bookings for update using (
+    exists (
+      select 1 from public.professional_listings pl
+      where pl.id = bookings.listing_id
+        and pl.user_id = auth.uid()
+    )
+  );
+
+-- bookings: admin sees all
+drop policy if exists "Admins can view all bookings." on bookings;
+create policy "Admins can view all bookings."
+  on bookings for select using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- bookings: admin can update any booking
+drop policy if exists "Admins can update all bookings." on bookings;
+create policy "Admins can update all bookings."
+  on bookings for update using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- professional_listings: admin sees all statuses (pending, approved, rejected)
+drop policy if exists "Admins can view all listings." on professional_listings;
+create policy "Admins can view all listings."
+  on professional_listings for select using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- profiles: admin sees all user profiles
+drop policy if exists "Admins can view all profiles." on profiles;
+create policy "Admins can view all profiles."
+  on profiles for select using (
+    exists (select 1 from public.profiles p2 where p2.id = auth.uid() and p2.role = 'admin')
+  );
+
+-- bookings: safe status column (idempotent)
+-- Note: status check constraint cannot be added idempotently in old Postgres;
+-- values used: 'pending' | 'confirmed' | 'completed' | 'cancelled'
