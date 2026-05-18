@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   js/login.js · alma+ v24
+   js/login.js · alma+ v25
    Handles patient/professional login and registration.
    After success uses getReturnUrl() to send users back where they came from.
 ───────────────────────────────────────────────────────────────────────── */

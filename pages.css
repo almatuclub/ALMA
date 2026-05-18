@@ -2771,3 +2771,212 @@
   animation: alma-fade-up 0.35s ease both;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   v25 PREMIUM VISUAL PASS
+   Hero wow · Depth · Motion · App polish
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Mouse-reactive glow blob (inside .hero__visual) ── */
+.hero__mouse-glow {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(232,69,60,0.14) 0%,
+    rgba(255,120,80,0.07) 40%,
+    transparent 70%);
+  filter: blur(80px);
+  pointer-events: none; z-index: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  will-change: left, top;
+}
+
+/* ── Hero visual column: parallax-ready ── */
+.hero__visual {
+  transition: transform 0.20s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* ── Hero blob: smooth parallax ── */
+.hero__blob {
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* ── Floating cards: depth shadow ── */
+.hcard--prof:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06),
+              0 20px 56px rgba(0,0,0,0.13),
+              0 0 0 1px rgba(232,69,60,0.07);
+}
+.hcard-icon-svg { width: 20px; height: 20px; color: white; }
+
+/* ── Hero pill: spring pop on load ── */
+.hero__pill {
+  animation: float 6s ease-in-out infinite, _pillPop 0.6s 0.9s var(--bounce) both;
+  animation-delay: -2s, 0.9s;
+}
+@keyframes _pillPop {
+  from { opacity: 0; transform: translateY(-50%) scale(0.7); }
+  to   { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+/* ── Step bubbles: spring scale on hover ── */
+.step-bubble {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.step:hover .step-bubble {
+  transform: scale(1.12);
+  box-shadow: 0 4px 18px rgba(232,69,60,0.22);
+  border-color: var(--coral-200);
+}
+
+/* ── Stats strip: number gradient on item hover ── */
+.stats-strip__item {
+  cursor: default;
+  transition: background 0.20s ease;
+}
+.stats-strip__item:hover { background: var(--bg); }
+.stats-strip__val {
+  transition: background 0.22s ease, -webkit-text-fill-color 0.22s ease;
+}
+.stats-strip__item:hover .stats-strip__val {
+  background: var(--coral-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stats-strip__item:hover .stats-strip__val em {
+  -webkit-text-fill-color: inherit;
+}
+
+/* ── Service cards: richer hover shadow ── */
+.service-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07),
+              0 18px 52px rgba(232,69,60,0.10),
+              0 0 0 1px rgba(232,69,60,0.10);
+}
+.service-card { transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring), border-color 0.25s var(--spring); }
+
+/* ── Ficha items in dark section: spring lift ── */
+.ficha-item {
+  transition: background 0.22s ease, border-color 0.22s ease,
+              transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ficha-item:hover { transform: translateY(-2px); }
+
+/* ── Prof mini cards: spring depth ── */
+.prof-mini {
+  transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring), border-color 0.22s ease;
+}
+.prof-mini:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.09);
+}
+
+/* ── Slot pills: spring hover ── */
+.slot-pill {
+  transition: background 0.18s var(--spring), color 0.18s var(--spring),
+              border-color 0.18s var(--spring), transform 0.18s var(--spring);
+}
+.slot-pill:hover { transform: scale(1.04); }
+
+/* ── Dashboard booking cards: spring ── */
+.bk-card {
+  transition: box-shadow 0.22s var(--spring),
+              transform 0.22s var(--spring),
+              border-color 0.22s ease;
+}
+.bk-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09), 0 1px 3px rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.09);
+}
+
+/* ── Booking row: subtle hover ── */
+.bk-row {
+  transition: background 0.16s ease;
+}
+.bk-row:hover { background: var(--bg) !important; }
+
+/* ── Skeleton shimmer: warmer + faster ── */
+@keyframes _shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.skeleton,
+.skel-line,
+.skel-block,
+[class*="skel-"] {
+  background: linear-gradient(
+    90deg,
+    #ede9e3 25%,
+    #f7f4f0 50%,
+    #ede9e3 75%
+  ) !important;
+  background-size: 1200px 100% !important;
+  animation: _shimmer 1.5s ease-in-out infinite !important;
+  border-radius: 6px;
+}
+
+/* ── Notification badge pulse ── */
+.notif-badge {
+  animation: _notifPulse 2.4s ease-in-out infinite;
+}
+@keyframes _notifPulse {
+  0%,100% { box-shadow: 0 0 0 0   rgba(232,69,60,0.55); }
+  50%      { box-shadow: 0 0 0 4px rgba(232,69,60,0);    }
+}
+
+/* ── Pro card (directory): spring hover ── */
+.prof-card {
+  transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring), border-color 0.22s ease;
+}
+.prof-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.09);
+}
+
+/* ── Admin stat cards: spring ── */
+.admin-stat-card {
+  transition: box-shadow 0.22s var(--spring), transform 0.22s var(--spring);
+}
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+}
+
+/* ── Widget slots (booking): spring ── */
+.widget-slot {
+  transition: background 0.18s var(--spring), border-color 0.18s var(--spring),
+              transform 0.18s var(--spring), color 0.18s var(--spring);
+}
+.widget-slot:hover:not(.active):not(:disabled) { transform: scale(1.03); }
+
+/* ── Chat send button: spring ── */
+.chat-send {
+  transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.chat-send:hover:not(:disabled) { transform: scale(1.08) !important; }
+
+/* ── Founder cards (about page): spring ── */
+.founder-card {
+  transition: transform 0.28s var(--spring), box-shadow 0.28s var(--spring),
+              border-color 0.22s ease, background 0.22s ease;
+}
+
+/* ── Mobile: disable parallax-heavy effects ── */
+@media (max-width: 768px) {
+  .hero__visual { transition: none !important; }
+  .hero__blob   { transition: none !important; }
+  .hero__mouse-glow { display: none; }
+  .bk-card:hover { transform: none; }
+  .prof-card:hover { transform: none; }
+  .admin-stat-card:hover { transform: none; }
+  .prof-mini:hover { transform: none; }
+}
+

@@ -77,8 +77,11 @@
   --nav-h: 68px;
 
   /* Transitions */
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease:            cubic-bezier(0.4, 0, 0.2, 1);
+  --spring:          cubic-bezier(0.22, 1, 0.36, 1);
+  --bounce:          cubic-bezier(0.34, 1.56, 0.64, 1);
   --transition:      all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.40s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Icon system */
@@ -448,8 +451,13 @@ h4 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pop { 0% { transform:scale(0.5); opacity:0; } 80% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }
 
-.reveal { opacity:0; transform:translateY(28px); transition: opacity .65s ease, transform .65s ease; }
-.reveal.visible { opacity:1; transform:none; }
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .55s var(--spring), transform .55s var(--spring);
+  will-change: transform, opacity;
+}
+.reveal.visible { opacity: 1; transform: none; }
 
 /* ─── Filter bar ─── */
 .filter-bar {
@@ -891,4 +899,107 @@ body.page-alt { background: var(--bg); }
   .stats-strip { grid-template-columns: 1fr 1fr; }
   .stats-strip__item { padding: 12px 8px; }
   .stats-strip__val  { font-size: 1.1rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v25 PREMIUM VISUAL PASS
+   Global polish: selection · focus · ripple · progress bar · motion tokens
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Text selection ── */
+::selection { background: rgba(232,69,60,0.13); color: var(--text); }
+
+/* ── Scrollbar (enhanced) ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--coral-200);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--coral); }
+
+/* ── Global focus ring ── */
+:focus-visible {
+  outline: 2px solid rgba(232,69,60,0.55);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── Reading progress bar ── */
+#alma-progress {
+  position: fixed; top: 0; left: 0; z-index: 2000;
+  height: 2px; width: 0%;
+  background: linear-gradient(90deg, #FF8B7A 0%, #E8453C 60%, #C4302A 100%);
+  pointer-events: none;
+  border-radius: 0 1px 1px 0;
+  box-shadow: 0 0 6px rgba(232,69,60,0.35);
+}
+
+/* ── Button ripple ── */
+.btn { overflow: hidden; position: relative; }
+.btn-ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,0.28);
+  transform: scale(0);
+  animation: _ripple 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none; z-index: 0;
+}
+.btn-outline .btn-ripple,
+.btn-ghost  .btn-ripple { background: rgba(232,69,60,0.10); }
+.btn-dark   .btn-ripple { background: rgba(255,255,255,0.15); }
+@keyframes _ripple { to { transform: scale(4); opacity: 0; } }
+
+/* ── Navbar: tighter transition, stronger scrolled blur ── */
+.navbar {
+  transition: background 0.25s var(--spring), box-shadow 0.25s var(--spring),
+              border-color 0.25s var(--spring);
+}
+.navbar.scrolled {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(32px) saturate(2.0);
+  -webkit-backdrop-filter: blur(32px) saturate(2.0);
+  border-bottom-color: rgba(0,0,0,0.08);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.07), 0 8px 32px rgba(0,0,0,0.07);
+}
+
+/* ── Card hover: spring lift with colored shadow ── */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07), 0 16px 48px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.10);
+  transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring), border-color 0.25s var(--spring);
+}
+.card { transition: transform 0.22s var(--spring), box-shadow 0.22s var(--spring), border-color 0.22s var(--spring); }
+
+/* ── Form inputs: spring focus ring ── */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  box-shadow: 0 0 0 3.5px rgba(232,69,60,0.13), 0 1px 3px rgba(0,0,0,0.06);
+  transition: border-color 0.18s var(--spring), box-shadow 0.22s var(--spring), background 0.18s var(--spring);
+}
+.form-input,
+.form-select,
+.form-textarea {
+  transition: border-color 0.18s var(--spring), box-shadow 0.22s var(--spring), background 0.18s var(--spring);
+}
+
+/* ── Toast: spring entrance ── */
+.toast {
+  transition: transform 0.42s var(--spring), opacity 0.38s var(--spring);
+}
+.toast.show { transform: translateY(0) scale(1); opacity: 1; }
+
+/* ── Reduced motion compliance ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  #alma-progress { display: none; }
 }

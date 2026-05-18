@@ -1,5 +1,5 @@
 /* ============================================
-   alma+ — Shared JavaScript  v24
+   alma+ — Shared JavaScript  v25
    ============================================ */
 
 // ─── Navbar scroll effect ───
@@ -312,6 +312,111 @@ document.addEventListener('DOMContentLoaded', () => {
   initJobsFilter();
   initApplyForm();
   initUserSession();
+});
+
+/* ══════════════════════════════════════════════════════════════════════════
+   v25 MOTION SYSTEM
+   Reading progress · Ripple · Hero parallax · Magnetic CTA · Stagger easing
+   All effects respect prefers-reduced-motion.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const _noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Reading progress bar ── */
+(function () {
+  const bar = document.createElement('div');
+  bar.id = 'alma-progress';
+  document.body.prepend(bar);
+  window.addEventListener('scroll', () => {
+    const d = document.documentElement;
+    const pct = d.scrollHeight === d.clientHeight ? 0
+      : (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+})();
+
+/* ── Ripple on every .btn (event delegation, single listener) ── */
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.btn');
+  if (!btn || btn.disabled) return;
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2.4;
+  const el   = document.createElement('span');
+  el.className = 'btn-ripple';
+  el.style.cssText =
+    `width:${size}px;height:${size}px;` +
+    `left:${e.clientX - rect.left  - size / 2}px;` +
+    `top:${e.clientY  - rect.top   - size / 2}px;` +
+    `position:absolute;`;
+  btn.appendChild(el);
+  el.addEventListener('animationend', () => el.remove(), { once: true });
+}, { passive: true });
+
+/* ── Hero mouse parallax ── */
+(function () {
+  if (_noMotion) return;
+  const hero   = document.querySelector('.hero');
+  if (!hero) return;
+  const visual = hero.querySelector('.hero__visual');
+  const blob   = hero.querySelector('.hero__blob');
+  const glow   = hero.querySelector('.hero__mouse-glow');
+  if (!visual) return;
+
+  let raf = null;
+
+  hero.addEventListener('mousemove', function (e) {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const r  = this.getBoundingClientRect();
+      const cx = (e.clientX - r.left)  / r.width  - 0.5;   /* -0.5 … 0.5 */
+      const cy = (e.clientY - r.top)   / r.height - 0.5;
+
+      /* Whole visual column — gentle tilt */
+      visual.style.transform = `translate(${cx * 14}px, ${cy * 9}px)`;
+
+      /* Background blob — deeper parallax for sense of depth */
+      if (blob) blob.style.transform = `translate(${cx * 34}px, ${cy * 22}px)`;
+
+      /* Mouse glow tracks cursor exactly */
+      if (glow) {
+        glow.style.left    = (e.clientX - r.left) + 'px';
+        glow.style.top     = (e.clientY - r.top)  + 'px';
+        glow.style.opacity = '1';
+      }
+    });
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', function () {
+    if (raf) cancelAnimationFrame(raf);
+    visual.style.transform = '';
+    if (blob) blob.style.transform = '';
+    if (glow) glow.style.opacity = '0';
+  });
+})();
+
+/* ── Magnetic large CTA buttons — subtle pull toward cursor ── */
+(function () {
+  if (_noMotion) return;
+  document.querySelectorAll('.btn-primary.btn-lg').forEach(btn => {
+    btn.addEventListener('mousemove', function (e) {
+      const r  = this.getBoundingClientRect();
+      const cx = (e.clientX - r.left  - r.width  / 2) * 0.10;
+      const cy = (e.clientY - r.top   - r.height / 2) * 0.08;
+      /* Keep the existing translateY(-1px) and layer the magnetic offset */
+      this.style.transform = `translateY(-1px) translate(${cx}px, ${cy}px)`;
+    });
+    btn.addEventListener('mouseleave', function () {
+      this.style.transform = '';
+    });
+  });
+})();
+
+/* ── Stagger children: eased delays (exponential curve, feels natural) ── */
+document.querySelectorAll('.stagger-children').forEach(parent => {
+  Array.from(parent.children).forEach((el, i) => {
+    const delay = i === 0 ? 0 : Math.round(40 + i * 60 + i * i * 1.5);
+    el.style.transitionDelay = delay + 'ms';
+  });
 });
 
 // ─── CSS spin keyframe (injected) ───
