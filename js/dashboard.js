@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/dashboard.js  ·  alma+  v19
+   js/dashboard.js  ·  alma+  v20
    Role-split dashboard — patient | professional | admin
    Includes: notifications, profile edit drawer, chat buttons
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -595,7 +595,12 @@ async function loadProfile(userId) {
    MAIN INIT
    ═══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[dashboard] ══ DOMContentLoaded ══ v19');
+  /* ── Very first log — confirms this script is running on the right page ── */
+  console.log('[dashboard] ══ DOMContentLoaded ══ v20');
+  console.log('[dashboard] pathname:', location.pathname);
+  console.log('[dashboard] href:', location.href);
+  console.log('[dashboard] localStorage keys (auth-related):',
+    Object.keys(localStorage).filter(k => k.startsWith('sb-') || k.includes('supabase') || k.includes('alma')));
 
   try {
     /* Auth */

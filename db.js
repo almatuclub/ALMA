@@ -1,79 +1,122 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   db.js · alma+ v19
+   db.js · alma+ v20
    Supabase client initialization + shared auth utilities.
    Loaded (defer) before every page script, so window.supabase,
    requireAuth(), optionalAuth() and getReturnUrl() are available globally.
-───────────────────────────────────────────────────────────────────────── */
+
+   ⚠ STORAGEKEY FIX (v20):
+     We removed storageKey:'alma_sb_v1' that was added in v17.
+     Supabase computes a stable key from the project URL:
+       sb-iuhnhexotyrnflsmpzxi-auth-token
+     Using a custom storageKey meant existing sessions (stored under the
+     default key) were invisible to getSession() → instant redirect to
+     login even when the user WAS logged in.
+     This file now migrates any session under the old custom key to the
+     natural Supabase key so NO ONE has to re-login.
+─────────────────────────────────────────────────────────────────────────── */
 
 const SUPABASE_URL      = 'https://iuhnhexotyrnflsmpzxi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DwIRv7GbWFpeBXyDeghA1g_sfXSoyTp';
 
-/* Fixed storage key so ALL pages use the same localStorage entry regardless
-   of how the SDK hashes the anon-key internally.                          */
-const ALMA_STORAGE_KEY  = 'alma_sb_v1';
+/* ── Key migration ─────────────────────────────────────────────────────── */
+/* The key Supabase JS v2 uses by default: sb-<projectRef>-auth-token      */
+const _SB_DEFAULT_KEY = 'sb-iuhnhexotyrnflsmpzxi-auth-token';
+const _OLD_CUSTOM_KEY = 'alma_sb_v1'; /* our v17/v18/v19 custom key — now removed */
 
-/* ── Initialize client ────────────────────────────────────────────────── */
-(function () {
+(function _migrateSessionKey() {
   try {
-    const lib = window.supabase; // CDN exports { createClient, ... } here
+    const hasDefault = !!localStorage.getItem(_SB_DEFAULT_KEY);
+    const hasCustom  = !!localStorage.getItem(_OLD_CUSTOM_KEY);
+
+    console.log('[auth] localStorage keys check',
+      '\n  default key present:', hasDefault,
+      '\n  old custom key present:', hasCustom);
+
+    if (!hasDefault && hasCustom) {
+      /* Copy old custom key session to natural Supabase key */
+      localStorage.setItem(_SB_DEFAULT_KEY, localStorage.getItem(_OLD_CUSTOM_KEY));
+      console.log('[auth] ✓ Session migrated from', _OLD_CUSTOM_KEY, '→', _SB_DEFAULT_KEY);
+    }
+
+    if (hasCustom) {
+      /* Clean up old key so there's no confusion */
+      localStorage.removeItem(_OLD_CUSTOM_KEY);
+      console.log('[auth] Old custom key removed from localStorage');
+    }
+  } catch (e) {
+    console.warn('[auth] key migration error (non-fatal):', e.message);
+  }
+})();
+
+/* ── Initialize Supabase client ────────────────────────────────────────── */
+(function _initSupabase() {
+  try {
+    const lib = window.supabase; /* CDN sets window.supabase = { createClient, ... } */
     if (!lib || typeof lib.createClient !== 'function') {
-      console.error('[alma+] Supabase SDK not found — CDN may not have loaded yet.');
+      console.error('[auth] Supabase CDN not loaded — check <script> tag order and network.');
       return;
     }
+
+    /*
+     * NO storageKey override — let Supabase use its natural default
+     * (sb-iuhnhexotyrnflsmpzxi-auth-token).  Consistent across all pages,
+     * consistent with sessions stored before v17.
+     */
     const client = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
-        storageKey:         ALMA_STORAGE_KEY,  // deterministic, shared across pages
         persistSession:     true,
         autoRefreshToken:   true,
-        detectSessionInUrl: true,              // picks up OAuth / magic-link tokens
+        detectSessionInUrl: true, /* picks up magic-link / OAuth tokens in URL */
       },
     });
+
     window.supabase = client;
-    console.log('[alma+] Supabase client ready · key:', ALMA_STORAGE_KEY);
+    console.log('[auth] Supabase client ready · project:', SUPABASE_URL.split('//')[1].split('.')[0]);
   } catch (err) {
-    console.error('[alma+] Failed to init Supabase:', err.message);
+    console.error('[auth] createClient failed:', err.message);
   }
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   requireAuth(redirectTo = 'login.html')
+   requireAuth(redirectTo?)
    ─────────────────────────────────────────────────────────────────────────
-   Ensures the current page has a valid session before proceeding.
+   Call at the top of any PRIVATE page's DOMContentLoaded.
+   Returns the live session, or null (and redirects) if unauthenticated.
 
-   Strategy (handles every real-world case):
-     1. getSession()          → immediate localStorage/memory read
-     2. onAuthStateChange     → catches INITIAL_SESSION after token refresh
-     3. 3-second timeout      → gives up and redirects if truly unauthenticated
-
-   Returns the session object, or null if redirecting.
+   Strategy:
+     1. getSession()        → reads from localStorage (immediate, sync-ish)
+     2. onAuthStateChange   → waits up to 4 s for INITIAL_SESSION / token refresh
+     3. timeout             → give up and redirect
    ═══════════════════════════════════════════════════════════════════════════ */
 async function requireAuth(redirectTo = 'login.html') {
   const page = location.pathname.split('/').pop() || location.pathname;
-  console.log('[auth] requireAuth() on:', page);
+  console.log('[auth] requireAuth() · page:', page, '· href:', location.href);
 
   if (!window.supabase || typeof window.supabase.auth?.getSession !== 'function') {
-    console.warn('[auth] Supabase not ready — redirecting');
+    console.error('[auth] Supabase client missing — cannot authenticate');
     _doAuthRedirect(redirectTo);
     return null;
   }
 
   try {
-    /* ─── Fast path: session already in localStorage/memory ─── */
+    /* ── Fast path ── */
+    console.log('[auth] calling getSession()…');
     const { data: { session }, error } = await window.supabase.auth.getSession();
 
     if (error) console.warn('[auth] getSession() error:', error.message);
 
     if (session) {
-      console.log('[auth] ✓ Session found (fast):', session.user.email);
+      console.log('[auth] ✓ session found (fast path) ·', session.user.email,
+        '· expires:', new Date(session.expires_at * 1000).toISOString());
       return session;
     }
 
-    /* ─── Slow path: wait for onAuthStateChange (token refresh, PKCE, etc.) ─── */
-    console.log('[auth] No immediate session — waiting up to 3s for auth state…');
+    /* ── Slow path: wait for auth state event ── */
+    console.log('[auth] getSession() returned null — waiting up to 4 s for auth state event…');
     return await _waitForAuthState(redirectTo);
 
   } catch (err) {
-    console.error('[auth] requireAuth() exception:', err.message);
+    console.error('[auth] requireAuth() exception:', err.message, err);
     _doAuthRedirect(redirectTo);
     return null;
   }
@@ -83,61 +126,61 @@ function _waitForAuthState(redirectTo) {
   return new Promise(resolve => {
     let settled = false;
 
-    /* Give up after 3 seconds */
     const timer = setTimeout(() => {
       if (settled) return;
       settled = true;
       sub?.unsubscribe?.();
-      console.warn('[auth] ✗ 3s timeout — no session, redirecting');
+      console.warn('[auth] ✗ 4 s timeout — still no session. localStorage snapshot:',
+        Object.keys(localStorage).filter(k => k.startsWith('sb-') || k.includes('supabase') || k.includes('alma')));
       _doAuthRedirect(redirectTo);
       resolve(null);
-    }, 3000);
+    }, 4000);
 
     const { data: { subscription: sub } } = window.supabase.auth.onAuthStateChange(
       (event, session) => {
         if (settled) return;
-        console.log('[auth] onAuthStateChange:', event, session ? '✓' : '✗');
+        console.log('[auth] onAuthStateChange event:', event, '· session:', session ? '✓ ' + session.user.email : '✗ null');
 
         if (session) {
-          /* Any event with a valid session = we're good */
           settled = true;
           clearTimeout(timer);
           sub?.unsubscribe?.();
-          console.log('[auth] ✓ Session via', event, ':', session.user.email);
+          console.log('[auth] ✓ session via', event);
           resolve(session);
 
         } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
-          /* INITIAL_SESSION with null = localStorage had no session at all */
           settled = true;
           clearTimeout(timer);
           sub?.unsubscribe?.();
-          console.log('[auth] ✗ Confirmed no session via', event);
+          console.log('[auth] ✗ no session confirmed via', event, '→ redirecting');
           _doAuthRedirect(redirectTo);
           resolve(null);
         }
-        /* TOKEN_REFRESHED etc. without session: keep waiting until timeout */
+        /* TOKEN_REFRESHED / USER_UPDATED without session: keep waiting */
       }
     );
   });
 }
 
 function _doAuthRedirect(redirectTo = 'login.html') {
-  /* Don't redirect if already on a public page — prevents loops */
+  /* Never redirect if already on a public page — prevents infinite loops */
   const page = location.pathname.split('/').pop() || '';
-  const publicPages = ['login.html', 'index.html', 'professionals.html',
-                       'about.html', 'jobs.html', ''];
-  if (publicPages.includes(page)) return;
+  const PUBLIC = ['login.html', 'index.html', 'professionals.html', 'about.html', 'jobs.html', ''];
+  if (PUBLIC.includes(page)) {
+    console.log('[auth] _doAuthRedirect: already on public page, skipping redirect');
+    return;
+  }
 
   const returnPath = (location.pathname.split('/').pop() || '') + location.search;
-  const target = `${redirectTo}?return=${encodeURIComponent(returnPath)}`;
-  console.log('[auth] Redirecting →', target);
+  const target     = `${redirectTo}?return=${encodeURIComponent(returnPath)}`;
+  console.log('[auth] → redirecting to:', target);
   location.href = target;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    optionalAuth()
-   Returns the current session or null. Never redirects.
-   Use on public pages to personalize UI (navbar user info etc.)
+   Returns session or null. NEVER redirects.
+   Use on public pages (professionals, index) to personalise navbar.
    ═══════════════════════════════════════════════════════════════════════════ */
 async function optionalAuth() {
   if (!window.supabase?.auth) return null;
@@ -152,13 +195,13 @@ async function optionalAuth() {
 /* ═══════════════════════════════════════════════════════════════════════════
    getReturnUrl(defaultUrl?)
    Reads the ?return= param written by _doAuthRedirect.
-   Call in login.js after successful auth to send the user back.
+   Call in login.js after successful sign-in.
    ═══════════════════════════════════════════════════════════════════════════ */
 function getReturnUrl(defaultUrl = 'dashboard.html') {
   const raw = new URLSearchParams(location.search).get('return');
   if (!raw) return defaultUrl;
-  /* Block external redirects */
   const decoded = decodeURIComponent(raw);
+  /* Block open-redirect to external URLs */
   if (decoded.startsWith('http') || decoded.startsWith('//')) return defaultUrl;
   return decoded || defaultUrl;
 }

@@ -1,5 +1,5 @@
 /* ============================================
-   alma+ — Shared JavaScript
+   alma+ — Shared JavaScript  v20
    ============================================ */
 
 // ─── Navbar scroll effect ───
@@ -234,18 +234,30 @@ async function initUserSession() {
 
   if (session) {
     try {
-      const { data: profile } = await window.supabase
+      /* Use select('*') — safe even if some v16 columns are missing */
+      const { data: profile, error: pErr } = await window.supabase
         .from('profiles')
-        .select('username, full_name, role, fichas')
+        .select('*')
         .eq('id', session.user.id)
         .single();
 
-      if (profile) {
+      if (pErr) {
+        console.warn('[script] initUserSession profile query error:', pErr.code, pErr.message);
+        /* Try minimal fallback */
+        const { data: fallback } = await window.supabase
+          .from('profiles')
+          .select('id, username, full_name, role, fichas')
+          .eq('id', session.user.id)
+          .single();
+        if (fallback) {
+          user = fallback;
+          localStorage.setItem('alma_user', JSON.stringify(fallback));
+        }
+      } else if (profile) {
         user = profile;
-        /* Cache for quick reads (avatar in navbar etc.) */
         localStorage.setItem('alma_user', JSON.stringify(profile));
       }
-    } catch { /* non-critical */ }
+    } catch (e) { console.warn('[script] initUserSession exception (non-critical):', e.message); }
   }
 
   /* Fallback to cached profile for UI (does NOT grant auth) */

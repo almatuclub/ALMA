@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   professionals.js  ·  alma+  v19
+   professionals.js  ·  alma+  v20
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Query logger ─── */
@@ -651,7 +651,8 @@ async function loadCustomPros() {
 
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[professionals] ══ DOMContentLoaded ══ v19 — public page, no auth required');
+  console.log('[professionals] ══ DOMContentLoaded ══ v20 — public page, no auth required');
+  console.log('[professionals] pathname:', location.pathname, '· href:', location.href);
   // Load logged-in user's fichas and role from Supabase (optional, never blocks)
   if (window.supabase) {
     const { data: { session } } = await window.supabase.auth.getSession();
