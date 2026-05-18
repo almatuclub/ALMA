@@ -449,16 +449,18 @@ async function saveProfileEdit() {
    CARD / ROW RENDERERS
    ═══════════════════════════════════════════════════════════════════════════ */
 function renderUpcomingCard(b) {
-  const dateStr  = fmtDateSmart(b.scheduled_at, b.slot);
+  // Real schema: professional_name (not pro_name), session_datetime (not slot)
+  const proName  = b.professional_name || b.pro_name || 'Profesional';
+  const dateStr  = fmtDateSmart(b.scheduled_at, b.session_datetime || b.slot);
   const hasLink  = b.meeting_link && (b.modality === 'online' || b.modality === 'both');
-  const initials = (b.pro_name || '?').replace(/^(Lic\.|Dr\.|Prof\.|Mg\.)\s*/i,'')
+  const initials = proName.replace(/^(Lic\.|Dr\.|Prof\.|Mg\.)\s*/i,'')
                     .split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) || '?';
 
   return `<div class="bk-card">
     <div class="bk-card__top">
       <div class="bk-card__avatar">${initials}</div>
       <div class="bk-card__header">
-        <div class="bk-card__name">${b.pro_name || 'Profesional'}</div>
+        <div class="bk-card__name">${proName}</div>
         ${statusChip(b.status || 'confirmed')}
       </div>
     </div>
@@ -470,7 +472,7 @@ function renderUpcomingCard(b) {
     ${b.fichas_spent ? `<div class="bk-card__fichas">${b.fichas_spent}+ fichas</div>` : ''}
     <div class="bk-card__actions">
       ${hasLink ? `<a href="${b.meeting_link}" target="_blank" rel="noopener" class="bk-card__join btn btn-primary btn-sm">Unirse →</a>` : ''}
-      ${b.scheduled_at ? `<button class="bk-card__cal" onclick="addToGoogleCal('${(b.pro_name||'').replace(/'/g,"\\'")}','${b.scheduled_at}',60,'${b.modality||''}','${b.meeting_link||''}')">
+      ${b.scheduled_at ? `<button class="bk-card__cal" onclick="addToGoogleCal('${proName.replace(/'/g,"\\'")}','${b.scheduled_at}',60,'${b.modality||''}','${b.meeting_link||''}')">
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendario</button>` : ''}
       <a href="chat.html?booking=${b.id}" class="bk-card__chat">
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat
@@ -480,10 +482,12 @@ function renderUpcomingCard(b) {
 }
 
 function renderPastRow(b) {
-  const dateStr = fmtDateSmart(b.scheduled_at, b.slot);
+  // Real schema: professional_name (not pro_name), session_datetime (not slot)
+  const proName = b.professional_name || b.pro_name || 'Profesional';
+  const dateStr = fmtDateSmart(b.scheduled_at, b.session_datetime || b.slot);
   return `<div class="bk-row">
     <div class="bk-row__main">
-      <div class="bk-row__name">${b.pro_name || 'Profesional'}</div>
+      <div class="bk-row__name">${proName}</div>
       <div class="bk-row__meta">${dateStr}${b.modality ? ` · ${b.modality}` : ''}</div>
     </div>
     <div class="bk-row__right">
@@ -497,7 +501,8 @@ function renderPastRow(b) {
 }
 
 function renderProRow(b, isPending) {
-  const dateStr      = fmtDateSmart(b.scheduled_at, b.slot);
+  // Real schema: session_datetime (not slot)
+  const dateStr      = fmtDateSmart(b.scheduled_at, b.session_datetime || b.slot);
   const patientLabel = `Paciente ···${(b.patient_id || '??????').slice(-4)}`;
   const pendingActions = isPending ? `
     <button class="btn btn-sm btn-primary" style="padding:4px 12px;font-size:0.75rem;margin-left:8px"
@@ -692,7 +697,7 @@ async function initPatientDashboard(session, profile, displayName) {
     logQuery('dashboard', 'bookings', `patient_id=${session.user.id}`);
     const { data: bookings, error: bkErr } = await window.supabase
       .from('bookings')
-      .select('id, pro_name, slot, scheduled_at, modality, meeting_link, status, fichas_spent')
+      .select('id, professional_name, session_datetime, scheduled_at, modality, meeting_link, status, fichas_spent')
       .eq('patient_id', session.user.id)
       .order('scheduled_at', { ascending: true, nullsFirst: false });
     logQueryResult('dashboard', 'bookings', bookings, bkErr);
@@ -803,7 +808,7 @@ async function initProDashboard(session, profile, displayName) {
       logQuery('dashboard', 'bookings', `listing_id=${listing.id}`);
       const { data: bkData, error: bkErr } = await window.supabase
         .from('bookings')
-        .select('id, patient_id, slot, scheduled_at, modality, status, fichas_spent, created_at')
+        .select('id, patient_id, session_datetime, scheduled_at, modality, status, fichas_spent, created_at')
         .eq('listing_id', listing.id)
         .order('scheduled_at', { ascending: true, nullsFirst: false });
       logQueryResult('dashboard', 'bookings (pro)', bkData, bkErr);
