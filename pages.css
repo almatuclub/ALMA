@@ -2981,7 +2981,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   v26 — PROFESSIONAL CARD SYSTEM
+   v27 — PROFESSIONAL CARD SYSTEM
    Redesign completo: prof-card (directorio) + hcard--prof (hero)
    Inspiración: Zocdoc · Doctoralia · BetterHelp · Linear
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -3240,7 +3240,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   v26 — HERO PROFILE CARD REDESIGN
+   v27 — HERO PROFILE CARD REDESIGN
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* ── hcard--prof: richer layout ── */
@@ -3429,4 +3429,466 @@
 
 /* ── Remove old hcard--session icon-wrap ── */
 .hcard__icon-wrap { display: none !important; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   v27 — HERO VISUAL: BOOKING CARD UPGRADE
+   Prof card → real booking widget; depth hierarchy; composition fixes
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Prof card: extend to full width, no dead space ── */
+.hcard--prof {
+  right: 0 !important;
+  top: 0 !important;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 12px 40px rgba(0,0,0,0.10),
+    0 0 0 0.5px rgba(0,0,0,0.05) !important;
+  z-index: 1 !important;
+}
+
+/* ── Bigger avatar for hero presence ── */
+.hcard--prof .hcard__avatar {
+  width: 64px !important;
+  height: 64px !important;
+  background: linear-gradient(135deg, #FCA5A5 0%, #C2285E 100%) !important;
+  box-shadow: 0 3px 12px rgba(194,40,94,0.35), 0 0 0 3px white !important;
+}
+
+/* ── Hide avail strip — replaced by booking section ── */
+.hcard--prof .hcard__avail { display: none !important; }
+.hcard--prof .hcard__divider { margin: 0 !important; }
+
+/* ── Booking section ── */
+.hcard__slots {
+  padding: 12px 18px 15px;
+}
+.hcard__slots-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hcard__slots-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px rgba(5,150,105,0.20);
+}
+.hcard__slots-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 11px;
+}
+.hcard__slot {
+  padding: 5px 11px;
+  background: rgba(99,102,241,0.06);
+  border: 1.5px solid rgba(99,102,241,0.18);
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #3730A3;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.hcard__book-btn {
+  display: block;
+  width: 100%;
+  padding: 11px 0;
+  background: linear-gradient(135deg, #FF6B5B 0%, #DC3B35 100%);
+  color: white;
+  font-size: 0.83rem;
+  font-weight: 800;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  letter-spacing: -0.01em;
+  cursor: default;
+  box-shadow:
+    0 1px 2px rgba(220,59,53,0.15),
+    0 4px 16px rgba(220,59,53,0.30);
+  /* subtle shimmer on hover for depth */
+  transition: box-shadow 0.2s;
+}
+
+/* ── Session card: float above prof card with depth ── */
+.hcard--session {
+  bottom: 86px !important;
+  left: 10px !important;
+  right: auto !important;
+  width: 226px !important;
+  z-index: 3 !important;
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.06),
+    0 16px 40px rgba(0,0,0,0.13),
+    0 0 0 0.5px rgba(0,0,0,0.05) !important;
+}
+
+/* ── Fichas card: float above prof card with depth ── */
+.hcard--fichas {
+  bottom: 10px !important;
+  right: 6px !important;
+  left: auto !important;
+  width: 198px !important;
+  z-index: 3 !important;
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.06),
+    0 16px 40px rgba(0,0,0,0.13),
+    0 0 0 0.5px rgba(0,0,0,0.05) !important;
+}
+
+/* ── Rating pill: above all cards ── */
+.hero__pill { z-index: 4 !important; }
+
+/* ── Session card: softer green on confirm icon ── */
+.hcard__session-check {
+  box-shadow: 0 2px 8px rgba(5,150,105,0.40) !important;
+}
+
+/* ── Fichas bar: coral accent ── */
+.hcard--fichas .hcard__bar-fill {
+  background: linear-gradient(90deg, #FF8A80, #DC3B35) !important;
+  width: 72% !important;
+}
+
+/* ── Prof card: online dot on avatar ── */
+.hcard--prof .hcard__online-dot {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 11px; height: 11px;
+  background: #22C55E;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(34,197,94,0.40);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   v27 — HERO PRODUCT MOCKUP
+   Single unified booking card — replaces scattered floating hcards.
+   Inspired by Zocdoc / Doctoralia / BetterHelp product screenshots.
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Hide legacy floating cards ── */
+.hcard--prof,
+.hcard--session,
+.hcard--fichas { display: none !important; }
+
+/* ── Mockup: positioned like original hcards (absolute, right-aligned) ── */
+.hero__mockup {
+  position: absolute;
+  top: 26px;
+  right: 0;
+  width: 334px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.85);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 0.5px rgba(0,0,0,0.06),
+    0 2px 4px rgba(0,0,0,0.04),
+    0 10px 30px rgba(0,0,0,0.09),
+    0 36px 80px rgba(0,0,0,0.13);
+  animation: float 6s ease-in-out infinite;
+  z-index: 2;
+}
+
+/* ── Window chrome (macOS dots + title) ── */
+.hm__chrome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 14px 9px;
+  background: rgba(248,247,253,0.96);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.hm__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.hm__dot--r { background: #FF5F57; }
+.hm__dot--y { background: #FFBD2E; }
+.hm__dot--g { background: #28CA41; }
+.hm__chrome-title {
+  margin-left: 10px;
+  font-size: 0.69rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1px;
+}
+
+/* ── Profile header ── */
+.hm__profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 18px 10px;
+}
+.hm__avatar-col {
+  position: relative;
+  flex-shrink: 0;
+}
+.hm__avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FECACA 0%, #BE185D 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.22);
+  box-shadow:
+    0 0 0 3px white,
+    0 0 0 4.5px rgba(190,24,93,0.14),
+    0 4px 14px rgba(190,24,93,0.26);
+}
+.hm__online-dot {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 13px; height: 13px;
+  background: #22C55E;
+  border-radius: 50%;
+  border: 2.5px solid white;
+  box-shadow: 0 1px 5px rgba(34,197,94,0.45);
+}
+.hm__info { flex: 1; min-width: 0; }
+.hm__name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+.hm__name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+.hm__verified-badge {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 16px; height: 16px;
+  background: #0EA5E9;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 1px 5px rgba(14,165,233,0.38);
+}
+.hm__spec {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--coral);
+  margin-bottom: 5px;
+}
+.hm__rating-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.hm__stars { color: #F59E0B; font-size: 0.70rem; letter-spacing: -0.5px; }
+.hm__rating-val { font-size: 0.82rem; font-weight: 800; color: var(--dark); }
+.hm__rating-cnt { font-size: 0.68rem; color: var(--text-muted); }
+.hm__meta {
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ── Tags row ── */
+.hm__tags {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 18px 11px;
+  flex-wrap: wrap;
+}
+.hm__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+}
+.hm__tag--blue {
+  background: rgba(14,165,233,0.09);
+  color: #0369A1;
+  border: 1px solid rgba(14,165,233,0.18);
+}
+.hm__tag--violet {
+  background: rgba(124,58,237,0.07);
+  color: #6D28D9;
+  border: 1px solid rgba(124,58,237,0.14);
+}
+.hm__tag--green {
+  background: rgba(5,150,105,0.08);
+  color: #047857;
+  border: 1px solid rgba(5,150,105,0.18);
+}
+.hm__pulse-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: hm-pulse 1.8s ease-in-out infinite;
+}
+@keyframes hm-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(0.75); }
+}
+
+/* ── Horizontal rule ── */
+.hm__rule {
+  height: 1px;
+  background: rgba(0,0,0,0.07);
+  margin: 0;
+}
+
+/* ── Slot picker ── */
+.hm__picker {
+  padding: 11px 18px 10px;
+}
+.hm__picker-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.hm__picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.hm__slot {
+  padding: 9px 4px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-2);
+  background: var(--bg);
+  text-align: center;
+  cursor: default;
+}
+.hm__slot--on {
+  border-color: var(--coral);
+  background: rgba(220,59,53,0.05);
+  box-shadow: 0 0 0 3px rgba(220,59,53,0.08);
+}
+.hm__slot-day {
+  font-size: 0.59rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+.hm__slot-time {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.025em;
+}
+.hm__slot--on .hm__slot-day  { color: rgba(220,59,53,0.68); }
+.hm__slot--on .hm__slot-time { color: var(--coral); }
+
+/* ── Booking CTA ── */
+.hm__cta-row {
+  padding: 0 18px 14px;
+}
+.hm__cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #FF6B5B 0%, #DC3B35 100%);
+  color: white;
+  font-size: 0.86rem;
+  font-weight: 800;
+  border-radius: 12px;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 1px 3px rgba(220,59,53,0.16),
+    0 5px 18px rgba(220,59,53,0.30);
+}
+.hm__cta-price {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.20);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ── Footer strip (balance + confirmed session) ── */
+.hm__footer {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 11px 18px;
+  background: rgba(249,248,253,0.80);
+}
+.hm__footer-col { flex: 1; min-width: 0; }
+.hm__footer-lbl {
+  font-size: 0.61rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.hm__footer-val {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.025em;
+  margin-bottom: 4px;
+}
+.hm__footer-val--g { color: #059669; }
+.hm__footer-bar {
+  height: 4px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.hm__footer-fill {
+  height: 100%;
+  width: 68%;
+  background: linear-gradient(90deg, #FCA5A5, #DC3B35);
+  border-radius: 2px;
+}
+.hm__footer-sub {
+  font-size: 0.60rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.hm__footer-sep {
+  width: 1px;
+  background: rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+/* ── Social proof pill: stick to top-right of mockup ── */
+.hero__pill {
+  top: 20px !important;
+  right: 344px !important;  /* left of the mockup card */
+  bottom: auto !important;
+  transform: none !important;
+  animation: float 6s ease-in-out infinite !important;
+  animation-delay: -1.5s !important;
+  z-index: 5 !important;
+}
+
+/* ── Mobile: hide mockup, keep only hero text ── */
+@media (max-width: 900px) {
+  .hero__mockup { display: none !important; }
+  .hero__pill   { display: none !important; }
+}
 

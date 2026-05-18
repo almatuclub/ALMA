@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>alma+ | Tu plataforma de salud y bienestar</title>
 <meta name="description" content="Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Uruguay. Reservá con fichas, sin intermediarios."/>
-<link rel="stylesheet" href="style.css?v=26"/>
-<link rel="stylesheet" href="pages.css?v=26"/>
+<link rel="stylesheet" href="style.css?v=27"/>
+<link rel="stylesheet" href="pages.css?v=27"/>
 </head>
 <body>
 
@@ -108,65 +108,108 @@
       </div>
     </div>
 
-    <!-- Floating cards visual -->
+    <!-- Hero visual: unified product mockup -->
     <div class="hero__visual" aria-hidden="true">
       <div class="hero__blob"></div>
       <div class="hero__mouse-glow" aria-hidden="true"></div>
 
-      <!-- Professional profile card -->
-      <div class="hcard hcard--prof">
-        <div class="hcard__top">
-          <div class="hcard__avatar-wrap">
-            <div class="hcard__avatar" aria-hidden="true"></div>
-            <span class="hcard__avatar-initials" aria-hidden="true">VS</span>
-            <div class="hcard__verified" aria-label="Verificado">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <!-- Single unified booking mockup -->
+      <div class="hero__mockup">
+
+        <!-- macOS-style window chrome -->
+        <div class="hm__chrome">
+          <span class="hm__dot hm__dot--r"></span>
+          <span class="hm__dot hm__dot--y"></span>
+          <span class="hm__dot hm__dot--g"></span>
+          <span class="hm__chrome-title">alma+ &middot; Reservar consulta</span>
+        </div>
+
+        <!-- Profile header -->
+        <div class="hm__profile">
+          <div class="hm__avatar-col">
+            <div class="hm__avatar" aria-hidden="true">VS</div>
+            <span class="hm__online-dot" aria-label="En línea"></span>
+          </div>
+          <div class="hm__info">
+            <div class="hm__name-row">
+              <span class="hm__name">Lic. Valentina Suárez</span>
+              <span class="hm__verified-badge" aria-label="Verificado">
+                <svg width="8" height="8" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="hm__spec">Psicología · TCC &amp; Mindfulness</div>
+            <div class="hm__rating-row">
+              <span class="hm__stars" aria-hidden="true">★★★★★</span>
+              <span class="hm__rating-val">4.9</span>
+              <span class="hm__rating-cnt">· 142 sesiones</span>
+            </div>
+            <div class="hm__meta">UdelaR &middot; Mat. 12.450 &middot; 8 años exp.</div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="hm__tags">
+          <span class="hm__tag hm__tag--blue">Online</span>
+          <span class="hm__tag hm__tag--violet">Presencial</span>
+          <span class="hm__tag hm__tag--green">
+            <span class="hm__pulse-dot" aria-hidden="true"></span>
+            Disponible hoy
+          </span>
+        </div>
+
+        <div class="hm__rule"></div>
+
+        <!-- Slot picker -->
+        <div class="hm__picker">
+          <div class="hm__picker-label">Seleccioná un horario</div>
+          <div class="hm__picker-grid">
+            <div class="hm__slot hm__slot--on">
+              <div class="hm__slot-day">Hoy</div>
+              <div class="hm__slot-time">17:00</div>
+            </div>
+            <div class="hm__slot">
+              <div class="hm__slot-day">Hoy</div>
+              <div class="hm__slot-time">18:30</div>
+            </div>
+            <div class="hm__slot">
+              <div class="hm__slot-day">Mañana</div>
+              <div class="hm__slot-time">10:00</div>
             </div>
           </div>
-          <div class="hcard__body">
-            <div class="hcard__name">Lic. Valentina Suárez</div>
-            <div class="hcard__spec">Psicología · TCC &amp; Mindfulness</div>
-            <div class="hcard__cred">UdelaR · Mat. 12.450 · 8 años exp.</div>
-            <div class="hcard__rating">
-              <span class="hcard__stars-row" aria-hidden="true">★★★★★</span>
-              <span class="hcard__rating-val">4.9</span>
-              <span class="hcard__rating-cnt">· 142 sesiones</span>
-            </div>
+        </div>
+
+        <!-- Book CTA -->
+        <div class="hm__cta-row">
+          <div class="hm__cta-btn">
+            <span>Reservar sesión</span>
+            <span class="hm__cta-price">8 fichas</span>
           </div>
         </div>
-        <div class="hcard__divider"></div>
-        <div class="hcard__avail">
-          <span class="hcard__avail-dot"></span>
-          Disponible hoy · responde en &lt;1 h
-        </div>
-      </div>
 
-      <!-- Session booked card -->
-      <div class="hcard hcard--session">
-        <div class="hcard__session-header">
-          <div class="hcard__session-check" aria-hidden="true">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="hm__rule"></div>
+
+        <!-- Footer: balance + confirmed session -->
+        <div class="hm__footer">
+          <div class="hm__footer-col">
+            <div class="hm__footer-lbl">Tu saldo</div>
+            <div class="hm__footer-val">24 fichas</div>
+            <div class="hm__footer-bar"><div class="hm__footer-fill"></div></div>
           </div>
-          <span class="hcard__session-title">Sesión confirmada</span>
+          <div class="hm__footer-sep"></div>
+          <div class="hm__footer-col">
+            <div class="hm__footer-lbl">Sesión confirmada</div>
+            <div class="hm__footer-val hm__footer-val--g">Hoy 17:00</div>
+            <div class="hm__footer-sub">con Valentina · Online</div>
+          </div>
         </div>
-        <div class="hcard__val">Hoy · 17:00 hs</div>
-        <div class="hcard__session-pro">con Valentina Suárez · Online</div>
+
       </div>
 
-      <!-- Fichas balance card -->
-      <div class="hcard hcard--fichas">
-        <div class="hcard__fichas-header">
-          <div class="hcard__label">Tu saldo</div>
-          <span class="hcard__fichas-icon">🎫</span>
-        </div>
-        <div class="hcard__big">24<em>+</em></div>
-        <div class="hcard__bar"><div class="hcard__bar-fill"></div></div>
-        <div class="hcard__bar-lbl">fichas disponibles</div>
-        <div class="hcard__fichas-next">Próxima sesión · <strong>Hoy 17:00</strong></div>
+      <!-- Social proof pill -->
+      <div class="hero__pill">
+        <svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg>
+        4.9 · 12k+ sesiones
       </div>
-
-      <!-- Floating rating pill -->
-      <div class="hero__pill"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.9 · 12k+ sesiones</div>
     </div>
 
   </div>
