@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/dashboard.js  ·  alma+  v20
+   js/dashboard.js  ·  alma+  v22
    Role-split dashboard — patient | professional | admin
    Includes: notifications, profile edit drawer, chat buttons
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -191,7 +191,7 @@ async function loadNotifications() {
   if (error) {
     /* 42P01 = table doesn't exist, PGRST200 = relation not found */
     if (error.code === '42P01' || error.code === 'PGRST200' || (error.message||'').includes('does not exist')) {
-      console.warn('[dashboard] notifications table missing — disabling polling. Run supabase_migration_v19.sql to fix.');
+      console.warn('[dashboard] notifications table missing — disabling polling. Run supabase_rls_clean_v22.sql to fix.');
       _notifDisabled = true;
       if (_notifPolling) clearInterval(_notifPolling);
     }
@@ -595,8 +595,12 @@ async function loadProfile(userId) {
    MAIN INIT
    ═══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
+  /* ── Body hidden until auth resolves — prevents white flash ── */
+  document.body.style.opacity    = '0';
+  document.body.style.transition = 'opacity 0.25s ease';
+
   /* ── Very first log — confirms this script is running on the right page ── */
-  console.log('[dashboard] ══ DOMContentLoaded ══ v20');
+  console.log('[dashboard] ══ DOMContentLoaded ══ v22');
   console.log('[dashboard] pathname:', location.pathname);
   console.log('[dashboard] href:', location.href);
   console.log('[dashboard] localStorage keys (auth-related):',
@@ -611,10 +615,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* Profile */
     const profile = await loadProfile(session.user.id);
     if (!profile) {
+      document.body.style.opacity = '1'; /* reveal even on error */
       showFatalError('No pudimos cargar tu perfil. Intentá cerrar sesión y volver a ingresar.');
       return;
     }
     console.log('[dashboard] profile OK · role:', profile.role, '· fichas:', profile.fichas);
+
+    /* Cache profile globally — script.js initUserSession will skip its own query */
+    window._almaProfile = profile;
 
     /* Soft onboarding nudge */
     if (!profile.onboarding_complete) {
@@ -631,6 +639,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (navU) navU.textContent = displayName;
 
     document.getElementById('dash-loading').style.display = 'none';
+
+    /* Reveal page — smooth fade-in once content is ready */
+    document.body.style.opacity = '1';
 
     /* Notifications (best-effort — won't crash if table missing) */
     loadNotifications();
@@ -652,6 +663,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   } catch (err) {
     console.error('[dashboard] CRITICAL unhandled error:', err.message, err);
+    document.body.style.opacity = '1'; /* always reveal — never stay invisible */
     showFatalError('Error inesperado al cargar el panel: ' + err.message);
   }
 });

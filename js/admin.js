@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/admin.js  ·  alma+  v20
+   js/admin.js  ·  alma+  v22
    Admin panel — approve/reject professionals, view bookings, view stats
    ═══════════════════════════════════════════════════════════════════════════ */
 

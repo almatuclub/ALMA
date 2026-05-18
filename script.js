@@ -1,5 +1,5 @@
 /* ============================================
-   alma+ — Shared JavaScript  v20
+   alma+ — Shared JavaScript  v22
    ============================================ */
 
 // ─── Navbar scroll effect ───
@@ -225,39 +225,54 @@ window.logout = async function () {
   location.href = 'login.html';
 };
 
-/* initUserSession — personalises the navbar on public pages.
+/* initUserSession — personalises the navbar on PUBLIC pages only.
+   On private pages (dashboard, admin, chat, etc.) the page JS handles auth
+   and navbar — skipping this query avoids a redundant Supabase round-trip.
    Uses optionalAuth() (never redirects) so public pages stay accessible. */
 async function initUserSession() {
+  /* Skip on private pages — they have their own auth + profile loading */
+  const _page = location.pathname.split('/').pop() || 'index.html';
+  const _PRIVATE = ['dashboard.html','admin.html','onboarding.html','chat.html','apply.html','payment.html'];
+  if (_PRIVATE.includes(_page)) {
+    console.log('[script] initUserSession: private page, skipping (page JS handles auth)');
+    return;
+  }
+
   /* optionalAuth is defined in db.js which loads before script.js */
   const session = typeof optionalAuth === 'function' ? await optionalAuth() : null;
   let user = null;
 
   if (session) {
-    try {
-      /* Use select('*') — safe even if some v16 columns are missing */
-      const { data: profile, error: pErr } = await window.supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-
-      if (pErr) {
-        console.warn('[script] initUserSession profile query error:', pErr.code, pErr.message);
-        /* Try minimal fallback */
-        const { data: fallback } = await window.supabase
+    /* Check window cache first (set by dashboard.js on same-tab navigation) */
+    if (window._almaProfile) {
+      user = window._almaProfile;
+    } else {
+      try {
+        /* Use select('*') — safe even if some columns are missing */
+        const { data: profile, error: pErr } = await window.supabase
           .from('profiles')
-          .select('id, username, full_name, role, fichas')
+          .select('*')
           .eq('id', session.user.id)
           .single();
-        if (fallback) {
-          user = fallback;
-          localStorage.setItem('alma_user', JSON.stringify(fallback));
+
+        if (pErr) {
+          console.warn('[script] initUserSession profile query error:', pErr.code, pErr.message);
+          /* Try minimal fallback */
+          const { data: fallback } = await window.supabase
+            .from('profiles')
+            .select('id, username, full_name, role, fichas')
+            .eq('id', session.user.id)
+            .single();
+          if (fallback) {
+            user = fallback;
+            localStorage.setItem('alma_user', JSON.stringify(fallback));
+          }
+        } else if (profile) {
+          user = profile;
+          localStorage.setItem('alma_user', JSON.stringify(profile));
         }
-      } else if (profile) {
-        user = profile;
-        localStorage.setItem('alma_user', JSON.stringify(profile));
-      }
-    } catch (e) { console.warn('[script] initUserSession exception (non-critical):', e.message); }
+      } catch (e) { console.warn('[script] initUserSession exception (non-critical):', e.message); }
+    }
   }
 
   /* Fallback to cached profile for UI (does NOT grant auth) */

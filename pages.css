@@ -2605,3 +2605,169 @@
 .dash-hero-edit-btn:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6); }
 .dash-hero-edit-btn svg { opacity: .85; }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   v22 — AUTH UX / LOADING STATES / VISUAL POLISH
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Skeleton shimmer: slightly warmer tone for better contrast ── */
+.skel {
+  background: linear-gradient(90deg, #ede9e3 25%, #f7f5f1 50%, #ede9e3 75%) !important;
+  background-size: 800px 100% !important;
+  animation: skel-shimmer 1.6s ease-in-out infinite !important;
+}
+
+/* ── Dashboard loading skeleton containers ── */
+.dash-loading-wrap {
+  padding: 40px 0 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.skel-hero {
+  height: 140px;
+  border-radius: 0;
+  width: 100%;
+}
+.skel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skel-section-head {
+  width: 160px;
+  height: 20px;
+  border-radius: 8px;
+}
+.skel-card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.skel-card {
+  height: 160px;
+  border-radius: 16px;
+}
+.skel-row {
+  height: 56px;
+  border-radius: 12px;
+}
+
+/* ── Auth-guard card ── */
+.auth-guard-card {
+  max-width: 400px;
+  margin: 80px auto;
+  text-align: center;
+  padding: 48px 32px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+}
+.auth-guard-card h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.auth-guard-card p {
+  font-size: 0.88rem;
+  color: var(--text-2);
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+.auth-guard-icon {
+  width: 60px; height: 60px;
+  border-radius: 16px;
+  background: var(--red-50);
+  color: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* ── Improved bk-card hover: slightly more elevated ── */
+.bk-card:hover {
+  border-color: var(--red-200);
+  box-shadow: 0 6px 24px rgba(232,69,60,0.10) !important;
+  transform: translateY(-1px);
+}
+.bk-card { transition: border-color .15s, box-shadow .15s, transform .15s !important; }
+
+/* ── Pro stat values: slightly larger on wide screens ── */
+@media (min-width: 768px) {
+  .pro-stat__val { font-size: 2rem; }
+}
+
+/* ── Admin stat cards: subtle hover ── */
+.admin-stat-card {
+  transition: box-shadow .15s, transform .15s;
+}
+.admin-stat-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* ── Pending card hover ── */
+.pending-card {
+  transition: border-color .15s, box-shadow .15s;
+}
+.pending-card:hover {
+  border-color: #FDE68A;
+  box-shadow: 0 4px 16px rgba(251,191,36,0.12);
+}
+
+/* ── Empty state: slightly softer dashed border ── */
+.empty-state {
+  border-color: #e5e0d8;
+}
+
+/* ── Mobile: compact dash hero ── */
+@media (max-width: 480px) {
+  .dash-hello { font-size: 1.2rem; }
+  .fichas-hero { display: none; }               /* fichas shown in body instead */
+  .dash-section__title { font-size: 1rem; }
+  .bk-card { padding: 16px; }
+  .bk-row  { padding: 12px 14px; }
+  .dash-body { gap: 28px; padding-top: 28px; }
+}
+
+/* ── Mobile: admin panel ── */
+@media (max-width: 480px) {
+  .admin-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .admin-stat-card { padding: 14px; gap: 10px; }
+  .admin-stat-card__val { font-size: 1.4rem; }
+  .pending-card { flex-direction: column; align-items: flex-start; }
+  .pending-card__actions { width: 100%; justify-content: flex-end; }
+  .admin-table td, .admin-table th { padding: 10px 12px; font-size: 0.78rem; }
+  .admin-body { padding: 28px 0 60px; }
+}
+
+/* ── Mobile: notification dropdown full-width ── */
+@media (max-width: 380px) {
+  .notif-dropdown { width: 260px; right: -50px; }
+}
+
+/* ── Professionals page mobile: single column cards ── */
+@media (max-width: 480px) {
+  .prof-profile-hero { padding: 32px 0 28px; }
+  .booking-widget { border-radius: 16px; padding: 18px; }
+}
+
+/* ── Focus ring for keyboard nav (accessibility) ── */
+.admin-btn:focus-visible,
+.bk-card__cal:focus-visible,
+.widget-slot:focus-visible,
+.day-btn:focus-visible,
+.modality-btn:focus-visible {
+  outline: 2.5px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ── Smooth page entrance (used by dashboard body reveal) ── */
+@keyframes alma-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.alma-fade-up {
+  animation: alma-fade-up 0.35s ease both;
+}
+
