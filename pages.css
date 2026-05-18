@@ -3911,3 +3911,97 @@
   .hero__pill        { display: none !important; }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   v27 — COMPONENT GLOW & DEPTH UPGRADES
+   Specialty glows · Fichas · CTA band · Founders · Dividers
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Service cards: per-specialty glow on hover ── */
+.service-card {
+  transition:
+    transform    0.25s var(--spring),
+    box-shadow   0.25s var(--spring),
+    border-color 0.22s ease;
+  will-change: transform;
+}
+.service-card[href*="psicologia"]:hover  { box-shadow: 0 6px 18px rgba(0,0,0,0.05), 0 24px 64px rgba(229,57,53,0.20);  border-color: rgba(229,57,53,0.22); }
+.service-card[href*="psiquiatria"]:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.05), 0 24px 64px rgba(123,31,162,0.20); border-color: rgba(123,31,162,0.22); }
+.service-card[href*="nutricion"]:hover   { box-shadow: 0 6px 18px rgba(0,0,0,0.05), 0 24px 64px rgba(46,125,50,0.20);  border-color: rgba(46,125,50,0.22); }
+.service-card[href*="trainer"]:hover     { box-shadow: 0 6px 18px rgba(0,0,0,0.05), 0 24px 64px rgba(230,81,0,0.20);   border-color: rgba(230,81,0,0.22); }
+.service-card[href*="coaching"]:hover    { box-shadow: 0 6px 18px rgba(0,0,0,0.05), 0 24px 64px rgba(0,105,92,0.20);   border-color: rgba(0,105,92,0.22); }
+
+/* ── Fichas dark section: richer layered gradient ── */
+.fichas-section {
+  background:
+    radial-gradient(ellipse 72% 55% at 5% 50%,  rgba(255,107,91,0.17) 0%, transparent 56%),
+    radial-gradient(ellipse 52% 48% at 95% 50%, rgba(102,126,234,0.13) 0%, transparent 56%),
+    linear-gradient(135deg, #0f0e17 0%, #1a1230 50%, #0d1117 100%);
+}
+
+/* ── Ficha items: lift on hover ── */
+.ficha-item {
+  transition: transform 0.22s var(--spring), box-shadow 0.22s var(--spring), border-color 0.2s ease;
+}
+.ficha-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.34);
+  border-color: rgba(255,107,91,0.32);
+}
+
+/* ── CTA band: animated ambient gradient ── */
+.cta-band {
+  background:
+    radial-gradient(ellipse 80% 65% at  8% 50%, rgba(255,107,91,0.22) 0%, transparent 58%),
+    radial-gradient(ellipse 60% 55% at 92% 50%, rgba(102,126,234,0.18) 0%, transparent 58%),
+    linear-gradient(135deg, #18181b 0%, #1a1230 52%, #16213e 100%);
+  background-size: 300% 300%, 300% 300%, 100% 100%;
+  animation: _ctaBg 14s ease-in-out infinite alternate;
+}
+@keyframes _ctaBg {
+  from { background-position: 0%   50%, 100% 50%, 0% 0%; }
+  to   { background-position: 100% 50%, 0%   50%, 0% 0%; }
+}
+
+/* ── Section .divider: gradient instead of solid ── */
+.divider {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--coral) 28%,
+    rgba(124,58,237,0.55) 72%,
+    transparent 100%
+  ) !important;
+}
+
+/* ── Prof-mini: bigger hover lift ── */
+.prof-mini {
+  transition: transform 0.22s var(--spring), box-shadow 0.22s var(--spring);
+}
+.prof-mini:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06), 0 24px 56px rgba(0,0,0,0.12);
+}
+
+/* ── Founders: hover depth ── */
+.founder-card {
+  transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring);
+}
+.founder-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 30px 68px rgba(0,0,0,0.13);
+}
+
+/* ── Hero visual: 3D perspective parent ── */
+.hero__visual {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+/* ── Active slot shimmer ── */
+.hm__slot--on { position: relative; overflow: hidden; }
+.hm__slot--on::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.16) 0%, transparent 55%);
+  border-radius: inherit; pointer-events: none;
+}

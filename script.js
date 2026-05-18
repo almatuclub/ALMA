@@ -371,8 +371,9 @@ document.addEventListener('click', function (e) {
       const cx = (e.clientX - r.left)  / r.width  - 0.5;   /* -0.5 … 0.5 */
       const cy = (e.clientY - r.top)   / r.height - 0.5;
 
-      /* Whole visual column — gentle tilt */
-      visual.style.transform = `translate(${cx * 14}px, ${cy * 9}px)`;
+      /* Whole visual column — parallax + subtle 3D perspective tilt */
+      visual.style.transform =
+        `translate(${cx * 14}px, ${cy * 9}px) perspective(1200px) rotateY(${cx * 4}deg) rotateX(${-cy * 2.5}deg)`;
 
       /* Background blob — deeper parallax for sense of depth */
       if (blob) blob.style.transform = `translate(${cx * 34}px, ${cy * 22}px)`;
