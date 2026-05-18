@@ -1,6 +1,20 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   professionals.js  ·  alma+  v18
+   professionals.js  ·  alma+  v19
    ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Query logger ─── */
+function logQ(table, extra) {
+  console.log(`[professionals] ▶ query: ${table}${extra ? ' · ' + extra : ''}`);
+}
+function logQR(table, data, error) {
+  if (error) {
+    console.error(`[professionals] ✗ ${table} ERROR`,
+      '\n  code:', error.code, '\n  message:', error.message,
+      '\n  details:', error.details, '\n  hint:', error.hint);
+  } else {
+    console.log(`[professionals] ✓ ${table} — rows:`, Array.isArray(data) ? data.length : (data ? 1 : 0));
+  }
+}
 
 /* ─── Availability helpers ─── */
 const DAYS_ES_PROS = ['lunes','martes','miercoles','jueves','viernes','sabado','domingo'];
@@ -223,11 +237,13 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
   }
 
   /* Load user balance */
+  logQ('profiles', `select(fichas,role) for booking user=${session.user.id}`);
   const { data: profile, error: profileErr } = await window.supabase
     .from('profiles')
     .select('fichas, role')
     .eq('id', session.user.id)
     .single();
+  logQR('profiles (booking)', profile, profileErr);
 
   if (profileErr || !profile) {
     showToast('Error al verificar tu cuenta', '❌', 'error');
@@ -261,10 +277,12 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
 
   /* Deduct fichas */
   const newFichas = isAdmin ? profile.fichas : profile.fichas - price;
+  logQ('profiles UPDATE', `fichas=${newFichas} user=${session.user.id}`);
   const { error: updateErr } = await window.supabase
     .from('profiles')
     .update({ fichas: newFichas })
     .eq('id', session.user.id);
+  logQR('profiles UPDATE (fichas)', null, updateErr);
 
   if (updateErr) {
     showToast('Error al procesar reserva: ' + updateErr.message, '❌', 'error');
@@ -274,7 +292,8 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
   }
 
   /* Create booking row */
-  await window.supabase.from('bookings').insert({
+  logQ('bookings INSERT', `pro=${name} slot=${slotLabel}`);
+  const { error: bkInsertErr } = await window.supabase.from('bookings').insert({
     patient_id:   session.user.id,
     listing_id:   listingId   || null,
     pro_name:     name,
@@ -284,6 +303,7 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
     modality:     bookingModality,
     meeting_link: meetingLink,
   });
+  logQR('bookings INSERT', null, bkInsertErr);
 
   /* Update fichas widget */
   const fNum = document.querySelector('.fichas-widget .f-num');
@@ -468,20 +488,35 @@ async function finishSavePro(p) {
 
 /* ─── Load additional professionals from Supabase ─── */
 async function loadCustomPros() {
-  if (!window.supabase) return;
-
-  /* Explicit column list — meeting_link intentionally excluded (privacy) */
-  const { data: listings, error } = await window.supabase
-    .from('professional_listings')
-    .select('id, user_id, name, spec, svc_id, barrio, price, lat, lng, color, icon, uyu, schedule, availability, session_duration_minutes, modality, location_address, status, created_at')
-    .eq('status', 'approved')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('[professionals] loadCustomPros query error:', error.message, '(code:', error.code, ')');
+  if (!window.supabase) {
+    console.warn('[professionals] loadCustomPros: supabase not ready, skipping');
     return;
   }
-  console.log('[professionals] loadCustomPros: loaded', listings?.length ?? 0, 'listings');
+
+  /* Use select('*') — safe even if some columns don't exist yet.
+     meeting_link is excluded from display elsewhere (privacy). */
+  logQ('professional_listings', "select(*) status=approved order:created_at desc");
+  const { data: listings, error } = await window.supabase
+    .from('professional_listings')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+  logQR('professional_listings', listings, error);
+
+  if (error) {
+    console.error('[professionals] loadCustomPros FAILED — likely missing table or column.');
+    console.error('[professionals] Fix: run supabase_migration_v19.sql in your Supabase SQL editor.');
+    /* Show a non-blocking notice in the listing area */
+    const list = document.getElementById('prof-list');
+    if (list) {
+      const notice = document.createElement('div');
+      notice.style.cssText = 'background:#fff8f0;border:1.5px solid #fed7aa;border-radius:12px;padding:14px 18px;font-size:0.82rem;color:#92400e;margin-bottom:16px';
+      notice.innerHTML = `<strong>Aviso:</strong> No se pudieron cargar profesionales de Supabase (${error.code}: ${error.message}). Los profesionales de ejemplo siguen disponibles.`;
+      list.prepend(notice);
+    }
+    return;
+  }
+  console.log('[professionals] loadCustomPros: loaded', listings?.length ?? 0, 'approved listings');
   if (!listings || !listings.length) return;
 
   const list = document.getElementById('prof-list');
@@ -616,18 +651,21 @@ async function loadCustomPros() {
 
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[professionals] DOMContentLoaded — public page, no auth required');
+  console.log('[professionals] ══ DOMContentLoaded ══ v19 — public page, no auth required');
   // Load logged-in user's fichas and role from Supabase (optional, never blocks)
   if (window.supabase) {
     const { data: { session } } = await window.supabase.auth.getSession();
+    console.log('[professionals] session:', session ? session.user.email : 'none (not logged in)');
     if (session) {
-      const { data: profile } = await window.supabase
+      logQ('profiles', `select(fichas,role) id=${session.user.id}`);
+      const { data: profile, error: pErr } = await window.supabase
         .from('profiles')
         .select('fichas, role')
         .eq('id', session.user.id)
         .single();
+      logQR('profiles', profile, pErr);
 
-      if (profile) {
+      if (!pErr && profile) {
         const fNum = document.querySelector('.fichas-widget .f-num');
         if (fNum) fNum.innerHTML = `${profile.fichas}<span style="font-size:1.4rem">+</span>`;
 

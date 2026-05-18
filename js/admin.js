@@ -1,7 +1,21 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/admin.js  ·  alma+  v16
+   js/admin.js  ·  alma+  v19
    Admin panel — approve/reject professionals, view bookings, view stats
    ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Query logger ─── */
+function logQ(table, extra) {
+  console.log(`[admin] ▶ query: ${table}${extra ? ' · ' + extra : ''}`);
+}
+function logQR(table, data, error) {
+  if (error) {
+    console.error(`[admin] ✗ ${table} ERROR`,
+      '\n  code:', error.code, '\n  message:', error.message,
+      '\n  details:', error.details, '\n  hint:', error.hint);
+  } else {
+    console.log(`[admin] ✓ ${table} — rows:`, Array.isArray(data) ? data.length : (data ? 1 : 0));
+  }
+}
 
 const MONTHS_SHORT = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 
@@ -33,10 +47,12 @@ async function updateListingStatus(id, newStatus, btn) {
   btn.disabled    = true;
   btn.textContent = '...';
 
+  logQ('professional_listings UPDATE', `id=${id} status=${newStatus}`);
   const { error } = await window.supabase
     .from('professional_listings')
     .update({ status: newStatus })
     .eq('id', id);
+  logQR('professional_listings UPDATE', null, error);
 
   if (error) {
     showToast('Error: ' + error.message, '❌', 'error');
@@ -249,11 +265,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!session) return;
 
   /* Role check */
-  const { data: profile } = await window.supabase
+  logQ('profiles', `select(*) id=${session.user.id}`);
+  const { data: profile, error: profileErr } = await window.supabase
     .from('profiles')
-    .select('full_name, username, role')
+    .select('*')
     .eq('id', session.user.id)
     .single();
+  logQR('profiles', profile, profileErr);
 
   if (!profile || profile.role !== 'admin') {
     document.getElementById('admin-guard').style.display = 'block';
@@ -265,24 +283,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('admin-main').style.display   = 'block';
 
   /* ─── Load all data in parallel ─── */
+  console.log('[admin] loading data in parallel: professional_listings, bookings, profiles count');
+  logQ('professional_listings', 'select(*) all');
+  logQ('bookings', 'select(*) limit:50 order:created_at desc');
+  logQ('profiles', 'count only');
+
   const [
     { data: listings,   error: listErr },
     { data: bookings,   error: bkErr   },
-    { count: userCount },
+    { count: userCount, error: countErr },
   ] = await Promise.all([
     window.supabase
       .from('professional_listings')
-      .select('id, name, spec, svc_id, barrio, email, status, created_at')
+      .select('*')
       .order('created_at', { ascending: false }),
     window.supabase
       .from('bookings')
-      .select('id, pro_name, slot, scheduled_at, modality, status, fichas_spent, created_at')
+      .select('*')
       .order('created_at', { ascending: false })
       .limit(50),
     window.supabase
       .from('profiles')
       .select('id', { count: 'exact', head: true }),
   ]);
+
+  logQR('professional_listings', listings, listErr);
+  logQR('bookings', bookings, bkErr);
+  if (countErr) console.error('[admin] profiles count error:', countErr.code, countErr.message);
+  else console.log('[admin] profiles count:', userCount);
 
   /* ─── Render listings ─── */
   if (!listErr && listings) {
