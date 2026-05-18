@@ -44,6 +44,45 @@ function selectCombo(card, fichas, price, per, disc) {
 // Expose selectCombo so combo card onclick attributes can call it
 window.selectCombo = selectCombo;
 
+/* ── Mercado Pago demo fallback (static hosting) ── */
+function showPaymentDemoModal() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+  overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div style="background:white;border-radius:20px;padding:36px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center">
+      <div style="width:52px;height:52px;background:rgba(0,158,227,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#009EE3" stroke-width="2" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      </div>
+      <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:#18181b">Pago via Mercado Pago</h3>
+      <p style="font-size:0.86rem;color:#71717a;line-height:1.65;margin:0 0 6px">
+        En producción, este botón te redirige al checkout seguro de <strong>Mercado Pago</strong> para pagar con tarjeta, efectivo o transferencia.
+      </p>
+      <p style="font-size:0.82rem;color:#a1a1aa;margin:0 0 24px;line-height:1.5">
+        El API de pagos requiere deployment en Vercel. Para esta demo, podés simular la acreditación:
+      </p>
+      <button onclick="simulatePaymentSuccess(${selectedFichas}); this.closest('[style*=fixed]').remove()"
+        class="btn btn-primary btn-lg" style="width:100%;justify-content:center;background:#009EE3;border-color:#009EE3;margin-bottom:10px">
+        Simular pago exitoso →
+      </button>
+      <button onclick="this.closest('[style*=fixed]').remove()"
+        style="width:100%;background:none;border:none;color:#71717a;font-size:0.85rem;cursor:pointer;padding:6px">
+        Cancelar
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function simulatePaymentSuccess(fichas) {
+  const formCard  = el('payment-form-card');
+  const successEl = el('payment-success');
+  if (formCard)  formCard.style.display  = 'none';
+  if (successEl) successEl.style.display = 'flex';
+  setText('success-fichas', fichas);
+  showToast('Demo: ¡Pago simulado! Fichas acreditadas.', '✓', 'success');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 async function initiatePayment() {
   /* ── 1. Check Supabase client is ready ── */
   if (!window.supabase) {
@@ -103,10 +142,16 @@ async function initiatePayment() {
     location.href = payload.init_point;
 
   } catch (err) {
-    showToast(err.message, '❌', 'error');
+    const isApiUnavailable = err instanceof TypeError ||
+      (err.message && (err.message.includes('404') || err.message.includes('Failed to fetch')));
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = '💳 Pagar $<span id="pay-amount">' + selectedPrice.toLocaleString() + '</span> UYU con Mercado Pago →';
+    }
+    if (isApiUnavailable) {
+      showPaymentDemoModal();
+    } else {
+      showToast(err.message, '❌', 'error');
     }
   }
 }

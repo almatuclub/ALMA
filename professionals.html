@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Encontrar Profesional | alma+</title>
   <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
-  <link rel="stylesheet" href="style.css?v=27"/>
-  <link rel="stylesheet" href="pages.css?v=27"/>
+  <link rel="stylesheet" href="style.css?v=28"/>
+  <link rel="stylesheet" href="pages.css?v=28"/>
   <!-- Leaflet.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
@@ -103,7 +103,7 @@
       <div class="prof-list" id="prof-list">
 
         <!-- ── Valentina Suárez — Psicología ── -->
-        <div class="prof-card reveal" data-svc="psicologia" data-id="0" onclick="highlightMap(0)">
+        <div class="prof-card reveal" data-svc="psicologia" data-id="0" data-barrio="pocitos" data-modality="online" data-avail="hoy" onclick="highlightMap(0)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#F9A8C4,#BE185D)">VS</div>
@@ -163,7 +163,7 @@
         </div>
 
         <!-- ── Rodrigo Mena — Psiquiatría ── -->
-        <div class="prof-card reveal" data-svc="psiquiatria" data-id="1" onclick="highlightMap(1)">
+        <div class="prof-card reveal" data-svc="psiquiatria" data-id="1" data-barrio="cordon" data-modality="presencial" data-avail="semana" onclick="highlightMap(1)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#C4B5FD,#6D28D9)">RM</div>
@@ -222,7 +222,7 @@
         </div>
 
         <!-- ── Camila Ríos — Nutrición ── -->
-        <div class="prof-card reveal" data-svc="nutricion" data-id="2" onclick="highlightMap(2)">
+        <div class="prof-card reveal" data-svc="nutricion" data-id="2" data-barrio="punta-carretas" data-modality="both" data-avail="semana" onclick="highlightMap(2)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#6EE7B7,#065F46)">CR</div>
@@ -281,7 +281,7 @@
         </div>
 
         <!-- ── Agustín Ferreyra — Personal Trainer ── -->
-        <div class="prof-card reveal" data-svc="trainer" data-id="3" onclick="highlightMap(3)">
+        <div class="prof-card reveal" data-svc="trainer" data-id="3" data-barrio="parque-rodo" data-modality="presencial" data-avail="hoy" onclick="highlightMap(3)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#FCD34D,#B45309)">AF</div>
@@ -340,7 +340,7 @@
         </div>
 
         <!-- ── Lucía Montoya — Coaching ── -->
-        <div class="prof-card reveal" data-svc="coaching" data-id="4" onclick="highlightMap(4)">
+        <div class="prof-card reveal" data-svc="coaching" data-id="4" data-barrio="ciudad-vieja" data-modality="online" data-avail="hoy" onclick="highlightMap(4)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#67E8F9,#0E7490)">LM</div>
@@ -399,7 +399,7 @@
         </div>
 
         <!-- ── Ignacio Pereyra — Psicología infanto-juvenil ── -->
-        <div class="prof-card reveal" data-svc="psicologia" data-id="5" onclick="highlightMap(5)">
+        <div class="prof-card reveal" data-svc="psicologia" data-id="5" data-barrio="aguada" data-modality="both" data-avail="hoy" onclick="highlightMap(5)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#FDA4AF,#9F1239)">IP</div>
@@ -457,7 +457,7 @@
         </div>
 
         <!-- ── Sofía Álvarez — Nutrición clínica ── -->
-        <div class="prof-card reveal" data-svc="nutricion" data-id="6" onclick="highlightMap(6)">
+        <div class="prof-card reveal" data-svc="nutricion" data-id="6" data-barrio="malvin" data-modality="online" data-avail="semana" onclick="highlightMap(6)">
           <div class="prof-avatar-col">
             <div class="prof-avatar-wrap">
               <div class="prof-avatar" style="background:linear-gradient(135deg,#86EFAC,#14532D)">SA</div>
@@ -517,10 +517,10 @@
 
       </div><!-- /prof-list -->
 
-      <div class="pagination" style="margin-top:32px">
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
+      <div id="filter-empty" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;gap:12px">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.3" style="color:#d4d4d8" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0">Sin resultados</h3>
+        <p style="font-size:0.85rem;color:var(--text-2);margin:0">Probá con otros filtros o <button onclick="clearFilters()" style="background:none;border:none;color:var(--red);font-size:0.85rem;font-weight:600;cursor:pointer;padding:0">limpiá la búsqueda</button></p>
       </div>
     </div>
 
@@ -552,26 +552,33 @@
         <div class="filter-sep"></div>
         <div class="form-group">
           <label class="form-label">Barrio</label>
-          <select class="form-select">
-            <option>Todos los barrios</option>
-            <option>Pocitos</option><option>Cordón</option><option>Punta Carretas</option>
-            <option>Parque Rodó</option><option>Ciudad Vieja</option><option>Malvín</option><option>Aguada</option>
+          <select id="filter-barrio" class="form-select" onchange="applyFilter()">
+            <option value="">Todos los barrios</option>
+            <option value="pocitos">Pocitos</option>
+            <option value="cordon">Cordón</option>
+            <option value="punta-carretas">Punta Carretas</option>
+            <option value="parque-rodo">Parque Rodó</option>
+            <option value="ciudad-vieja">Ciudad Vieja</option>
+            <option value="malvin">Malvín</option>
+            <option value="aguada">Aguada</option>
           </select>
         </div>
         <div class="filter-sep"></div>
         <div class="form-group">
           <label class="form-label">Modalidad</label>
-          <select class="form-select">
-            <option>Online y presencial</option>
-            <option>Solo online</option><option>Solo presencial</option>
+          <select id="filter-modality" class="form-select" onchange="applyFilter()">
+            <option value="">Online y presencial</option>
+            <option value="online">Solo online</option>
+            <option value="presencial">Solo presencial</option>
           </select>
         </div>
         <div class="filter-sep"></div>
         <div class="form-group">
           <label class="form-label">Disponibilidad</label>
-          <select class="form-select">
-            <option>Cualquier momento</option>
-            <option>Disponible hoy</option><option>Esta semana</option>
+          <select id="filter-avail-sel" class="form-select" onchange="applyFilter()">
+            <option value="">Cualquier momento</option>
+            <option value="hoy">Disponible hoy</option>
+            <option value="semana">Esta semana</option>
           </select>
         </div>
         <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px" onclick="clearFilters()">Limpiar filtros</button>

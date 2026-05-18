@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   professionals.js  ·  alma+  v27
+   professionals.js  ·  alma+  v28
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Query logger ─── */
@@ -170,16 +170,27 @@ function highlightMap(id) {
 
 /* ─── Filters ─── */
 function applyFilter() {
-  const svc = document.getElementById('filter-svc').value;
+  const svc    = (document.getElementById('filter-svc')?.value       || '').trim();
+  const barrio = (document.getElementById('filter-barrio')?.value    || '').trim();
+  const mod    = (document.getElementById('filter-modality')?.value  || '').trim();
+  const avail  = (document.getElementById('filter-avail-sel')?.value || '').trim();
+
   let count = 0;
   document.querySelectorAll('.prof-card').forEach(c => {
-    const show = !svc || c.dataset.svc === svc;
+    const svcOk    = !svc    || c.dataset.svc      === svc;
+    const barrioOk = !barrio || c.dataset.barrio    === barrio;
+    const cardMod  = c.dataset.modality || '';
+    const modOk    = !mod    || cardMod === mod || cardMod === 'both';
+    const availOk  = !avail  || c.dataset.avail    === avail;
+    const show = svcOk && barrioOk && modOk && availOk;
     c.style.display = show ? '' : 'none';
     if (show) count++;
     const id = parseInt(c.dataset.id);
     if (markers[id]) markers[id].setOpacity(show ? 1 : 0.2);
   });
   document.getElementById('result-count').textContent = count;
+  const emptyEl = document.getElementById('filter-empty');
+  if (emptyEl) emptyEl.style.display = count === 0 ? 'flex' : 'none';
 }
 
 function filterChip(el, svc) {
@@ -190,9 +201,11 @@ function filterChip(el, svc) {
 }
 
 function clearFilters() {
-  document.getElementById('filter-svc').value = '';
+  ['filter-svc','filter-barrio','filter-modality','filter-avail-sel'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  document.querySelector('.chip').classList.add('active');
+  document.querySelector('.chip')?.classList.add('active');
   applyFilter();
 }
 
@@ -651,7 +664,7 @@ async function loadCustomPros() {
 
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[professionals] ══ DOMContentLoaded ══ v20 — public page, no auth required');
+  console.log('[professionals] ══ DOMContentLoaded ══ v28 — public page, no auth required');
   console.log('[professionals] pathname:', location.pathname, '· href:', location.href);
   // Load logged-in user's fichas and role from Supabase (optional, never blocks)
   if (window.supabase) {
@@ -682,13 +695,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('search-input')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') doSearch();
-  });
-
-  document.querySelectorAll('.page-btn').forEach(b => {
-    b.addEventListener('click', function () {
-      document.querySelectorAll('.page-btn').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-    });
   });
 
   const sp = new URLSearchParams(location.search).get('s');

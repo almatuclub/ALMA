@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   js/login.js · alma+ v27
+   js/login.js · alma+ v28
    Handles patient/professional login and registration.
    After success uses getReturnUrl() to send users back where they came from.
 ───────────────────────────────────────────────────────────────────────── */
@@ -132,6 +132,50 @@ async function handleRegister(e, type) {
     /* New users always go to onboarding */
     setTimeout(() => { location.href = 'onboarding.html'; }, 800);
   }
+}
+
+/* ── Password Reset ── */
+function openResetModal(emailPrefill) {
+  const modal = document.getElementById('reset-modal');
+  if (!modal) return;
+  const emailInput = document.getElementById('reset-email');
+  if (emailInput && emailPrefill) emailInput.value = emailPrefill;
+  document.getElementById('reset-form-state').style.display  = '';
+  document.getElementById('reset-success-state').style.display = 'none';
+  const btn = document.getElementById('reset-send-btn');
+  if (btn) { btn.disabled = false; btn.textContent = 'Enviar link de recuperación'; }
+  modal.style.display = 'flex';
+  setTimeout(() => emailInput?.focus(), 100);
+}
+
+function closeResetModal() {
+  const modal = document.getElementById('reset-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function sendPasswordReset() {
+  const emailInput = document.getElementById('reset-email');
+  const email      = emailInput?.value?.trim();
+  if (!email) {
+    emailInput?.classList.add('shake');
+    setTimeout(() => emailInput?.classList.remove('shake'), 500);
+    return;
+  }
+  const btn = document.getElementById('reset-send-btn');
+  btn.disabled    = true;
+  btn.textContent = 'Enviando...';
+  const { error } = await window.supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html',
+  });
+  if (error) {
+    btn.disabled    = false;
+    btn.textContent = 'Enviar link de recuperación';
+    showToast('No pudimos enviar el link. Verificá el email e intentá de nuevo.', '✗', 'error');
+    return;
+  }
+  document.getElementById('reset-form-state').style.display   = 'none';
+  document.getElementById('reset-success-state').style.display = 'block';
+  document.getElementById('reset-email-shown').textContent     = email;
 }
 
 /* ── Auto-switch to register if hash says so ── */
