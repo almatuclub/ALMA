@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   db.js · alma+ v17
+   db.js · alma+ v18
    Supabase client initialization + shared auth utilities.
    Loaded (defer) before every page script, so window.supabase,
    requireAuth(), optionalAuth() and getReturnUrl() are available globally.

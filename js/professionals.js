@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   professionals.js  ·  alma+  v14
+   professionals.js  ·  alma+  v18
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Availability helpers ─── */
@@ -216,8 +216,9 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
 
   const { data: { session } } = await window.supabase.auth.getSession();
   if (!session) {
+    console.log('[professionals] bookSlot: no session → prompting login');
     showToast('Para reservar necesitás iniciar sesión', '🔒', 'info');
-    setTimeout(() => { location.href = 'login.html'; }, 2000);
+    setTimeout(() => { location.href = 'login.html?return=professionals.html'; }, 2000);
     return;
   }
 
@@ -476,7 +477,11 @@ async function loadCustomPros() {
     .eq('status', 'approved')
     .order('created_at', { ascending: false });
 
-  if (error) { console.warn('[pros] loadCustomPros error:', error.message); return; }
+  if (error) {
+    console.error('[professionals] loadCustomPros query error:', error.message, '(code:', error.code, ')');
+    return;
+  }
+  console.log('[professionals] loadCustomPros: loaded', listings?.length ?? 0, 'listings');
   if (!listings || !listings.length) return;
 
   const list = document.getElementById('prof-list');
@@ -611,7 +616,8 @@ async function loadCustomPros() {
 
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load logged-in user's fichas and role from Supabase
+  console.log('[professionals] DOMContentLoaded — public page, no auth required');
+  // Load logged-in user's fichas and role from Supabase (optional, never blocks)
   if (window.supabase) {
     const { data: { session } } = await window.supabase.auth.getSession();
     if (session) {

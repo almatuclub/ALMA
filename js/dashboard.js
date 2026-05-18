@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/dashboard.js  ·  alma+  v16
+   js/dashboard.js  ·  alma+  v18
    Role-split dashboard — patient | professional | admin
    Includes: notifications, profile edit drawer, chat buttons
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -61,6 +61,68 @@ function emptyState(svgIcon, title, desc, cta = '') {
 
 const ICON_CALENDAR = `<svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.3"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
 
+/* ─── Fatal error state (never blank screen) ─── */
+function showFatalError(msg) {
+  const loading = document.getElementById('dash-loading');
+  if (loading) loading.style.display = 'none';
+  const existing = document.getElementById('dash-fatal-error');
+  if (existing) { existing.style.display = 'flex'; return; }
+
+  const el = document.createElement('div');
+  el.id = 'dash-fatal-error';
+  el.style.cssText = [
+    'display:flex','flex-direction:column','align-items:center','justify-content:center',
+    'min-height:60vh','text-align:center','padding:40px 20px','gap:16px'
+  ].join(';');
+  el.innerHTML = `
+    <svg width="44" height="44" fill="none" viewBox="0 0 24 24" stroke="#E53935" stroke-width="1.4">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h2 style="font-size:1.1rem;font-weight:700;color:var(--text);margin:0">
+      No pudimos cargar tu panel
+    </h2>
+    <p style="color:var(--text-2);font-size:0.88rem;margin:0;max-width:320px">
+      ${msg || 'Ocurrió un error inesperado. Intentá recargar la página.'}
+    </p>
+    <button onclick="location.reload()" class="btn btn-primary" style="margin-top:8px">
+      Reintentar
+    </button>
+    <a href="login.html" style="font-size:0.8rem;color:var(--text-2)">Volver al inicio de sesión</a>`;
+  document.body.appendChild(el);
+}
+
+/* ─── Soft onboarding banner (no hard redirect) ─── */
+function showOnboardingBanner() {
+  if (document.getElementById('onboarding-banner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'onboarding-banner';
+  banner.style.cssText = [
+    'background:linear-gradient(90deg,#FF8573,#DC3B35)',
+    'color:white','padding:10px 20px','display:flex','align-items:center',
+    'justify-content:space-between','gap:12px','font-size:0.85rem',
+    'flex-wrap:wrap','position:sticky','top:60px','z-index:90'
+  ].join(';');
+  banner.innerHTML = `
+    <span style="font-weight:600">
+      ✦ Completá tu perfil para una mejor experiencia
+    </span>
+    <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+      <a href="onboarding.html" style="background:rgba(255,255,255,0.22);color:white;padding:5px 14px;
+         border-radius:999px;font-size:0.8rem;font-weight:700;text-decoration:none;
+         border:1.5px solid rgba(255,255,255,0.4)">Completar ahora →</a>
+      <button onclick="this.closest('#onboarding-banner').remove()"
+        style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;
+               opacity:.7;padding:0 2px" aria-label="Cerrar">✕</button>
+    </div>`;
+  const nav = document.querySelector('nav.navbar');
+  if (nav && nav.nextSibling) {
+    nav.parentNode.insertBefore(banner, nav.nextSibling);
+  } else {
+    document.body.prepend(banner);
+  }
+}
+
 /* ─── "Add to Google Calendar" ─── */
 function addToGoogleCal(proName, isoTime, durationMins, modality, meetingLink) {
   if (!isoTime) return;
@@ -98,27 +160,35 @@ function escDash(str) {
 
 async function loadNotifications() {
   if (!window.supabase) return;
-  const { data: notifs } = await window.supabase
-    .from('notifications')
-    .select('id, type, title, body, link, read, created_at')
-    .order('created_at', { ascending: false })
-    .limit(30);
+  try {
+    const { data: notifs, error } = await window.supabase
+      .from('notifications')
+      .select('id, type, title, body, link, read, created_at')
+      .order('created_at', { ascending: false })
+      .limit(30);
 
-  if (!notifs) return;
+    if (error) {
+      console.warn('[dashboard] notifications query error:', error.message);
+      return;
+    }
+    if (!notifs) return;
 
-  const unread = notifs.filter(n => !n.read).length;
-  const badge  = document.getElementById('notif-badge');
-  if (badge) {
-    badge.textContent   = unread > 9 ? '9+' : unread;
-    badge.style.display = unread > 0 ? 'flex' : 'none';
-  }
+    const unread = notifs.filter(n => !n.read).length;
+    const badge  = document.getElementById('notif-badge');
+    if (badge) {
+      badge.textContent   = unread > 9 ? '9+' : unread;
+      badge.style.display = unread > 0 ? 'flex' : 'none';
+    }
 
-  const list = document.getElementById('notif-list');
-  if (!list) return;
-  if (!notifs.length) {
-    list.innerHTML = `<div class="notif-empty">Sin notificaciones nuevas</div>`;
-  } else {
-    list.innerHTML = notifs.map(renderNotifItem).join('');
+    const list = document.getElementById('notif-list');
+    if (!list) return;
+    if (!notifs.length) {
+      list.innerHTML = `<div class="notif-empty">Sin notificaciones nuevas</div>`;
+    } else {
+      list.innerHTML = notifs.map(renderNotifItem).join('');
+    }
+  } catch (err) {
+    console.warn('[dashboard] loadNotifications exception:', err.message);
   }
 }
 
@@ -350,13 +420,15 @@ async function saveProfileEdit() {
     if (fullName) {
       const nameEl = document.getElementById(_editRole === 'pro' ? 'pro-name' : 'p-name');
       if (nameEl) nameEl.textContent = _editRole === 'pro' ? fullName : `Hola, ${fullName.split(' ')[0]}`;
-      document.getElementById('nav-username').textContent = fullName;
+      const navUsername = document.getElementById('nav-username');
+      if (navUsername) navUsername.textContent = fullName;
     }
 
     showToast('Perfil actualizado correctamente', '✓', 'success');
     closeEditDrawer();
 
   } catch (err) {
+    console.error('[dashboard] saveProfileEdit error:', err.message);
     showToast('Error: ' + (err.message || 'No se pudo guardar'), '✗', 'error');
   } finally {
     btn.disabled    = false;
@@ -471,6 +543,7 @@ async function updateBookingStatus(bookingId, newStatus, btn) {
     .from('bookings').update({ status: newStatus }).eq('id', bookingId);
 
   if (error) {
+    console.error('[dashboard] updateBookingStatus error:', error.message);
     showToast('Error: ' + error.message, '❌', 'error');
     btn.disabled    = false;
     btn.textContent = newStatus === 'confirmed' ? 'Confirmar' : 'Rechazar';
@@ -495,61 +568,135 @@ async function updateBookingStatus(bookingId, newStatus, btn) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   LOAD PROFILE — resilient to missing v16 columns
+   ═══════════════════════════════════════════════════════════════════════════ */
+async function loadProfile(userId) {
+  /* Step 1: try select * (works if schema is up-to-date) */
+  console.log('[dashboard] loading profile for user:', userId);
+  const { data: profile, error } = await window.supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (!error && profile) {
+    console.log('[dashboard] profile loaded OK, role:', profile.role);
+    return profile;
+  }
+
+  /* Step 2: column or schema error — fall back to core columns only */
+  if (error) {
+    console.warn('[dashboard] select(*) failed:', error.message, '— trying core columns fallback');
+    const { data: fallback, error: fallbackErr } = await window.supabase
+      .from('profiles')
+      .select('id, username, full_name, role, fichas')
+      .eq('id', userId)
+      .single();
+
+    if (!fallbackErr && fallback) {
+      console.log('[dashboard] fallback profile loaded, role:', fallback.role);
+      /* Fill in defaults for missing v16 columns */
+      return {
+        ...fallback,
+        bio:                null,
+        avatar_color:       null,
+        onboarding_complete: false,
+        onboarding_data:    null,
+      };
+    }
+
+    console.error('[dashboard] profile fallback also failed:', fallbackErr?.message);
+  }
+
+  /* Step 3: profile row missing — auto-create a minimal one */
+  console.warn('[dashboard] profile not found — attempting to create default profile');
+  const { data: created, error: createErr } = await window.supabase
+    .from('profiles')
+    .insert({ id: userId, role: 'patient', fichas: 0 })
+    .select('id, username, full_name, role, fichas')
+    .single();
+
+  if (!createErr && created) {
+    console.log('[dashboard] default profile created OK');
+    return {
+      ...created,
+      bio:                null,
+      avatar_color:       null,
+      onboarding_complete: false,
+      onboarding_data:    null,
+    };
+  }
+
+  console.error('[dashboard] could not create profile:', createErr?.message);
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    MAIN INIT
    ═══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('[dashboard] DOMContentLoaded — starting auth check');
 
-  /* ─── Auth guard: wait for session (handles refresh/timing) ─── */
-  const session = await requireAuth('login.html');
-  if (!session) return; // requireAuth redirected
+  try {
+    /* ─── Auth guard ─── */
+    const session = await requireAuth('login.html');
+    if (!session) {
+      console.log('[dashboard] no session → redirecting to login');
+      return;
+    }
+    console.log('[dashboard] session OK, user:', session.user.id);
 
-  /* ─── Load profile ─── */
-  const { data: profile, error: profileErr } = await window.supabase
-    .from('profiles')
-    .select('username, full_name, role, fichas, bio, avatar_color, onboarding_complete, onboarding_data')
-    .eq('id', session.user.id)
-    .single();
+    /* ─── Load profile (resilient) ─── */
+    const profile = await loadProfile(session.user.id);
 
-  if (profileErr || !profile) {
-    console.error('[dash] Profile load failed:', profileErr?.message);
-    location.href = 'login.html';
-    return;
-  }
+    if (!profile) {
+      console.error('[dashboard] profile could not be loaded or created — showing error state');
+      showFatalError('No pudimos cargar tu perfil. Por favor, cerrá sesión e intentá de nuevo.');
+      return;
+    }
 
-  /* ─── Redirect to onboarding if not completed ─── */
-  if (!profile.onboarding_complete) {
-    console.log('[dash] Onboarding not complete → onboarding.html');
-    location.href = 'onboarding.html';
-    return;
-  }
+    /* ─── Soft onboarding nudge (no hard redirect) ─── */
+    if (!profile.onboarding_complete) {
+      console.log('[dashboard] onboarding_complete=false — showing soft banner (not blocking)');
+      showOnboardingBanner();
+    }
 
-  /* Store for edit drawer */
-  _editSession = session;
-  _editProfile = profile;
-  _editColor   = profile.avatar_color || '#E53935';
+    /* Store for edit drawer */
+    _editSession = session;
+    _editProfile = profile;
+    _editColor   = profile.avatar_color || '#E53935';
 
-  const displayName = profile.full_name || profile.username || session.user.email.split('@')[0];
-  document.getElementById('nav-username').textContent = displayName;
+    const displayName = profile.full_name || profile.username || session.user.email?.split('@')[0] || 'Usuario';
+    const navUsername = document.getElementById('nav-username');
+    if (navUsername) navUsername.textContent = displayName;
 
-  /* Hide skeleton */
-  document.getElementById('dash-loading').style.display = 'none';
+    /* Hide skeleton */
+    const loadingEl = document.getElementById('dash-loading');
+    if (loadingEl) loadingEl.style.display = 'none';
 
-  /* ─── Start notification polling ─── */
-  loadNotifications();
-  _notifPolling = setInterval(loadNotifications, 30000);
+    /* ─── Notifications ─── */
+    loadNotifications();
+    _notifPolling = setInterval(loadNotifications, 30000);
 
-  /* ─── Route by role ─── */
-  const role = profile.role || 'patient';
+    /* ─── Route by role ─── */
+    const role = profile.role || 'patient';
+    console.log('[dashboard] routing to role:', role);
 
-  if (role === 'admin') {
-    document.getElementById('dash-admin').style.display = 'block';
-    return;
-  }
+    if (role === 'admin') {
+      const adminView = document.getElementById('dash-admin');
+      if (adminView) adminView.style.display = 'block';
+      return;
+    }
 
-  if (role === 'pro') {
-    await initProDashboard(session, profile, displayName);
-  } else {
-    await initPatientDashboard(session, profile, displayName);
+    if (role === 'pro') {
+      await initProDashboard(session, profile, displayName);
+    } else {
+      await initPatientDashboard(session, profile, displayName);
+    }
+
+  } catch (err) {
+    console.error('[dashboard] CRITICAL init error:', err.message, err);
+    showFatalError('Ocurrió un error inesperado al cargar tu panel.');
   }
 });
 
@@ -557,63 +704,92 @@ document.addEventListener('DOMContentLoaded', async () => {
    PATIENT DASHBOARD
    ═══════════════════════════════════════════════════════════════════════════ */
 async function initPatientDashboard(session, profile, displayName) {
-  const view = document.getElementById('dash-patient');
-  view.style.display = 'block';
+  console.log('[dashboard] initPatientDashboard');
+  try {
+    const view = document.getElementById('dash-patient');
+    if (!view) { console.error('[dashboard] #dash-patient element not found'); return; }
+    view.style.display = 'block';
 
-  /* Header */
-  const initials = displayName.split(' ').filter(Boolean).map(w => w[0])
-                   .join('').toUpperCase().slice(0, 2) || '?';
-  const avatarEl = document.getElementById('p-avatar');
-  avatarEl.textContent         = initials;
-  avatarEl.style.background    = profile.avatar_color || 'var(--red)';
-  document.getElementById('p-name').textContent   = `Hola, ${displayName.split(' ')[0]}`;
-  document.getElementById('p-fichas').textContent = profile.fichas ?? 0;
+    /* Header */
+    const initials = displayName.split(' ').filter(Boolean).map(w => w[0])
+                     .join('').toUpperCase().slice(0, 2) || '?';
+    const avatarEl = document.getElementById('p-avatar');
+    if (avatarEl) {
+      avatarEl.textContent      = initials;
+      avatarEl.style.background = profile.avatar_color || 'var(--red)';
+    }
 
-  /* Load bookings */
-  const { data: bookings, error } = await window.supabase
-    .from('bookings')
-    .select('id, pro_name, slot, scheduled_at, modality, meeting_link, status, fichas_spent')
-    .eq('patient_id', session.user.id)
-    .order('scheduled_at', { ascending: true, nullsFirst: false });
+    const nameEl = document.getElementById('p-name');
+    if (nameEl) nameEl.textContent = `Hola, ${displayName.split(' ')[0]}`;
 
-  if (error) console.warn('[dash] bookings error:', error.message);
+    const fichasEl = document.getElementById('p-fichas');
+    if (fichasEl) fichasEl.textContent = profile.fichas ?? 0;
 
-  const all = bookings || [];
-  const now = new Date();
+    /* Load bookings */
+    console.log('[dashboard] loading patient bookings');
+    const { data: bookings, error } = await window.supabase
+      .from('bookings')
+      .select('id, pro_name, slot, scheduled_at, modality, meeting_link, status, fichas_spent')
+      .eq('patient_id', session.user.id)
+      .order('scheduled_at', { ascending: true, nullsFirst: false });
 
-  const upcoming = all.filter(b => {
-    if (b.status === 'cancelled') return false;
-    if (!b.scheduled_at)         return ['confirmed','pending'].includes(b.status);
-    return new Date(b.scheduled_at) >= now;
-  });
+    if (error) {
+      console.error('[dashboard] patient bookings error:', error.message, '(code:', error.code, ')');
+    }
 
-  const past = all.filter(b => {
-    if (b.status === 'cancelled') return true;
-    if (b.status === 'completed') return true;
-    if (b.scheduled_at && new Date(b.scheduled_at) < now) return true;
-    return false;
-  }).reverse().slice(0, 12);
+    const all = bookings || [];
+    console.log('[dashboard] patient bookings loaded:', all.length);
+    const now = new Date();
 
-  /* Render upcoming */
-  const upcomingEl = document.getElementById('p-upcoming-list');
-  if (upcoming.length) {
-    upcomingEl.innerHTML = upcoming.map(renderUpcomingCard).join('');
-  } else {
-    upcomingEl.innerHTML = emptyState(
-      ICON_CALENDAR,
-      'Sin sesiones próximas',
-      'Aún no tenés turnos reservados. Encontrá un profesional y agendá tu primera sesión.',
-      `<a href="professionals.html" class="btn btn-primary" style="margin-top:16px">Encontrar profesional →</a>`
-    );
-  }
+    const upcoming = all.filter(b => {
+      if (b.status === 'cancelled') return false;
+      if (!b.scheduled_at)         return ['confirmed','pending'].includes(b.status);
+      return new Date(b.scheduled_at) >= now;
+    });
 
-  /* Render past */
-  const pastSection = document.getElementById('p-past-section');
-  const pastEl      = document.getElementById('p-past-list');
-  if (past.length) {
-    pastEl.innerHTML = past.map(renderPastRow).join('');
-  } else {
-    pastSection.style.display = 'none';
+    const past = all.filter(b => {
+      if (b.status === 'cancelled') return true;
+      if (b.status === 'completed') return true;
+      if (b.scheduled_at && new Date(b.scheduled_at) < now) return true;
+      return false;
+    }).reverse().slice(0, 12);
+
+    /* Render upcoming */
+    const upcomingEl = document.getElementById('p-upcoming-list');
+    if (upcomingEl) {
+      if (upcoming.length) {
+        upcomingEl.innerHTML = upcoming.map(renderUpcomingCard).join('');
+      } else {
+        upcomingEl.innerHTML = emptyState(
+          ICON_CALENDAR,
+          'Sin sesiones próximas',
+          'Aún no tenés turnos reservados. Encontrá un profesional y agendá tu primera sesión.',
+          `<a href="professionals.html" class="btn btn-primary" style="margin-top:16px">Encontrar profesional →</a>`
+        );
+      }
+    }
+
+    /* Render past */
+    const pastSection = document.getElementById('p-past-section');
+    const pastEl      = document.getElementById('p-past-list');
+    if (past.length && pastEl) {
+      pastEl.innerHTML = past.map(renderPastRow).join('');
+    } else if (pastSection) {
+      pastSection.style.display = 'none';
+    }
+
+  } catch (err) {
+    console.error('[dashboard] initPatientDashboard error:', err.message, err);
+    /* Show partial error — don't blank the whole page, patient view is already visible */
+    const upcomingEl = document.getElementById('p-upcoming-list');
+    if (upcomingEl && !upcomingEl.innerHTML) {
+      upcomingEl.innerHTML = emptyState(
+        ICON_CALENDAR,
+        'Error al cargar sesiones',
+        'No pudimos obtener tus reservas. Intentá recargar la página.',
+        `<button onclick="location.reload()" class="btn btn-outline btn-sm" style="margin-top:12px">Recargar</button>`
+      );
+    }
   }
 }
 
@@ -621,107 +797,150 @@ async function initPatientDashboard(session, profile, displayName) {
    PROFESSIONAL DASHBOARD
    ═══════════════════════════════════════════════════════════════════════════ */
 async function initProDashboard(session, profile, displayName) {
-  const view = document.getElementById('dash-pro');
-  view.style.display = 'block';
+  console.log('[dashboard] initProDashboard');
+  try {
+    const view = document.getElementById('dash-pro');
+    if (!view) { console.error('[dashboard] #dash-pro element not found'); return; }
+    view.style.display = 'block';
 
-  /* Header */
-  const initials = displayName.split(' ').filter(Boolean).map(w => w[0])
-                   .join('').toUpperCase().slice(0, 2) || '?';
-  const avatarEl = document.getElementById('pro-avatar');
-  avatarEl.textContent      = initials;
-  avatarEl.style.background = profile.avatar_color || 'rgba(255,255,255,0.25)';
-  document.getElementById('pro-name').textContent = displayName;
+    /* Header */
+    const initials = displayName.split(' ').filter(Boolean).map(w => w[0])
+                     .join('').toUpperCase().slice(0, 2) || '?';
+    const avatarEl = document.getElementById('pro-avatar');
+    if (avatarEl) {
+      avatarEl.textContent      = initials;
+      avatarEl.style.background = profile.avatar_color || 'rgba(255,255,255,0.25)';
+    }
 
-  /* Load their listing */
-  const { data: listings } = await window.supabase
-    .from('professional_listings')
-    .select('id, spec, status, modality, bio, meeting_link, price')
-    .eq('user_id', session.user.id)
-    .order('created_at', { ascending: false })
-    .limit(1);
+    const proNameEl = document.getElementById('pro-name');
+    if (proNameEl) proNameEl.textContent = displayName;
 
-  const listing = listings?.[0] ?? null;
-  _editListing  = listing;
+    /* Load their listing */
+    console.log('[dashboard] loading pro listing');
+    const { data: listings, error: listErr } = await window.supabase
+      .from('professional_listings')
+      .select('id, spec, status, modality, bio, meeting_link, price')
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
 
-  if (listing) {
-    document.getElementById('pro-spec').textContent = listing.spec || 'Profesional de salud';
-    const badge = document.getElementById('pro-listing-badge');
-    const STATUS_MAP = {
-      approved: `<span class="listing-badge listing-badge--approved">Perfil verificado</span>`,
-      pending:  `<span class="listing-badge listing-badge--pending">En revisión</span>`,
-      rejected: `<span class="listing-badge listing-badge--rejected">Perfil rechazado · <a href="apply.html" style="color:inherit;text-decoration:underline">Volver a enviar</a></span>`,
-    };
-    badge.innerHTML = STATUS_MAP[listing.status] || '';
-  } else {
-    document.getElementById('pro-spec').textContent = 'Profesional de salud';
-    document.getElementById('pro-listing-badge').innerHTML =
-      `<a href="apply.html" class="listing-badge listing-badge--missing">Completar perfil →</a>`;
-  }
+    if (listErr) {
+      console.error('[dashboard] listing load error:', listErr.message, '(code:', listErr.code, ')');
+    }
 
-  /* Load bookings for this listing */
-  let bookings = [];
-  if (listing) {
-    const { data, error } = await window.supabase
-      .from('bookings')
-      .select('id, patient_id, slot, scheduled_at, modality, status, fichas_spent, created_at')
-      .eq('listing_id', listing.id)
-      .order('scheduled_at', { ascending: true, nullsFirst: false });
+    const listing = listings?.[0] ?? null;
+    _editListing  = listing;
+    console.log('[dashboard] listing:', listing?.id || 'none', 'status:', listing?.status || 'n/a');
 
-    if (!error && data) bookings = data;
-    else if (error) console.warn('[dash-pro] bookings error:', error.message);
-  }
+    const specEl  = document.getElementById('pro-spec');
+    const badgeEl = document.getElementById('pro-listing-badge');
 
-  const now        = new Date();
-  const todayStart = new Date(now); todayStart.setHours(0,0,0,0);
-  const todayEnd   = new Date(now); todayEnd.setHours(23,59,59,999);
+    if (listing) {
+      if (specEl)  specEl.textContent = listing.spec || 'Profesional de salud';
+      if (badgeEl) {
+        const STATUS_MAP = {
+          approved: `<span class="listing-badge listing-badge--approved">Perfil verificado</span>`,
+          pending:  `<span class="listing-badge listing-badge--pending">En revisión</span>`,
+          rejected: `<span class="listing-badge listing-badge--rejected">Perfil rechazado · <a href="apply.html" style="color:inherit;text-decoration:underline">Volver a enviar</a></span>`,
+        };
+        badgeEl.innerHTML = STATUS_MAP[listing.status] || '';
+      }
+    } else {
+      if (specEl)  specEl.textContent = 'Profesional de salud';
+      if (badgeEl) badgeEl.innerHTML =
+        `<a href="apply.html" class="listing-badge listing-badge--missing">Completar perfil →</a>`;
+    }
 
-  const pending  = bookings.filter(b => b.status === 'pending');
-  const upcoming = bookings.filter(b =>
-    b.status !== 'cancelled' && b.status !== 'pending' &&
-    b.scheduled_at && new Date(b.scheduled_at) >= now
-  );
-  const todaySessions = bookings.filter(b =>
-    b.scheduled_at &&
-    new Date(b.scheduled_at) >= todayStart &&
-    new Date(b.scheduled_at) <= todayEnd &&
-    b.status !== 'cancelled'
-  );
+    /* Load bookings for this listing */
+    let bookings = [];
+    if (listing) {
+      console.log('[dashboard] loading pro bookings for listing:', listing.id);
+      const { data, error } = await window.supabase
+        .from('bookings')
+        .select('id, patient_id, slot, scheduled_at, modality, status, fichas_spent, created_at')
+        .eq('listing_id', listing.id)
+        .order('scheduled_at', { ascending: true, nullsFirst: false });
 
-  const nowM = new Date();
-  const fichasMonth = bookings
-    .filter(b => {
-      if (!b.created_at || b.status === 'cancelled') return false;
-      const d = new Date(b.created_at);
-      return d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear();
-    })
-    .reduce((s, b) => s + (b.fichas_spent || 0), 0);
+      if (!error && data) {
+        bookings = data;
+        console.log('[dashboard] pro bookings loaded:', bookings.length);
+      } else if (error) {
+        console.error('[dashboard] pro bookings error:', error.message, '(code:', error.code, ')');
+      }
+    }
 
-  document.getElementById('stat-today').textContent = todaySessions.length;
-  document.getElementById('stat-month').textContent = fichasMonth + '+';
-  document.getElementById('stat-total').textContent = bookings.filter(b => b.status !== 'cancelled').length;
+    const now        = new Date();
+    const todayStart = new Date(now); todayStart.setHours(0,0,0,0);
+    const todayEnd   = new Date(now); todayEnd.setHours(23,59,59,999);
 
-  /* Pending requests */
-  if (pending.length) {
-    document.getElementById('pro-pending-section').style.display = 'block';
-    document.getElementById('pro-pending-badge').textContent     = pending.length;
-    document.getElementById('pro-pending-list').innerHTML        = pending.map(b => renderProRow(b, true)).join('');
-  }
-
-  /* Upcoming patients */
-  const upEl = document.getElementById('pro-upcoming-list');
-  if (upcoming.length) {
-    upEl.innerHTML = upcoming.map(b => renderProRow(b, false)).join('');
-  } else {
-    upEl.innerHTML = emptyState(
-      ICON_CALENDAR,
-      'Sin pacientes próximos',
-      listing?.status === 'pending'
-        ? 'Tu perfil está en revisión. Una vez aprobado aparecerás en el directorio.'
-        : 'Cuando un paciente reserve una sesión aparecerá aquí.',
-      listing?.status === 'pending'
-        ? ''
-        : `<a href="professionals.html" class="btn btn-outline btn-sm" style="margin-top:16px">Ver mi perfil en el directorio</a>`
+    const pending  = bookings.filter(b => b.status === 'pending');
+    const upcoming = bookings.filter(b =>
+      b.status !== 'cancelled' && b.status !== 'pending' &&
+      b.scheduled_at && new Date(b.scheduled_at) >= now
     );
+    const todaySessions = bookings.filter(b =>
+      b.scheduled_at &&
+      new Date(b.scheduled_at) >= todayStart &&
+      new Date(b.scheduled_at) <= todayEnd &&
+      b.status !== 'cancelled'
+    );
+
+    const nowM = new Date();
+    const fichasMonth = bookings
+      .filter(b => {
+        if (!b.created_at || b.status === 'cancelled') return false;
+        const d = new Date(b.created_at);
+        return d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear();
+      })
+      .reduce((s, b) => s + (b.fichas_spent || 0), 0);
+
+    const statToday = document.getElementById('stat-today');
+    const statMonth = document.getElementById('stat-month');
+    const statTotal = document.getElementById('stat-total');
+    if (statToday) statToday.textContent = todaySessions.length;
+    if (statMonth) statMonth.textContent = fichasMonth + '+';
+    if (statTotal) statTotal.textContent = bookings.filter(b => b.status !== 'cancelled').length;
+
+    /* Pending requests */
+    const pendingSection = document.getElementById('pro-pending-section');
+    if (pending.length && pendingSection) {
+      pendingSection.style.display = 'block';
+      const pendingBadge = document.getElementById('pro-pending-badge');
+      const pendingList  = document.getElementById('pro-pending-list');
+      if (pendingBadge) pendingBadge.textContent = pending.length;
+      if (pendingList)  pendingList.innerHTML    = pending.map(b => renderProRow(b, true)).join('');
+    }
+
+    /* Upcoming patients */
+    const upEl = document.getElementById('pro-upcoming-list');
+    if (upEl) {
+      if (upcoming.length) {
+        upEl.innerHTML = upcoming.map(b => renderProRow(b, false)).join('');
+      } else {
+        upEl.innerHTML = emptyState(
+          ICON_CALENDAR,
+          'Sin pacientes próximos',
+          listing?.status === 'pending'
+            ? 'Tu perfil está en revisión. Una vez aprobado aparecerás en el directorio.'
+            : 'Cuando un paciente reserve una sesión aparecerá aquí.',
+          listing?.status === 'pending'
+            ? ''
+            : `<a href="professionals.html" class="btn btn-outline btn-sm" style="margin-top:16px">Ver mi perfil en el directorio</a>`
+        );
+      }
+    }
+
+  } catch (err) {
+    console.error('[dashboard] initProDashboard error:', err.message, err);
+    const upEl = document.getElementById('pro-upcoming-list');
+    if (upEl && !upEl.innerHTML) {
+      upEl.innerHTML = emptyState(
+        ICON_CALENDAR,
+        'Error al cargar datos',
+        'No pudimos obtener tu información. Intentá recargar la página.',
+        `<button onclick="location.reload()" class="btn btn-outline btn-sm" style="margin-top:12px">Recargar</button>`
+      );
+    }
   }
 }
 
