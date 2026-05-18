@@ -1,5 +1,5 @@
 /* ============================================
-   alma+ — Shared JavaScript  v22
+   alma+ — Shared JavaScript  v24
    ============================================ */
 
 // ─── Navbar scroll effect ───
@@ -232,7 +232,7 @@ window.logout = async function () {
 async function initUserSession() {
   /* Skip on private pages — they have their own auth + profile loading */
   const _page = location.pathname.split('/').pop() || 'index.html';
-  const _PRIVATE = ['dashboard.html','admin.html','onboarding.html','chat.html','apply.html','payment.html'];
+  const _PRIVATE = ['dashboard.html','admin.html','onboarding.html','chat.html','apply.html'];
   if (_PRIVATE.includes(_page)) {
     console.log('[script] initUserSession: private page, skipping (page JS handles auth)');
     return;

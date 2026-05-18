@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   professionals.js  ·  alma+  v20
+   professionals.js  ·  alma+  v24
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Query logger ─── */
@@ -291,17 +291,17 @@ async function bookSlot(evt, name, slotLabel, price, isoTime, listingId) {
     return;
   }
 
-  /* Create booking row */
+  /* Create booking row — uses real schema column names (v23 fix) */
   logQ('bookings INSERT', `pro=${name} slot=${slotLabel}`);
   const { error: bkInsertErr } = await window.supabase.from('bookings').insert({
-    patient_id:   session.user.id,
-    listing_id:   listingId   || null,
-    pro_name:     name,
-    slot:         slotLabel,
-    fichas_spent: isAdmin ? 0 : price,
-    scheduled_at: isoTime     ? new Date(isoTime).toISOString() : null,
-    modality:     bookingModality,
-    meeting_link: meetingLink,
+    patient_id:          session.user.id,
+    listing_id:          listingId   || null,
+    professional_name:   name,          // real column (was: pro_name)
+    session_datetime:    slotLabel,     // real column (was: slot)
+    fichas_spent:        isAdmin ? 0 : price,
+    scheduled_at:        isoTime     ? new Date(isoTime).toISOString() : null,
+    modality:            bookingModality,
+    meeting_link:        meetingLink,
   });
   logQR('bookings INSERT', null, bkInsertErr);
 

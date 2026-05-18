@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   js/login.js · alma+ v17
+   js/login.js · alma+ v24
    Handles patient/professional login and registration.
    After success uses getReturnUrl() to send users back where they came from.
 ───────────────────────────────────────────────────────────────────────── */
@@ -107,6 +107,27 @@ async function handleRegister(e, type) {
     }
 
     console.log('[login] Register OK:', data.user?.email);
+
+    /* ── Create profiles row immediately.
+       Supabase Auth creates the auth.users entry but NOT the public.profiles row.
+       Without this, onboarding.html and dashboard.js get null profile → redirect loop.
+       ON CONFLICT DO NOTHING makes it safe if a DB trigger already created the row. ── */
+    if (data.user) {
+      const fullName = `${name} ${lastName}`.trim();
+      const { error: profErr } = await window.supabase
+        .from('profiles')
+        .upsert({
+          id:        data.user.id,
+          username:  fullName,
+          full_name: fullName,
+          role:      'patient',
+          fichas:    0,
+          onboarding_complete: false,
+        }, { onConflict: 'id', ignoreDuplicates: true });
+      if (profErr) console.warn('[login] profiles upsert error (non-fatal):', profErr.code, profErr.message);
+      else         console.log('[login] profiles row created for', data.user.id);
+    }
+
     showToast('¡Cuenta creada con éxito!', '🎉', 'success');
     /* New users always go to onboarding */
     setTimeout(() => { location.href = 'onboarding.html'; }, 800);

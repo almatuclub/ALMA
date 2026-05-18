@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/admin.js  ·  alma+  v22
+   js/admin.js  ·  alma+  v24
    Admin panel — approve/reject professionals, view bookings, view stats
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -190,7 +190,7 @@ function renderActivityFeed(bookings, listings) {
       ts:    b.created_at,
       icon:  '📅',
       cls:   'activity-icon--booking',
-      title: `Nueva reserva con ${b.pro_name || '—'}`,
+      title: `Nueva reserva con ${b.professional_name || '—'}`,
     });
   });
 
@@ -343,9 +343,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bookingsTbody = document.getElementById('bookings-body');
     if (bookings.length) {
       bookingsTbody.innerHTML = bookings.map(b => {
-        const dateStr = b.scheduled_at ? fmtDateAdmin(b.scheduled_at) : (b.slot || '—');
+        const dateStr = b.scheduled_at ? fmtDateAdmin(b.scheduled_at) : (b.session_datetime || '—');
         return `<tr>
-          <td><strong>${b.pro_name || '—'}</strong></td>
+          <td><strong>${b.professional_name || '—'}</strong></td>
           <td>${dateStr}</td>
           <td>${b.modality || '—'}</td>
           <td>${statusChip(b.status)}</td>

@@ -4,8 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chat | alma+</title>
-  <link rel="stylesheet" href="style.css?v=22"/>
-  <link rel="stylesheet" href="pages.css?v=22"/>
+  <link rel="stylesheet" href="style.css?v=24"/>
+  <link rel="stylesheet" href="pages.css?v=24"/>
   <style>
     html, body { height: 100%; overflow: hidden; }
     body { display: flex; flex-direction: column; }
@@ -294,10 +294,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  /* Load booking metadata */
+  /* Load booking metadata — uses real schema column names (v23 fix) */
   const { data: booking } = await window.supabase
     .from('bookings')
-    .select('id, pro_name, patient_id, listing_id, slot, scheduled_at, status')
+    .select('id, professional_name, patient_id, listing_id, session_datetime, scheduled_at, status')
     .eq('id', _bookingId)
     .single();
 
@@ -310,17 +310,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* Determine who I'm talking to */
   const amPatient = booking.patient_id === _myId;
-  const otherName = amPatient ? booking.pro_name : 'Paciente';
+  const otherName = amPatient
+    ? (booking.professional_name || 'Profesional')
+    : 'Paciente';
 
   const initials = otherName.replace(/^(Lic\.|Dr\.|Prof\.|Mg\.)\s*/i,'')
                     .split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) || '?';
   document.getElementById('chat-other-avatar').textContent = initials;
   document.getElementById('chat-other-name').textContent   = otherName;
 
-  const slot = booking.slot || (booking.scheduled_at
-    ? new Date(booking.scheduled_at).toLocaleString('es-UY', { dateStyle:'short', timeStyle:'short' })
-    : 'Turno confirmado');
-  document.getElementById('chat-other-sub').textContent = `${slot} · alma+`;
+  const sessionLabel = booking.session_datetime
+    || (booking.scheduled_at
+      ? new Date(booking.scheduled_at).toLocaleString('es-UY', { dateStyle:'short', timeStyle:'short' })
+      : 'Turno confirmado');
+  document.getElementById('chat-other-sub').textContent = `${sessionLabel} · alma+`;
 
   /* Load messages */
   await loadMessages(true);
