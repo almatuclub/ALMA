@@ -3886,9 +3886,28 @@
   z-index: 5 !important;
 }
 
-/* ── Mobile: hide mockup, keep only hero text ── */
-@media (max-width: 900px) {
-  .hero__mockup { display: none !important; }
-  .hero__pill   { display: none !important; }
+/* ── Mobile: show mockup as centered card below hero text ── */
+@media (max-width: 1024px) {
+  /* Un-hide the visual column (base CSS sets display:none here) */
+  .hero__visual {
+    display: block !important;
+    height: auto !important;
+    margin-top: 36px;
+    padding: 0 4px 8px;
+  }
+  /* Mockup: leave absolute flow, become normal block */
+  .hero__mockup {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 390px;
+    margin: 0 auto;
+    animation: none !important;  /* no float on mobile */
+  }
+  /* Hide decorative elements that don't make sense without parallax */
+  .hero__blob        { display: none !important; }
+  .hero__mouse-glow  { display: none !important; }
+  .hero__pill        { display: none !important; }
 }
 
