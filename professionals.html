@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z' fill='%23DC3B35'/%3E%3C/svg%3E"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Encontrar Profesional | alma+</title>
   <meta name="description" content="Buscá psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Montevideo."/>
@@ -153,8 +154,8 @@
               <div class="prof-price-meta"><small>/ sesión</small><div class="uyu">$3.200 UYU</div></div>
             </div>
             <div class="avail"><span class="dot"></span>Disponible hoy</div>
-            <a href="payment.html" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Reservar</a>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Valentina Suárez', 8); event.stopPropagation()">Reservar</button>
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -213,7 +214,7 @@
             </div>
             <div class="avail busy"><span class="dot"></span>Esta semana</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Dr. Mena', 12); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -272,7 +273,7 @@
             </div>
             <div class="avail busy"><span class="dot"></span>Esta semana</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Ríos', 6); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -331,7 +332,7 @@
             </div>
             <div class="avail"><span class="dot"></span>Disponible hoy</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Agustín', 5); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -390,7 +391,7 @@
             </div>
             <div class="avail"><span class="dot"></span>Disponible hoy</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lucía', 7); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -448,7 +449,7 @@
             </div>
             <div class="avail"><span class="dot"></span>Disponible hoy</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Pereyra', 8); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -507,7 +508,7 @@
             </div>
             <div class="avail busy"><span class="dot"></span>Esta semana</div>
             <button class="btn btn-primary btn-sm" onclick="openBookingPopup('Lic. Álvarez', 6); event.stopPropagation()">Reservar</button>
-            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation()">
+            <button class="btn btn-outline btn-sm prof-msg-btn" onclick="event.stopPropagation();showToast('Reservá una sesión primero para chatear con el profesional.','💬','info')">
               <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Mensaje
             </button>
@@ -671,6 +672,7 @@
 <script src="db.js" defer></script>
 <script src="script.js" defer></script>
 <script src="js/professionals.js" defer></script>
+<script src="js/effects.js" defer></script>
 
 </body>
 </html>
