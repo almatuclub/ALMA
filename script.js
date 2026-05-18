@@ -1,5 +1,5 @@
 /* ============================================
-   alma+ — Shared JavaScript  v25
+   alma+ — Shared JavaScript  v26
    ============================================ */
 
 // ─── Navbar scroll effect ───
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ══════════════════════════════════════════════════════════════════════════
-   v25 MOTION SYSTEM
+   v26 MOTION SYSTEM
    Reading progress · Ripple · Hero parallax · Magnetic CTA · Stagger easing
    All effects respect prefers-reduced-motion.
    ══════════════════════════════════════════════════════════════════════════ */

@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   js/apply.js  ·  alma+  v25
+   js/apply.js  ·  alma+  v26
    Professional application form — availability configurator + Supabase submit
 ───────────────────────────────────────────────────────────────────────────── */
 

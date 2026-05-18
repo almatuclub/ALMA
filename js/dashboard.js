@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   js/dashboard.js  ·  alma+  v25
+   js/dashboard.js  ·  alma+  v26
    Role-split dashboard — patient | professional | admin
    Includes: notifications, profile edit drawer, chat buttons
    ═══════════════════════════════════════════════════════════════════════════ */
