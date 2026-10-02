@@ -1,48 +1,48 @@
 /* =============================================
-   alma+ — Design System v3 · Premium SaaS 2026
+   alma+ — Design System v4 · Rebrand 2026
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 /* ─── Tokens ─── */
 :root {
-  /* Coral accent — used sparingly, only for CTAs & key moments */
-  --coral:          #E8453C;
-  --coral-light:    #FF6969;
-  --coral-dark:     #C4302A;
-  --coral-50:       #FFF3F2;
-  --coral-100:      #FFE2E0;
-  --coral-200:      #FFBAB6;
-  --coral-gradient: linear-gradient(135deg, #FF6969 0%, #E8453C 100%);
+  /* Brand: Sage Teal */
+  --coral:          #1E7868;
+  --coral-light:    #37A08A;
+  --coral-dark:     #145549;
+  --coral-50:       #EEF8F5;
+  --coral-100:      #C5E8DF;
+  --coral-200:      #8DCFC1;
+  --coral-gradient: linear-gradient(135deg, #37A08A 0%, #1E7868 100%);
 
-  /* Backward-compatible red aliases (existing HTML references these) */
-  --red:        #E8453C;
-  --red-light:  #FF6969;
-  --red-dark:   #C4302A;
-  --red-deep:   #A82520;
-  --red-50:     #FFF3F2;
-  --red-100:    #FFE2E0;
-  --red-200:    #FFBAB6;
-  --red-gradient: linear-gradient(135deg, #FF6969 0%, #E8453C 100%);
+  /* Backward-compatible red aliases */
+  --red:        #1E7868;
+  --red-light:  #37A08A;
+  --red-dark:   #145549;
+  --red-deep:   #0C3D30;
+  --red-50:     #EEF8F5;
+  --red-100:    #C5E8DF;
+  --red-200:    #8DCFC1;
+  --red-gradient: linear-gradient(135deg, #37A08A 0%, #1E7868 100%);
 
-  /* Neutral surfaces — warm parchment, not pink */
-  --bg:        #F7F6F3;
-  --bg-2:      #EEECEA;
+  /* Neutral surfaces — warm parchment */
+  --bg:        #F7F4EE;
+  --bg-2:      #EDE8DF;
   --surface:   #FFFFFF;
-  --surface-2: #FAFAF8;
+  --surface-2: #FAF8F3;
 
-  /* Text — rich near-black */
-  --text:        #0B0A17;
-  --text-2:      #56566E;
-  --text-muted:  #9696AB;
+  /* Text — warm charcoal */
+  --text:        #0F1D1A;
+  --text-2:      #4E6560;
+  --text-muted:  #8A9E99;
 
-  /* Borders — transparency-based for clean look */
+  /* Borders */
   --border:   rgba(0, 0, 0, 0.08);
   --border-2: rgba(0, 0, 0, 0.14);
 
-  /* Dark sections */
-  --dark:   #0D0C1C;
-  --dark-2: #16152A;
+  /* Dark sections — deep forest, not navy */
+  --dark:   #0C1F1B;
+  --dark-2: #132924;
 
   /* Status */
   --green:       #059669;
@@ -52,18 +52,18 @@
   --blue:        #2563EB;
   --blue-light:  #EFF6FF;
 
-  /* Shadows — Stripe-style multi-layer, crisp */
+  /* Shadows */
   --shadow-xs:   0 1px 2px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.03);
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
   --shadow-md:   0 2px 6px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.06);
   --shadow-lg:   0 4px 14px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.08);
   --shadow-xl:   0 8px 32px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
   --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 3px 14px rgba(0,0,0,0.05);
-  --shadow-glow: 0 2px 8px rgba(232,69,60,0.16), 0 6px 24px rgba(232,69,60,0.26);
+  --shadow-glow: 0 2px 8px rgba(30,120,104,0.18), 0 6px 24px rgba(30,120,104,0.28);
   --shadow-float:0 8px 28px rgba(0,0,0,0.08), 0 20px 56px rgba(0,0,0,0.09);
 
   /* Font */
-  --font: 'Outfit', sans-serif;
+  --font: 'Poppins', sans-serif;
 
   /* Radius */
   --radius-sm:   6px;
@@ -270,21 +270,21 @@ h4 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
   -webkit-tap-highlight-color: transparent;
 }
 .btn-primary {
-  background: linear-gradient(155deg, #FF6B5B 0%, #E8453C 55%, #CF3229 100%);
+  background: linear-gradient(155deg, #37A08A 0%, #1E7868 55%, #145549 100%);
   color: white;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 18px rgba(220,50,41,0.28),
+  box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 18px rgba(30,120,104,0.28),
               inset 0 1px 0 rgba(255,255,255,0.16);
   border: 1px solid rgba(0,0,0,0.05);
 }
 .btn-primary:hover {
-  background: linear-gradient(155deg, #FF7D6E 0%, #F05048 55%, #DC3B35 100%);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(220,50,41,0.34),
+  background: linear-gradient(155deg, #44B09A 0%, #258A75 55%, #1A6A5A 100%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(30,120,104,0.34),
               inset 0 1px 0 rgba(255,255,255,0.16);
   transform: translateY(-1px);
 }
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 2px 8px rgba(220,50,41,0.20),
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 2px 8px rgba(30,120,104,0.20),
               inset 0 1px 0 rgba(255,255,255,0.16);
 }
 
@@ -631,13 +631,13 @@ body.page-alt { background: var(--bg); }
 }
 .intro__atmo--coral {
   width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(232,69,60,0.16) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(30,120,104,0.18) 0%, transparent 65%);
   top: -250px; right: -250px;
   animation: introAtmoFloat 9s ease-in-out infinite;
 }
 .intro__atmo--indigo {
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(55,160,138,0.10) 0%, transparent 65%);
   bottom: -150px; left: -150px;
   animation: introAtmoFloat 11s ease-in-out -4s infinite;
 }
@@ -907,7 +907,7 @@ body.page-alt { background: var(--bg); }
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Text selection ── */
-::selection { background: rgba(232,69,60,0.13); color: var(--text); }
+::selection { background: rgba(30,120,104,0.14); color: var(--text); }
 
 /* ── Scrollbar (enhanced) ── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -921,7 +921,7 @@ body.page-alt { background: var(--bg); }
 
 /* ── Global focus ring ── */
 :focus-visible {
-  outline: 2px solid rgba(232,69,60,0.55);
+  outline: 2px solid rgba(30,120,104,0.55);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -931,10 +931,10 @@ body.page-alt { background: var(--bg); }
 #alma-progress {
   position: fixed; top: 0; left: 0; z-index: 2000;
   height: 2px; width: 0%;
-  background: linear-gradient(90deg, #FF8B7A 0%, #E8453C 60%, #C4302A 100%);
+  background: linear-gradient(90deg, #5FC4AE 0%, #1E7868 60%, #145549 100%);
   pointer-events: none;
   border-radius: 0 1px 1px 0;
-  box-shadow: 0 0 6px rgba(232,69,60,0.35);
+  box-shadow: 0 0 6px rgba(30,120,104,0.35);
 }
 
 /* ── Button ripple ── */
@@ -977,7 +977,7 @@ body.page-alt { background: var(--bg); }
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  box-shadow: 0 0 0 3.5px rgba(232,69,60,0.13), 0 1px 3px rgba(0,0,0,0.06);
+  box-shadow: 0 0 0 3.5px rgba(30,120,104,0.13), 0 1px 3px rgba(0,0,0,0.06);
   transition: border-color 0.18s var(--spring), box-shadow 0.22s var(--spring), background 0.18s var(--spring);
 }
 .form-input,
@@ -1009,16 +1009,16 @@ body.page-alt { background: var(--bg); }
    Gradient mesh · Animated type · Cursor · Depth · Motion
 ══════════════════════════════════════════════════════════════════════════════ */
 
-/* ── Hero: animated multi-color gradient mesh ── */
+/* ── Hero: subtle warm gradient mesh ── */
 .hero { position: relative; overflow: hidden; }
 .hero::before {
   content: '';
   position: absolute; inset: 0;
   pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 60% 70% at 72% 38%, rgba(255,107,91,0.15) 0%, transparent 62%),
-    radial-gradient(ellipse 48% 55% at 14% 65%, rgba(102,126,234,0.11) 0%, transparent 62%),
-    radial-gradient(ellipse 36% 42% at 88% 82%, rgba(255,160,100,0.08) 0%, transparent 62%);
+    radial-gradient(ellipse 60% 70% at 72% 38%, rgba(30,120,104,0.08) 0%, transparent 62%),
+    radial-gradient(ellipse 48% 55% at 14% 65%, rgba(55,160,138,0.06) 0%, transparent 62%),
+    radial-gradient(ellipse 36% 42% at 88% 82%, rgba(218,200,175,0.12) 0%, transparent 62%);
   animation: _heroMesh 20s ease-in-out infinite alternate;
 }
 @keyframes _heroMesh {
@@ -1031,42 +1031,16 @@ body.page-alt { background: var(--bg); }
 .hero .hero__inner { position: relative; z-index: 1; }
 .hero-cursor, .hero-ring { z-index: 9999; }
 
-/* ── Animated gradient text ── */
+/* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(
-    110deg,
-    #FF6B5B 0%, #DC3B35 20%, #C026D3 42%,
-    #7C3AED 60%, #DC3B35 82%, #FF6B5B 100%
-  );
-  background-size: 220% auto;
+  background: linear-gradient(135deg, #37A08A 0%, #1E7868 55%, #0F4A3E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: _gradShift 6s linear infinite;
 }
-@keyframes _gradShift { to { background-position: 220% center; } }
 
-/* ── Cursor glow orb ── */
-#cursor-glow {
-  position: fixed;
-  width: 340px; height: 340px; border-radius: 50%;
-  pointer-events: none; z-index: 9989;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle,
-    rgba(220,59,53,0.08) 0%,
-    rgba(102,126,234,0.04) 45%,
-    transparent 70%);
-  opacity: 0; transition: opacity 0.5s ease, width 0.35s ease, height 0.35s ease;
-  will-change: left, top; mix-blend-mode: multiply;
-}
-#cursor-glow.active   { opacity: 1; }
-#cursor-glow.on-accent {
-  background: radial-gradient(circle,
-    rgba(220,59,53,0.13) 0%,
-    rgba(255,107,91,0.07) 42%,
-    transparent 70%);
-  width: 480px; height: 480px;
-}
+/* ── Cursor glow — hidden ── */
+#cursor-glow { display: none; }
 
 /* ── Reveal: scale + translateY ── */
 .reveal {
@@ -1092,7 +1066,7 @@ body.page-alt { background: var(--bg); }
   content: '';
   display: inline-block; width: 5px; height: 5px; border-radius: 50%;
   background: var(--coral); flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(220,59,53,0.5);
+  box-shadow: 0 0 8px rgba(30,120,104,0.5);
   animation: _overPulse 2.5s ease-in-out infinite;
 }
 @keyframes _overPulse {

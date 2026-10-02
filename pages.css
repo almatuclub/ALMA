@@ -15,21 +15,21 @@
   overflow: hidden;
 }
 
-/* Coral glow — top right */
+/* Teal glow — top right */
 .hero::before {
   content: ''; position: absolute;
   width: 1100px; height: 1100px; border-radius: 50%;
   background: radial-gradient(circle at center,
-    rgba(232,69,60,0.13) 0%, rgba(255,105,105,0.07) 38%, transparent 66%);
+    rgba(30,120,104,0.10) 0%, rgba(55,160,138,0.05) 38%, transparent 66%);
   top: -320px; right: -280px; pointer-events: none;
   animation: blobPulse 12s ease-in-out infinite;
 }
-/* Warm accent — bottom left */
+/* Warm parchment accent — bottom left */
 .hero::after {
   content: ''; position: absolute;
   width: 640px; height: 640px; border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(232,69,60,0.07) 0%, rgba(255,180,140,0.04) 45%, transparent 70%);
+    rgba(218,200,165,0.14) 0%, rgba(200,180,140,0.06) 45%, transparent 70%);
   bottom: -180px; left: -180px; pointer-events: none;
 }
 
@@ -103,20 +103,20 @@
   display: flex; align-items: center; justify-content: center;
 }
 
-/* Coral blob glow — behind the floating cards */
+/* Teal blob glow — behind the floating cards */
 .hero__blob {
   position: absolute;
   width: 520px; height: 520px; border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(232,69,60,0.26) 0%, rgba(255,120,100,0.14) 42%, transparent 70%);
+    rgba(30,120,104,0.20) 0%, rgba(55,160,138,0.10) 42%, transparent 70%);
   filter: blur(80px);
   animation: blobPulse 9s ease-in-out infinite;
 }
-/* Secondary indigo accent blob */
+/* Warm parchment secondary blob */
 .hero__blob::after {
   content: ''; position: absolute;
   width: 260px; height: 260px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(102,126,234,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(218,190,150,0.15) 0%, transparent 70%);
   filter: blur(40px);
   top: 60%; left: 60%;
   animation: blobPulse 11s ease-in-out infinite reverse;
