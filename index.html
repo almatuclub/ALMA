@@ -1,53 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>alma+ | Tu plataforma de salud y bienestar</title>
-<meta name="description" content="Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados en Uruguay. Reservá con fichas, sin intermediarios."/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z' fill='%231E7868'/%3E%3C/svg%3E"/>
-<link rel="stylesheet" href="style.css?v=29"/>
-<link rel="stylesheet" href="pages.css?v=29"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALMA+ — Bienestar sin espera</title>
+  <meta name="description" content="Conectate con psicólogos, coaches, nutricionistas y especialistas verificados. Sin lista de espera. Sin burocracia. Desde donde estés.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z' fill='%231A7A6B'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
 
-<!-- ─── Intro / Loading Screen ─── -->
-<div id="alma-intro" aria-hidden="true" role="presentation">
-  <div class="intro__atmo intro__atmo--coral"></div>
-  <div class="intro__atmo intro__atmo--indigo"></div>
-  <div class="intro__center">
-    <div class="intro__mark">
-      <div class="intro__glow"></div>
-      <svg width="68" height="62" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="intro-heart-g" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#FF8B7A"/>
-            <stop offset="100%" stop-color="#1E7868"/>
-          </linearGradient>
-        </defs>
-        <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#intro-heart-g)"/>
-      </svg>
-    </div>
-    <div class="intro__brand">
-      <span class="intro__brand-word">alma</span><span class="intro__brand-plus">+</span>
-    </div>
-    <div class="intro__sub">Tu bienestar, en buenas manos</div>
-    <div class="intro__progress"></div>
-  </div>
+<!-- ─── Announce bar ─── -->
+<div class="announce-bar">
+  <strong>Uruguay lidera la tasa de suicidios en LATAM.</strong> El acceso a especialistas es parte del problema.
+  <a href="professionals.html">Conocé ALMA+ →</a>
 </div>
 
-<nav class="navbar">
+<!-- ─── Navbar ─── -->
+<nav class="navbar" id="navbar">
   <div class="navbar__inner">
     <a href="index.html" class="navbar__logo">
-      <svg class="logo-mark" width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="alma-nav-g" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#37A08A"/>
-            <stop offset="100%" stop-color="#1E7868"/>
-          </linearGradient>
-        </defs>
-        <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#alma-nav-g)"/>
+      <svg width="22" height="20" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="#1A7A6B"/>
       </svg>
       <span class="logo-wordmark">alma<span class="logo-plus">+</span></span>
     </a>
@@ -60,16 +37,18 @@
     </ul>
     <div class="navbar__actions">
       <div class="navbar__fichas" id="navbar-fichas">
-        <span class="ficha"><span class="symbol">+</span></span>
+        <span>+</span>
         <span id="navbar-fichas-count">0</span>
       </div>
       <a href="login.html" class="btn btn-ghost btn-sm">Ingresar</a>
-      <a href="login.html#register" class="btn btn-primary btn-sm">Registrarme</a>
+      <a href="login.html#register" class="btn btn-primary btn-sm">Comenzar gratis</a>
     </div>
-    <button class="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
-<nav class="mobile-nav">
+<nav class="mobile-nav" id="mobile-nav" aria-label="Menú móvil">
   <a href="index.html">Inicio</a>
   <a href="professionals.html">Profesionales</a>
   <a href="payment.html">Comprar fichas</a>
@@ -82,16 +61,23 @@
 <section class="hero">
   <div class="container hero__inner">
 
+    <!-- Left: Text -->
     <div class="hero__text">
       <div class="hero__eyebrow">
         <span class="dot"></span>
         480+ profesionales verificados en Uruguay
       </div>
-      <h1>Tu bienestar a un <span class="gradient-text"><span class="clic-word" id="clic-word">clic</span> de distancia</span></h1>
-      <p class="hero__lead">Psicólogos, nutricionistas, personal trainers, coaches y psiquiatras privados. Elegís a quién, cuándo y cómo — con fichas, sin intermediarios.</p>
+      <h1 class="hero__h1">
+        El especialista<br>
+        que necesitás,<br>
+        <span class="accent">sin espera.</span>
+      </h1>
+      <p class="hero__lead">
+        Psicólogos, coaches, nutricionistas y más — verificados y disponibles hoy. Sin turnos largos, sin burocracia. Desde donde estés.
+      </p>
       <div class="hero__actions">
-        <a href="professionals.html" class="btn btn-primary btn-lg">Encontrar profesional →</a>
-        <a href="payment.html" class="btn btn-outline btn-lg">Ver paquetes de fichas</a>
+        <a href="professionals.html" class="btn btn-primary btn-lg">Buscar profesional →</a>
+        <a href="payment.html" class="btn btn-outline btn-lg">Ver paquetes</a>
       </div>
       <div class="hero__trust">
         <div class="hero__trust-item">
@@ -104,201 +90,122 @@
         </div>
         <div class="hero__trust-item">
           <div class="check">✓</div>
-          Agenda en tiempo real
+          Disponible hoy
         </div>
       </div>
     </div>
 
-    <!-- Hero visual: unified product mockup -->
+    <!-- Right: Booking card visual -->
     <div class="hero__visual" aria-hidden="true">
-      <div class="hero__blob"></div>
-      <div class="hero__mouse-glow" aria-hidden="true"></div>
 
-      <!-- Single unified booking mockup -->
-      <div class="hero__mockup">
+      <!-- Floating stats badge -->
+      <div class="hero__stats-badge">
+        <div class="hsb__num">4.9 ★</div>
+        <div class="hsb__label">Promedio de calificación</div>
+      </div>
 
-        <!-- macOS-style window chrome -->
-        <div class="hm__chrome">
-          <span class="hm__dot hm__dot--r"></span>
-          <span class="hm__dot hm__dot--y"></span>
-          <span class="hm__dot hm__dot--g"></span>
-          <span class="hm__chrome-title">alma+ &middot; Reservar consulta</span>
-        </div>
-
-        <!-- Profile header -->
-        <div class="hm__profile">
-          <div class="hm__avatar-col">
-            <div class="hm__avatar" aria-hidden="true">VS</div>
-            <span class="hm__online-dot" aria-label="En línea"></span>
+      <!-- Main booking card -->
+      <div class="booking-card">
+        <div class="bc__header">
+          <div class="bc__avatar">
+            VS
+            <div class="bc__online"></div>
           </div>
-          <div class="hm__info">
-            <div class="hm__name-row">
-              <span class="hm__name">Lic. Valentina Suárez</span>
-              <span class="hm__verified-badge" aria-label="Verificado">
-                <svg width="8" height="8" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="bc__info">
+            <div class="bc__name">
+              Lic. Valentina Suárez
+              <span class="bc__verified" aria-label="Verificado">
+                <svg width="7" height="7" viewBox="0 0 10 10" fill="none">
+                  <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </span>
             </div>
-            <div class="hm__spec">Psicología · TCC &amp; Mindfulness</div>
-            <div class="hm__rating-row">
-              <span class="hm__stars" aria-hidden="true">★★★★★</span>
-              <span class="hm__rating-val">4.9</span>
-              <span class="hm__rating-cnt">· 142 sesiones</span>
-            </div>
-            <div class="hm__meta">UdelaR &middot; Mat. 12.450 &middot; 8 años exp.</div>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div class="hm__tags">
-          <span class="hm__tag hm__tag--blue">Online</span>
-          <span class="hm__tag hm__tag--violet">Presencial</span>
-          <span class="hm__tag hm__tag--green">
-            <span class="hm__pulse-dot" aria-hidden="true"></span>
-            Disponible hoy
-          </span>
-        </div>
-
-        <div class="hm__rule"></div>
-
-        <!-- Slot picker -->
-        <div class="hm__picker">
-          <div class="hm__picker-label">Seleccioná un horario</div>
-          <div class="hm__picker-grid">
-            <div class="hm__slot hm__slot--on">
-              <div class="hm__slot-day">Hoy</div>
-              <div class="hm__slot-time">17:00</div>
-            </div>
-            <div class="hm__slot">
-              <div class="hm__slot-day">Hoy</div>
-              <div class="hm__slot-time">18:30</div>
-            </div>
-            <div class="hm__slot">
-              <div class="hm__slot-day">Mañana</div>
-              <div class="hm__slot-time">10:00</div>
+            <div class="bc__specialty">Psicología · TCC &amp; Mindfulness</div>
+            <div class="bc__rating">
+              <span class="bc__stars">★★★★★</span>
+              <b>4.9</b>
+              <span>· 142 sesiones</span>
             </div>
           </div>
-        </div>
-
-        <!-- Book CTA -->
-        <div class="hm__cta-row">
-          <div class="hm__cta-btn">
-            <span>Reservar sesión</span>
-            <span class="hm__cta-price">8 fichas</span>
+          <div class="bc__avail">
+            <span class="bc__avail-dot"></span>
+            Hoy
           </div>
         </div>
 
-        <div class="hm__rule"></div>
+        <div class="bc__divider"></div>
 
-        <!-- Footer: balance + confirmed session -->
-        <div class="hm__footer">
-          <div class="hm__footer-col">
-            <div class="hm__footer-lbl">Tu saldo</div>
-            <div class="hm__footer-val">24 fichas</div>
-            <div class="hm__footer-bar"><div class="hm__footer-fill"></div></div>
+        <div class="bc__slots-label">Seleccioná un horario</div>
+        <div class="bc__slots">
+          <div class="bc__slot active">
+            <div class="bc__slot-day">Hoy</div>
+            <div class="bc__slot-time">17:00</div>
           </div>
-          <div class="hm__footer-sep"></div>
-          <div class="hm__footer-col">
-            <div class="hm__footer-lbl">Sesión confirmada</div>
-            <div class="hm__footer-val hm__footer-val--g">Hoy 17:00</div>
-            <div class="hm__footer-sub">con Valentina · Online</div>
+          <div class="bc__slot">
+            <div class="bc__slot-day">Hoy</div>
+            <div class="bc__slot-time">18:30</div>
+          </div>
+          <div class="bc__slot">
+            <div class="bc__slot-day">Mañana</div>
+            <div class="bc__slot-time">10:00</div>
           </div>
         </div>
 
+        <a href="professionals.html" class="bc__btn">Reservar sesión · 8 fichas</a>
       </div>
 
-      <!-- Social proof pill -->
-      <div class="hero__pill">
-        <svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg>
-        4.9 · 12k+ sesiones
+      <!-- Floating confirmation badge -->
+      <div class="hero__confirm">
+        <div class="hc__icon">✓</div>
+        <div class="hc__text">
+          <div class="hc__title">Turno confirmado</div>
+          <div class="hc__sub">Hoy a las 17:00 · Valentina S.</div>
+        </div>
       </div>
-    </div>
 
-  </div>
-
-  <!-- Hero click animation overlays -->
-  <div class="hero-cursor" id="hero-cursor" aria-hidden="true">
-    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1.5 1.5L1.5 16L5 12L7.2 18L9 17.3L6.8 11.5L12 11.5L1.5 1.5Z" fill="white" stroke="#18181b" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
-    </svg>
-  </div>
-  <div class="hero-ring" id="hero-ring" aria-hidden="true"></div>
-</section>
-
-<!-- ─── Stats strip ─── -->
-<section class="stats-row-section">
-  <div class="container" style="display:flex;justify-content:center">
-    <div class="stats-strip">
-      <div class="stats-strip__item">
-        <span class="stats-strip__val">480<em>+</em></span>
-        <div class="stats-strip__lbl">Profesionales activos</div>
-      </div>
-      <div class="stats-strip__item">
-        <span class="stats-strip__val">12k<em>+</em></span>
-        <div class="stats-strip__lbl">Sesiones realizadas</div>
-      </div>
-      <div class="stats-strip__item">
-        <span class="stats-strip__val">4.9<em>★</em></span>
-        <div class="stats-strip__lbl">Calificación promedio</div>
-      </div>
-      <div class="stats-strip__item">
-        <span class="stats-strip__val">5<em>+</em></span>
-        <div class="stats-strip__lbl">Especialidades</div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- ─── How it works ─── -->
-<section class="section" style="background:white">
+<!-- ─── Stats dark bar ─── -->
+<div class="stats-bar">
   <div class="container">
-    <div class="how-wrap reveal">
-      <div class="section-header" style="margin-bottom:48px">
-        <div class="overline">Cómo funciona</div>
-        <h2>Simple y sin vueltas</h2>
-        <div class="divider"></div>
+    <div class="stats-bar__inner">
+      <div class="stats-bar__item">
+        <div class="stats-bar__num"><span>668</span></div>
+        <div class="stats-bar__label">suicidios en Uruguay en 2025. El acceso a profesionales importa.</div>
       </div>
-      <div class="steps-row">
-        <div class="step">
-          <div class="step-bubble">1</div>
-          <h4>Elegís un profesional</h4>
-          <p>Filtrá por especialidad, horario y precio en fichas.</p>
-        </div>
-        <div class="step">
-          <div class="step-bubble">2</div>
-          <h4>Reservás tu sesión</h4>
-          <p>Elegís el día y horario disponible en el calendario.</p>
-        </div>
-        <div class="step">
-          <div class="step-bubble">3</div>
-          <h4>Pagás con fichas</h4>
-          <p>Cada sesión tiene un precio fijo y transparente.</p>
-        </div>
-        <div class="step">
-          <div class="step-bubble">4</div>
-          <h4>¡Listo, nos vemos!</h4>
-          <p>Recibís confirmación y recordatorio de tu turno.</p>
-        </div>
+      <div class="stats-bar__item">
+        <div class="stats-bar__num"><span>24</span>%</div>
+        <div class="stats-bar__label">de los uruguayos en el mayor nivel de soledad. El doble del promedio mundial.</div>
+      </div>
+      <div class="stats-bar__item">
+        <div class="stats-bar__num"><span>1</span></div>
+        <div class="stats-bar__label">psiquiatra pública en Las Piedras, la 3ª ciudad del país. ALMA es parte de la respuesta.</div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ─── Services ─── -->
-<section class="section" style="padding-top:0">
+<!-- ─── Servicios ─── -->
+<section class="section">
   <div class="container">
-    <div class="section-header reveal">
-      <div class="overline">Nuestros servicios</div>
-      <h2>Profesionales de salud <span class="gradient-text">privados</span></h2>
-      <div class="divider"></div>
-      <p>Todos atienden de forma independiente con precios transparentes en fichas.</p>
+    <div class="reveal">
+      <div class="section-label">Especialidades</div>
+      <h2 class="section-title">Todo el bienestar,<br>en un solo lugar</h2>
+      <p class="section-sub" style="margin-bottom:40px">Profesionales privados verificados para cada dimensión de tu salud.</p>
     </div>
-    <div class="services-grid stagger-children">
+    <div class="services-grid reveal">
 
       <a href="professionals.html?s=psicologia" class="service-card">
-        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.04-4.78 2.5 2.5 0 0 1-.46-4.88 2.5 2.5 0 0 1 2-4.38z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.04-4.78 2.5 2.5 0 0 0 .46-4.88 2.5 2.5 0 0 0-2-4.38z"/></svg></div>
+        <div class="service-icon">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2a10 10 0 0 1 10 10c0 4-2.3 7.4-5.7 9.1L12 22l-4.3-.9C4.3 19.4 2 16 2 12A10 10 0 0 1 12 2z"/>
+          </svg>
+        </div>
         <h3>Psicología</h3>
-        <p class="desc">Terapia individual con psicólogos y psicólogas especializados en diferentes enfoques.</p>
-        <div class="session-info">⏱ Sesiones de 45 a 60 minutos</div>
+        <p class="desc">Terapia individual con psicólogos especializados en TCC, mindfulness y más enfoques.</p>
+        <div class="session-info">⏱ 45 a 60 minutos por sesión</div>
         <div class="service-footer">
           <div class="ficha"><span class="symbol">+</span> 8 fichas / sesión</div>
           <span class="badge badge-green">Disponible hoy</span>
@@ -306,10 +213,15 @@
       </a>
 
       <a href="professionals.html?s=psiquiatria" class="service-card">
-        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg></div>
+        <div class="service-icon">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/>
+            <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+          </svg>
+        </div>
         <h3>Psiquiatría</h3>
         <p class="desc">Consultas psiquiátricas para diagnóstico, seguimiento y ajuste de tratamiento.</p>
-        <div class="session-info">⏱ Consultas de 30 a 45 minutos</div>
+        <div class="session-info">⏱ 30 a 45 minutos por consulta</div>
         <div class="service-footer">
           <div class="ficha"><span class="symbol">+</span> 12 fichas / consulta</div>
           <span class="badge badge-yellow">Alta demanda</span>
@@ -317,10 +229,15 @@
       </a>
 
       <a href="professionals.html?s=nutricion" class="service-card">
-        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+        <div class="service-icon">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
         <h3>Nutrición</h3>
         <p class="desc">Planes de alimentación personalizados con nutricionistas diplomados.</p>
-        <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
+        <div class="session-info">⏱ 50 a 60 minutos por sesión</div>
         <div class="service-footer">
           <div class="ficha"><span class="symbol">+</span> 6 fichas / sesión</div>
           <span class="badge badge-green">Disponible hoy</span>
@@ -328,10 +245,14 @@
       </a>
 
       <a href="professionals.html?s=trainer" class="service-card">
-        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="service-icon">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
         <h3>Personal Trainer</h3>
         <p class="desc">Entrenamiento físico personalizado online o presencial, adaptado a tus objetivos.</p>
-        <div class="session-info">⏱ Sesiones de 60 minutos</div>
+        <div class="session-info">⏱ 60 minutos por sesión</div>
         <div class="service-footer">
           <div class="ficha"><span class="symbol">+</span> 5 fichas / sesión</div>
           <span class="badge badge-green">Disponible hoy</span>
@@ -339,10 +260,16 @@
       </a>
 
       <a href="professionals.html?s=coaching" class="service-card">
-        <div class="service-icon"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="service-icon">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="6"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
+        </div>
         <h3>Coaching</h3>
         <p class="desc">Acompañamiento profesional para metas de vida, carrera y transformación personal.</p>
-        <div class="session-info">⏱ Sesiones de 50 a 60 minutos</div>
+        <div class="session-info">⏱ 50 a 60 minutos por sesión</div>
         <div class="service-footer">
           <div class="ficha"><span class="symbol">+</span> 7 fichas / sesión</div>
           <span class="badge badge-green">Disponible hoy</span>
@@ -350,11 +277,18 @@
       </a>
 
       <a href="professionals.html" class="service-card service-card--dashed">
-        <div class="service-icon" style="margin:0 auto 14px"><svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-        <h3>Otro profesional</h3>
-        <p class="desc">¿Buscás otro tipo de profesional de salud privado? Explorá el directorio completo.</p>
+        <div class="service-icon" style="margin:0 auto 14px">
+          <svg class="svc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <h3>Ver directorio</h3>
+        <p class="desc">Explorá todos los profesionales disponibles y encontrá el que más se adapta a vos.</p>
         <div style="margin-top:16px">
-          <span class="btn btn-outline btn-sm">Ver directorio</span>
+          <span class="btn btn-outline btn-sm">Ver todos →</span>
         </div>
       </a>
 
@@ -362,170 +296,123 @@
   </div>
 </section>
 
-<!-- ─── Fichas explainer (dark) ─── -->
+<!-- ─── Fichas explainer ─── -->
 <section class="section" style="padding-top:0">
   <div class="container">
     <div class="fichas-section reveal">
-      <div class="fichas-section__inner">
-        <div>
-          <span class="badge" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.2);margin-bottom:22px">Sistema de fichas</span>
-          <h2>¿Qué son las fichas <span style="color:#FF8A80">+</span>?</h2>
-          <p class="fs-body">Las fichas son la moneda de alma+. Comprás un paquete y las usás para reservar sesiones con cualquier profesional del directorio. Sin sorpresas, sin comisiones ocultas.</p>
-          <a href="payment.html" class="btn btn-primary btn-lg" style="margin-top:4px">Ver paquetes de fichas →</a>
+      <div>
+        <span class="badge badge-dark" style="margin-bottom:22px">Sistema de fichas</span>
+        <h2>¿Qué son las fichas<span style="color:#5DD4BE"> +</span>?</h2>
+        <p class="fs-body">Las fichas son la moneda de alma+. Comprás un paquete y las usás para reservar sesiones con cualquier profesional del directorio. Sin sorpresas, sin comisiones ocultas.</p>
+        <a href="payment.html" class="btn btn-primary btn-lg" style="margin-top:24px">Ver paquetes de fichas →</a>
+      </div>
+      <div class="fichas-grid">
+        <div class="ficha-item">
+          <div class="svc">Psicología</div>
+          <div class="price">8<span>+ fichas</span></div>
+          <div class="duration">45 – 60 min por sesión</div>
         </div>
-        <div class="fichas-grid">
-          <div class="ficha-item">
-            <div class="svc">Psicología</div>
-            <div class="price">8<span>+ fichas</span></div>
-            <div class="duration">45 – 60 min por sesión</div>
-          </div>
-          <div class="ficha-item">
-            <div class="svc">Psiquiatría</div>
-            <div class="price">12<span>+ fichas</span></div>
-            <div class="duration">30 – 45 min por consulta</div>
-          </div>
-          <div class="ficha-item">
-            <div class="svc">Nutrición</div>
-            <div class="price">6<span>+ fichas</span></div>
-            <div class="duration">50 – 60 min por sesión</div>
-          </div>
-          <div class="ficha-item">
-            <div class="svc">Personal Trainer</div>
-            <div class="price">5<span>+ fichas</span></div>
-            <div class="duration">60 min por sesión</div>
-          </div>
-          <div class="ficha-item">
-            <div class="svc">Coaching</div>
-            <div class="price">7<span>+ fichas</span></div>
-            <div class="duration">50 – 60 min por sesión</div>
-          </div>
-          <div class="ficha-item" style="display:flex;align-items:center;justify-content:center;text-align:center">
-            <a href="payment.html" style="color:rgba(255,255,255,0.7);font-size:0.85rem;text-decoration:underline">Ver todos los precios →</a>
-          </div>
+        <div class="ficha-item">
+          <div class="svc">Psiquiatría</div>
+          <div class="price">12<span>+ fichas</span></div>
+          <div class="duration">30 – 45 min por consulta</div>
+        </div>
+        <div class="ficha-item">
+          <div class="svc">Nutrición</div>
+          <div class="price">6<span>+ fichas</span></div>
+          <div class="duration">50 – 60 min por sesión</div>
+        </div>
+        <div class="ficha-item">
+          <div class="svc">Personal Trainer</div>
+          <div class="price">5<span>+ fichas</span></div>
+          <div class="duration">60 min por sesión</div>
+        </div>
+        <div class="ficha-item">
+          <div class="svc">Coaching</div>
+          <div class="price">7<span>+ fichas</span></div>
+          <div class="duration">50 – 60 min por sesión</div>
+        </div>
+        <div class="ficha-item" style="display:flex;align-items:center;justify-content:center;border-style:dashed">
+          <a href="payment.html" style="font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.35);text-align:center;line-height:1.5">Ver paquetes<br>de fichas →</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── Professionals preview ─── -->
-<section class="section" style="padding-top:0;background:linear-gradient(180deg,var(--bg) 0%,#EAE8F5 100%);border-top:1px solid var(--border);border-bottom:1px solid rgba(110,90,230,0.12)">
+<!-- ─── Cómo funciona ─── -->
+<section class="section" style="background:var(--bg-2)">
   <div class="container">
-    <div class="section-header reveal">
-      <div class="overline">Profesionales destacados</div>
-      <h2>Conocé a nuestros especialistas</h2>
-      <div class="divider"></div>
-      <p>Verificados, matriculados y con disponibilidad inmediata.</p>
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">Cómo funciona</div>
+      <h2 class="section-title">Tres pasos. Sin complicaciones.</h2>
+      <p class="section-sub" style="margin:0 auto">De registrarte a tu primera sesión en menos de 5 minutos.</p>
     </div>
-    <div class="profs-preview stagger-children">
-
-      <div class="prof-mini">
-        <div class="prof-mini-head">
-          <div class="prof-mini-avatar">VS</div>
-          <div>
-            <div class="prof-mini-name">Lic. Valentina Suárez</div>
-            <div class="prof-mini-spec">Psicología · TCC</div>
-            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.9 · 142 sesiones</div>
-          </div>
-        </div>
-        <div class="tags"><span class="tag">Ansiedad</span><span class="tag">Vínculos</span><span class="tag">Online</span></div>
-        <div class="next-slots">
-          <span class="slot-pill">Hoy 17:00</span>
-          <span class="slot-pill">Hoy 18:00</span>
-          <span class="slot-pill">Mañ 10:00</span>
-        </div>
-        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
+    <div class="steps-grid reveal">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__title">Comprás fichas</div>
+        <div class="step__desc">Elegís el paquete que mejor se ajusta a tus necesidades. Cuanto más fichas, mayor el descuento por sesión.</div>
       </div>
-
-      <div class="prof-mini">
-        <div class="prof-mini-head">
-          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#FF7043,#E53935)">AF</div>
-          <div>
-            <div class="prof-mini-name">Agustín Ferreyra</div>
-            <div class="prof-mini-spec">Personal Trainer</div>
-            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 5.0 · 98 sesiones</div>
-          </div>
-        </div>
-        <div class="tags"><span class="tag">Funcional</span><span class="tag">Presencial</span><span class="tag">CABA</span></div>
-        <div class="next-slots">
-          <span class="slot-pill">Hoy 08:00</span>
-          <span class="slot-pill">Mañ 07:30</span>
-          <span class="slot-pill">Mañ 09:00</span>
-        </div>
-        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__title">Encontrás tu profesional</div>
+        <div class="step__desc">Explorás el directorio, filtrás por especialidad, precio y disponibilidad, y leés los perfiles verificados.</div>
       </div>
-
-      <div class="prof-mini">
-        <div class="prof-mini-head">
-          <div class="prof-mini-avatar" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">CR</div>
-          <div>
-            <div class="prof-mini-name">Lic. Camila Ríos</div>
-            <div class="prof-mini-spec">Nutrición</div>
-            <div class="prof-mini-rating"><svg class="star-svg" viewBox="0 0 16 16" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 1.5l1.65 3.35 3.7.54-2.67 2.6.63 3.67L8 9.77l-3.31 1.74.63-3.67-2.67-2.6 3.7-.54z"/></svg> 4.8 · 207 sesiones</div>
-          </div>
-        </div>
-        <div class="tags"><span class="tag">Deportiva</span><span class="tag">Vegana</span><span class="tag">Online</span></div>
-        <div class="next-slots">
-          <span class="slot-pill">Mañ 11:00</span>
-          <span class="slot-pill">Mañ 16:00</span>
-          <span class="slot-pill">Jue 10:00</span>
-        </div>
-        <a href="professionals.html" class="btn btn-outline btn-sm" style="width:100%;margin-top:16px;justify-content:center">Ver perfil</a>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__title">Reservás al instante</div>
+        <div class="step__desc">Elegís el horario que te queda cómodo y confirmás con tus fichas. Recordatorio automático incluido.</div>
       </div>
-
-    </div>
-    <div style="text-align:center;margin-top:40px">
-      <a href="professionals.html" class="btn btn-primary btn-lg">Ver todos los profesionales →</a>
     </div>
   </div>
 </section>
 
 <!-- ─── Founders ─── -->
-<section class="section founders-section">
+<section class="section">
   <div class="container">
-    <div class="section-header reveal">
-      <div class="overline">El equipo</div>
-      <h2>Quiénes somos</h2>
-      <div class="divider"></div>
-      <p>Dos personas convencidas de que acceder a salud mental y bienestar puede ser más simple, transparente y humano.</p>
+    <div class="reveal" style="margin-bottom:40px">
+      <div class="section-label">El equipo</div>
+      <h2 class="section-title">Quiénes hacemos ALMA+</h2>
     </div>
-    <div class="founders-grid stagger-children">
-
+    <div class="founders-grid reveal">
       <div class="founder-card">
-        <div class="founder-avatar founder-avatar--jms">JMS</div>
-        <div class="founder-name">Juan María Sequeira</div>
+        <div class="founder-avatar">JS</div>
+        <div class="founder-name">Juan Sequeira</div>
         <div class="founder-role">Co-fundador &amp; CEO</div>
-        <p class="founder-bio">Apasionado por el impacto social y la tecnología. Construyó alma+ para democratizar el acceso a profesionales de salud y bienestar en Uruguay.</p>
-        <a href="https://www.linkedin.com/in/juan-mar%C3%ADa-sequeira/" target="_blank" rel="noopener" class="founder-linkedin">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <p class="founder-bio">Emprendedor con visión en salud digital. Lidera la estrategia, las relaciones con profesionales y el crecimiento de alma+ en Uruguay.</p>
+        <a href="https://www.linkedin.com/in/juan-sequeira-b0b0a4270/" target="_blank" rel="noopener" class="founder-linkedin">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
           LinkedIn
         </a>
       </div>
-
       <div class="founder-card">
         <div class="founder-avatar founder-avatar--fa">FA</div>
         <div class="founder-name">Francisco Algorta</div>
         <div class="founder-role">Co-fundador &amp; CTO</div>
         <p class="founder-bio">Desarrollador y emprendedor con foco en producto. Diseñó la arquitectura técnica de alma+ para que la experiencia sea rápida, segura y sin fricciones.</p>
         <a href="https://www.linkedin.com/in/francisco-algorta-7b7207291/" target="_blank" rel="noopener" class="founder-linkedin">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
           LinkedIn
         </a>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ─── CTA band ─── -->
-<section class="section">
+<!-- ─── CTA para profesionales ─── -->
+<section class="section" style="padding-top:0">
   <div class="container">
     <div class="cta-band reveal">
       <h2>¿Sos profesional de la salud?</h2>
       <p>Sumáte a alma+ y gestioná tu agenda, pacientes y pagos en un solo lugar.</p>
       <div class="btn-group">
-        <a href="apply.html" class="btn-white-solid">Registrarme como profesional</a>
-        <a href="professionals.html" class="btn-outline-white">Conocer el directorio</a>
+        <a href="apply.html"        class="btn btn-white-solid btn-lg">Registrarme como profesional</a>
+        <a href="professionals.html" class="btn btn-outline-white btn-lg">Ver el directorio</a>
       </div>
     </div>
   </div>
@@ -536,19 +423,13 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <div class="footer__logo" style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-          <svg class="logo-mark" width="22" height="20" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="alma-footer-g" x1="2" y1="1.5" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#37A08A"/>
-                <stop offset="100%" stop-color="#1E7868"/>
-              </linearGradient>
-            </defs>
-            <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="url(#alma-footer-g)"/>
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="22" height="20" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 21C12 21 2 14.5 2 7.5C2 4.46 4.24 2 7 2C9.06 2 10.88 3.12 12 5C13.12 3.12 14.94 2 17 2C19.76 2 22 4.46 22 7.5C22 14.5 12 21 12 21Z" fill="#1A7A6B"/>
           </svg>
-          <span class="logo-wordmark">alma<span class="logo-plus">+</span></span>
+          <span style="font-size:1.1rem;font-weight:800;letter-spacing:-0.04em;color:#fff">alma<span style="color:#5DD4BE">+</span></span>
         </div>
-        <p>Plataforma de salud y bienestar con profesionales privados verificados en Uruguay. Atención personalizada con precios transparentes.</p>
+        <p>Plataforma de salud y bienestar con profesionales privados verificados en Uruguay. Atención personalizada, precios transparentes.</p>
       </div>
       <div class="footer__col">
         <h5>Servicios</h5>
@@ -559,24 +440,21 @@
         <a href="professionals.html?s=coaching">Coaching</a>
       </div>
       <div class="footer__col">
-        <h5>Para profesionales</h5>
+        <h5>Profesionales</h5>
         <a href="apply.html">Registrarme</a>
         <a href="login.html">Mi panel</a>
-        <a href="about.html">¿Cómo funciona?</a>
+        <a href="about.html">Cómo funciona</a>
       </div>
       <div class="footer__col">
         <h5>alma+</h5>
         <a href="about.html">Sobre nosotros</a>
-        <a href="about.html">Políticas y Contacto</a>
+        <a href="about.html">Contacto</a>
         <a href="donate.html">Donar fichas</a>
       </div>
     </div>
     <div class="footer__bottom">
       <span>© 2026 alma+ · Montevideo, Uruguay</span>
-      <div style="display:flex;gap:16px;font-size:0.8rem;color:#52525b">
-        <span>🇺🇾 Hecho en Uruguay</span>
-        <span>❤️ Bienestar que suma</span>
-      </div>
+      <span>Hecho en Uruguay con propósito</span>
     </div>
   </div>
 </footer>
@@ -584,8 +462,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="db.js" defer></script>
 <script src="script.js" defer></script>
-<script src="js/loader.js" defer></script>
-<script src="js/hero-click.js" defer></script>
-<script src="js/effects.js" defer></script>
+
 </body>
 </html>
