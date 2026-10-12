@@ -444,8 +444,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navbar on dark hero — transparent until scrolled */
 .navbar {
-  background: transparent;
-  border-bottom-color: rgba(255,255,255,0.08);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+  box-shadow: none !important;
 }
 .navbar__logo { color: #fff; }
 .logo-wordmark { color: #fff; }
@@ -458,10 +461,10 @@ h1, h2, h3, h4, h5, h6 {
 /* Once scrolled into light sections — switch navbar to light */
 .navbar.scrolled {
   background: rgba(248,247,245,0.96) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
   border-bottom-color: var(--border) !important;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07) !important;
 }
 .navbar.scrolled .navbar__logo { color: var(--text); }
 .navbar.scrolled .logo-wordmark { color: var(--text); }
@@ -521,23 +524,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero visual */
 .hero__visual {
-  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 /* Booking card */
 .booking-card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--radius-xl);
   padding: 24px;
   width: 100%;
-  max-width: 360px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  z-index: 2;
+  max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.25);
 }
 .bc__header {
   display: flex;
